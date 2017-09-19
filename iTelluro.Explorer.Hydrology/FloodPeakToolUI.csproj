@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{81742C4A-B689-4E28-8AFD-A79DFBF07F84}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FloodPeakToolUI</RootNamespace>
+    <AssemblyName>FloodPeakToolUI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevComponents.DotNetBar2">
+      <HintPath>..\..\..\iTelluro.Explorer.Demo\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.DotNetBar2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevComponents.TreeGX">
+      <HintPath>..\..\..\iTelluro.Explorer.Demo\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.TreeGX.dll</HintPath>
+    </Reference>
+    <Reference Include="gdal_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.DataTools.Utility, Version=1.0.6449.37223, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\iTelluro.DataTools.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.Explorer.Raster110, Version=1.10.6186.33355, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.Explorer.Raster110.1.10.6186.33355\lib\net20\iTelluro.Explorer.Raster110.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.Explorer.Vector110">
+      <HintPath>..\packages\iTelluro.Explorer.Vector110.1.10.5806.19922\lib\net20\iTelluro.Explorer.Vector110.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.Explorer.VectorLoader, Version=2.1.6228.17936, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\iTelluro.Explorer.VectorLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GeometrySymbol, Version=1.0.6128.25612, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\iTelluro.GeometrySymbol.1.0.6128.25612\lib\net20\iTelluro.GeometrySymbol.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iTelluro.GlobeDB, Version=2.6.5434.26875, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\iTelluro.GlobeDB.2.6.5434.26875\lib\net20\iTelluro.GlobeDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.Analyst, Version=2.10.6402.31554, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.Analyst.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.DataSource, Version=2.10.6402.31553, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.DataSource.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.DataSource.Providers, Version=2.10.6402.31551, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.DataSource.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.Geometry, Version=2.10.6402.31549, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.Graphics3D, Version=2.10.6402.31552, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.Graphics3D.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.MapControl3D, Version=2.10.6402.31555, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.MapControl3D.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.GlobeEngine.Utility, Version=2.10.6402.31550, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="iTelluro.LicProvider, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTelluro.LicProvider.2.0.0.0\lib\net20\iTelluro.LicProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iTelluro.MBTiles, Version=1.1.5553.30535, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\iTelluro.MBTiles.1.1.5553.30535\lib\net20\iTelluro.MBTiles.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iTelluro.Utility, Version=2.3.6310.26015, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\iTelluro.Utility.2.3.6310.26015\lib\net20\iTelluro.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=3.11.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="microsoft.directx, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\microsoft.directx.dll</HintPath>
+    </Reference>
+    <Reference Include="microsoft.directx.direct3d, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\microsoft.directx.direct3d.dll</HintPath>
+    </Reference>
+    <Reference Include="ogr_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\ogr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="osr_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\osr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.85.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <HintPath>..\packages\SQLite.1.0.85.0\lib\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZedGraph.5.1.5.28844\lib\ZedGraph.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CaculateUI\CaculateResultUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\CaculateResultUI.Designer.cs">
+      <DependentUpon>CaculateResultUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\FormCaculateArgView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormCaculateArgView.Designer.cs">
+      <DependentUpon>FormCaculateArgView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FileChooseControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\FileChooseControl.Designer.cs">
+      <DependentUpon>FileChooseControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\MainCaculateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\MainCaculateControl.Designer.cs">
+      <DependentUpon>MainCaculateControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormAttenuation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormAttenuation.Designer.cs">
+      <DependentUpon>RainstormAttenuation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormPencentControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormPencentControl.Designer.cs">
+      <DependentUpon>RainstormPencentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\RiverConfluenceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\RiverConfluenceControl.Designer.cs">
+      <DependentUpon>RiverConfluenceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormLossControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\RainstormLossControl.Designer.cs">
+      <DependentUpon>RainstormLossControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CaculateUI\SlopeConfluenceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CaculateUI\SlopeConfluenceControl.Designer.cs">
+      <DependentUpon>SlopeConfluenceControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CaculateUI\CaculateResultUI.resx">
+      <DependentUpon>CaculateResultUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormCaculateArgView.resx">
+      <DependentUpon>FormCaculateArgView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FileChooseControl.resx">
+      <DependentUpon>FileChooseControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\MainCaculateControl.resx">
+      <DependentUpon>MainCaculateControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\RainstormAttenuation.resx">
+      <DependentUpon>RainstormAttenuation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\RainstormPencentControl.resx">
+      <DependentUpon>RainstormPencentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\RiverConfluenceControl.resx">
+      <DependentUpon>RiverConfluenceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\RainstormLossControl.resx">
+      <DependentUpon>RainstormLossControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CaculateUI\SlopeConfluenceControl.resx">
+      <DependentUpon>SlopeConfluenceControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FloodPeakUtility\FloodPeakUtility.csproj">
+      <Project>{c2817366-26f7-4bca-88f5-caafba9e8a51}</Project>
+      <Name>FloodPeakUtility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)bin\Plugins\" /y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
