@@ -175,7 +175,14 @@ namespace FloodPeakUtility.UI
             Node pnode = advTreeMain.Nodes[1].Nodes.Find(pid, false).FirstOrDefault();
             if (pnode != null)
             {
+                //清除节点和集合信息
                 pnode.Nodes.Clear();
+                var clearModels = _projectModel.Nodes.Where(t => t.PNode == pid).ToArray();
+                if (clearModels != null)
+                    foreach (var item in clearModels)
+                    {
+                        SaveModel(item, 1);
+                    }
                 foreach (var item in models)
                 {
                     if (item != null)

@@ -123,14 +123,23 @@ namespace FloodPeakToolUI.UI
         /// 绑定数据源
         /// </summary>
         /// <param name="model"></param>
-        public void BindSource(PnlLeftControl model)
+        public void BindSource(PnlLeftControl model, string selectedName)
         {
             _model = model;
             _model.OnChanged += _model_OnChanged;
             cmbAll.DisplayMember = "NodeName";
             cmbAll.ValueMember = "Path";
             IniliazeCombox(model.ProjectModel);
-
+            //选中节点上存在的条件
+            foreach (var item in cmbAll.Items)
+            {
+                NodeModel temp = item as NodeModel;
+                if (temp.NodeName == selectedName)
+                {
+                    cmbAll.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void cmbAll_SelectedIndexChanged(object sender, EventArgs e)

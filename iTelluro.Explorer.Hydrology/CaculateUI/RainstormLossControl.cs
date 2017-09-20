@@ -118,9 +118,12 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             double[] result = e.Result as double[];
-            textBox1.Text = result[0].ToString();
-            textBox2.Text = result[1].ToString();
-            textBox3.Text = result[2].ToString();
+            if (result != null && result.Length > 3)
+            {
+                textBox1.Text = result[0].ToString();
+                textBox2.Text = result[1].ToString();
+                textBox3.Text = result[2].ToString();
+            }
            // progressBar1.Visible = false;
            // progressBar1.Value = 0;
 
@@ -136,7 +139,11 @@ namespace FloodPeakToolUI.UI
         {
             FormOutput.AppendLog("按范围裁剪栅格..");
             ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
-
+            if (File.Exists(outDemPath) == false)
+            {
+                FormOutput.AppendLog("裁剪失败！");
+                return;
+            }
             //读取裁剪后的栅格
             RasterReader raster = new RasterReader(outDemPath);
 
@@ -369,9 +376,11 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
-            //绑定数据源
-            fileChooseControl1.BindSource(Parent);
-            fileChooseControl2.BindSource(Parent);
+            //绑定数据源，显示查询条件
+            NodeModel[] nodes= Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
+            fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0)?nodes[0].NodeName:string.Empty);
+            fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
+
             //显示之前的结果
             _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "Rainstormloss.xml");
             if (File.Exists(_xmlPath))
@@ -384,6 +393,7 @@ namespace FloodPeakToolUI.UI
                     textBox3.Text = result.SubN == 0 ? "" : result.SubN.ToString();
                 }
             }
+            
             Parent.UIParent.Controls.Add(this);
         }
 

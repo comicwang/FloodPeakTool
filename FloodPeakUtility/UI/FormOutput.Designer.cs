@@ -53,7 +53,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormOutput";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "输出";
             this.ResumeLayout(false);
             this.PerformLayout();

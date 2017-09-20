@@ -37,7 +37,7 @@ namespace FloodPeakUtility.UI
             if (_form == null ||_form.IsDisposed)
             {
                 _form = new FormOutput();
-                _form.StartPosition = FormStartPosition.CenterParent;
+                _form.StartPosition = FormStartPosition.CenterScreen;
             }
             if (_form.InvokeRequired)
             {
@@ -46,6 +46,7 @@ namespace FloodPeakUtility.UI
                         _form.BindConsole();
                         _form.Show();
                         _form.WindowState = FormWindowState.Normal;
+                        _form.StartPosition = FormStartPosition.CenterScreen;
                         _form.Activate();
                     }));
             }
@@ -54,6 +55,7 @@ namespace FloodPeakUtility.UI
                 _form.BindConsole();
                 _form.Show();
                 _form.WindowState = FormWindowState.Normal;
+                _form.StartPosition = FormStartPosition.CenterScreen;
                 _form.Activate();
             }
             MyConsole.AppendLine(content);
