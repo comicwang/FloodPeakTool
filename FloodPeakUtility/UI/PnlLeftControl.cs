@@ -223,6 +223,9 @@ namespace FloodPeakUtility.UI
             {
                 _isNew = false;
                 _projectModel = XmlHelper.Deserialize<ProjectModel>(_xmlPath);
+                //防止文件夹被移动之后失效，需要时时更新路径
+                _projectModel.ProjectPath = _projectPath;
+                XmlHelper.Serialize<ProjectModel>(_projectModel, _xmlPath);
             }
             //不存在创建基本项目信息
             else

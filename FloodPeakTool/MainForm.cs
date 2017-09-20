@@ -214,6 +214,8 @@ namespace FloodPeakTool
                     }
                     Pnl_Main_Left.Show();
                     _pnlLeft.InitialzeProject(_FullPath);
+                    //设置标题
+                    this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
                     btnImportDom.Enabled = true;
                     btnImportShp.Enabled = true;
                 }
@@ -280,6 +282,8 @@ namespace FloodPeakTool
                     }
                     Pnl_Main_Left.Show();
                     _pnlLeft.InitialzeProject(_FullPath);
+                    //设置标题
+                    this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
                     btnImportDom.Enabled = true;
                     btnImportShp.Enabled = true;
                 }
