@@ -36,7 +36,7 @@ namespace FloodPeakToolUI.UI
         {
             if (!backgroundWorker1.IsBusy)
             {
-                MyConsole.AppendLine("开始计算...");
+                FormOutput.AppendLog("开始计算...");
                 //保存计算参数
                 List<NodeModel> result = new List<NodeModel>();
                 NodeModel model = fileChooseControl1.SelectedValue;
@@ -63,12 +63,12 @@ namespace FloodPeakToolUI.UI
                 string tifPath = fileChooseControl1.FilePath;//影像路径
                 string mainShp = fileChooseControl3.FilePath; //主河槽shp
                 string argShp = fileChooseControl2.FilePath;//流速系数
-                progressBar1.Visible = true;
+                //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync(new string[] { mainShp, tifPath, argShp });
             }
             else
             {
-                MyConsole.AppendLine("当前后台正在计算...");
+                FormOutput.AppendLog("当前后台正在计算...");
             }
         }
 
@@ -95,25 +95,25 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];
-            MyConsole.AppendLine("开始计算主河道长度...");
+            FormOutput.AppendLog("开始计算主河道长度...");
             double riverlength = FlowLength(args[0]);
-            MyConsole.AppendLine("主河道长度：" + riverlength.ToString("f3"));
+            FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
 
-            MyConsole.AppendLine("开始计算主河纵降比...");
+            FormOutput.AppendLog("开始计算主河纵降比...");
             double j = CalRiverLonGradient(args[0]);
-            MyConsole.AppendLine("主河道纵降比：" + j.ToString("f3"));
+            FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
 
-            MyConsole.AppendLine("开始计算河槽流域系数...");
+            FormOutput.AppendLog("开始计算河槽流域系数...");
             string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM.tif");
             double r = FlowVelocity(args[2], args[1], outDemPath);
-            MyConsole.AppendLine("河槽流速系数：" + r.ToString("f3"));
+            FormOutput.AppendLog("河槽流速系数：" + r.ToString("f3"));
 
             e.Result = new double[] { riverlength, j, r };
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -122,8 +122,8 @@ namespace FloodPeakToolUI.UI
             textBox1.Text = result[0].ToString();
             textBox2.Text = result[1].ToString();
             textBox3.Text = result[2].ToString();
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
+           // progressBar1.Visible = false;
+           // progressBar1.Value = 0;
 
         }
 
@@ -298,7 +298,7 @@ namespace FloodPeakToolUI.UI
             _parent = Parent;
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
-            textBox4.BindConsole();
+            //textBox4.BindConsole();
             //绑定数据源
             fileChooseControl1.BindSource(Parent);
             fileChooseControl2.BindSource(Parent);
@@ -307,7 +307,7 @@ namespace FloodPeakToolUI.UI
             _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "RiverConfluence.xml");
             if (File.Exists(_xmlPath))
             {
-                HCHLResult result = XmlHelp.Deserialize<HCHLResult>(_xmlPath);
+                HCHLResult result = XmlHelper.Deserialize<HCHLResult>(_xmlPath);
                 if (result != null)
                 {
                     textBox1.Text = result.L1 == 0 ? "" : result.L1.ToString();
@@ -329,7 +329,7 @@ namespace FloodPeakToolUI.UI
                 l1 = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
                 A1 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
-            XmlHelp.Serialize<HCHLResult>(result, _xmlPath);
+            XmlHelper.Serialize<HCHLResult>(result, _xmlPath);
         }
 
     }

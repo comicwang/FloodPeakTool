@@ -54,10 +54,10 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.advTreeMain);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(222, 257);
+            this.groupBox1.Size = new System.Drawing.Size(222, 359);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "工程树";
@@ -79,7 +79,7 @@
             this.advTreeMain.NodesConnector = this.nodeConnector1;
             this.advTreeMain.NodeStyle = this.elementStyle1;
             this.advTreeMain.PathSeparator = ";";
-            this.advTreeMain.Size = new System.Drawing.Size(216, 237);
+            this.advTreeMain.Size = new System.Drawing.Size(216, 339);
             this.advTreeMain.Styles.Add(this.elementStyle1);
             this.advTreeMain.TabIndex = 0;
             this.advTreeMain.Text = "advTree1";
@@ -113,10 +113,10 @@
             // 
             // grpCaculate
             // 
-            this.grpCaculate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpCaculate.Location = new System.Drawing.Point(0, 257);
+            this.grpCaculate.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.grpCaculate.Location = new System.Drawing.Point(0, 359);
             this.grpCaculate.Name = "grpCaculate";
-            this.grpCaculate.Size = new System.Drawing.Size(222, 352);
+            this.grpCaculate.Size = new System.Drawing.Size(222, 250);
             this.grpCaculate.TabIndex = 1;
             this.grpCaculate.TabStop = false;
             this.grpCaculate.Text = "模块名称";
@@ -182,8 +182,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.grpCaculate);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.grpCaculate);
             this.Name = "PnlLeftControl";
             this.Size = new System.Drawing.Size(222, 609);
             this.groupBox1.ResumeLayout(false);

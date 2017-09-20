@@ -132,7 +132,7 @@
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 60);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1184, 681);
+            this.panelMain.Size = new System.Drawing.Size(1184, 673);
             this.panelMain.TabIndex = 8;
             // 
             // PlnMainPlug
@@ -141,7 +141,7 @@
             this.PlnMainPlug.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PlnMainPlug.Location = new System.Drawing.Point(240, 42);
             this.PlnMainPlug.Name = "PlnMainPlug";
-            this.PlnMainPlug.Size = new System.Drawing.Size(944, 639);
+            this.PlnMainPlug.Size = new System.Drawing.Size(944, 631);
             this.PlnMainPlug.TabIndex = 2;
             // 
             // tabControl1
@@ -151,7 +151,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(944, 639);
+            this.tabControl1.Size = new System.Drawing.Size(944, 631);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -161,7 +161,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(936, 613);
+            this.tabPage1.Size = new System.Drawing.Size(936, 605);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "三维视图";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -172,7 +172,7 @@
             this.ShowPLG.Location = new System.Drawing.Point(3, 3);
             this.ShowPLG.Margin = new System.Windows.Forms.Padding(0);
             this.ShowPLG.Name = "ShowPLG";
-            this.ShowPLG.Size = new System.Drawing.Size(930, 607);
+            this.ShowPLG.Size = new System.Drawing.Size(930, 599);
             this.ShowPLG.TabIndex = 0;
             // 
             // Pnl_Main_Left
@@ -180,7 +180,7 @@
             this.Pnl_Main_Left.Dock = System.Windows.Forms.DockStyle.Left;
             this.Pnl_Main_Left.Location = new System.Drawing.Point(0, 42);
             this.Pnl_Main_Left.Name = "Pnl_Main_Left";
-            this.Pnl_Main_Left.Size = new System.Drawing.Size(240, 639);
+            this.Pnl_Main_Left.Size = new System.Drawing.Size(240, 631);
             this.Pnl_Main_Left.TabIndex = 1;
             this.Pnl_Main_Left.Visible = false;
             // 
@@ -429,7 +429,7 @@
             // 
             this.dockSite4.AccessibleRole = System.Windows.Forms.AccessibleRole.Window;
             this.dockSite4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dockSite4.Location = new System.Drawing.Point(0, 741);
+            this.dockSite4.Location = new System.Drawing.Point(0, 733);
             this.dockSite4.Name = "dockSite4";
             this.dockSite4.Size = new System.Drawing.Size(1184, 0);
             this.dockSite4.TabIndex = 12;
@@ -441,7 +441,7 @@
             this.dockSite1.Dock = System.Windows.Forms.DockStyle.Left;
             this.dockSite1.Location = new System.Drawing.Point(0, 0);
             this.dockSite1.Name = "dockSite1";
-            this.dockSite1.Size = new System.Drawing.Size(0, 741);
+            this.dockSite1.Size = new System.Drawing.Size(0, 733);
             this.dockSite1.TabIndex = 9;
             this.dockSite1.TabStop = false;
             // 
@@ -451,7 +451,7 @@
             this.dockSite2.Dock = System.Windows.Forms.DockStyle.Right;
             this.dockSite2.Location = new System.Drawing.Point(1184, 0);
             this.dockSite2.Name = "dockSite2";
-            this.dockSite2.Size = new System.Drawing.Size(0, 741);
+            this.dockSite2.Size = new System.Drawing.Size(0, 733);
             this.dockSite2.TabIndex = 10;
             this.dockSite2.TabStop = false;
             // 
@@ -470,7 +470,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1184, 741);
+            this.ClientSize = new System.Drawing.Size(1184, 733);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.dockSite1);

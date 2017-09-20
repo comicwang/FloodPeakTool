@@ -136,6 +136,8 @@ namespace FloodPeakUtility.UI
         /// <param name="projectPath">项目路径</param>
         public void InitialzeProject(string projectPath)
         {
+            //绑定日志
+            LogHelper.BindLog(projectPath);
             _isIni = true;
             _projectPath = projectPath;
             InitializeConfig();
@@ -152,7 +154,7 @@ namespace FloodPeakUtility.UI
             //保存
             if(save)
             {
-                XmlHelp.Serialize<ProjectModel>(_projectModel, _xmlPath);
+                XmlHelper.Serialize<ProjectModel>(_projectModel, _xmlPath);
                 IsChanged = false;
             }
             //删除
@@ -213,7 +215,7 @@ namespace FloodPeakUtility.UI
             if (File.Exists(_xmlPath))
             {
                 _isNew = false;
-                _projectModel = XmlHelp.Deserialize<ProjectModel>(_xmlPath);
+                _projectModel = XmlHelper.Deserialize<ProjectModel>(_xmlPath);
             }
             //不存在创建基本项目信息
             else
@@ -580,7 +582,7 @@ namespace FloodPeakUtility.UI
                 string path = Path.Combine(Path.GetDirectoryName(_projectPath), checkNode.Text + ".xml");
                 if (File.Exists(path) == false)
                     return;
-                DomLayerInfo lyrInfo = XmlHelp.Deserialize<DomLayerInfo>(path);
+                DomLayerInfo lyrInfo = XmlHelper.Deserialize<DomLayerInfo>(path);
                 if (lyrInfo == null)
                     return;
                 //加载影像图层
@@ -679,7 +681,7 @@ namespace FloodPeakUtility.UI
             DomLayerInfo lyrInfo = objs[0] as DomLayerInfo;           
             //保存切片信息
             string path = Path.Combine(Path.GetDirectoryName(_projectPath), lyrInfo.LyrName + ".xml");
-            XmlHelp.Serialize<DomLayerInfo>(lyrInfo, path);
+            XmlHelper.Serialize<DomLayerInfo>(lyrInfo, path);
             //显示CheckBox
             Node node = objs[1] as Node;
             node.CheckBoxVisible = true;

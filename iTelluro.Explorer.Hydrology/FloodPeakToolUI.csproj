@@ -38,9 +38,15 @@
     <Reference Include="DevComponents.TreeGX">
       <HintPath>..\..\..\iTelluro.Explorer.Demo\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.TreeGX.dll</HintPath>
     </Reference>
+    <Reference Include="FuncforHFLL">
+      <HintPath>..\packages\lib\FuncforHFLL.dll</HintPath>
+    </Reference>
     <Reference Include="gdal_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="iTelluro.DataTools.Utility, Version=1.0.6449.37223, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -117,6 +123,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\bin\microsoft.directx.direct3d.dll</HintPath>
     </Reference>
+    <Reference Include="MWArray, Version=2.13.0.0, Culture=neutral, PublicKeyToken=e1d84a0da19db86f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\MWArray\2.13.0.0__e1d84a0da19db86f\MWArray.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\lib\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\packages\lib\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\packages\lib\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\packages\lib\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="ogr_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\ogr_csharp.dll</HintPath>
@@ -136,6 +158,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -148,10 +174,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CaculateUI\CaculateResultUI.cs">
+    <Compile Include="UI\CaculatePercentUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CaculateUI\CaculateResultUI.Designer.cs">
+    <Compile Include="UI\CaculatePercentUI.Designer.cs">
+      <DependentUpon>CaculatePercentUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CaculateResultUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CaculateResultUI.Designer.cs">
       <DependentUpon>CaculateResultUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,7 +237,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CaculateUI\CaculateResultUI.resx">
+    <EmbeddedResource Include="UI\CaculatePercentUI.resx">
+      <DependentUpon>CaculatePercentUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CaculateResultUI.resx">
       <DependentUpon>CaculateResultUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormCaculateArgView.resx">

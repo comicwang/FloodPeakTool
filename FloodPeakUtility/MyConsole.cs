@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -39,6 +40,9 @@ namespace FloodPeakUtility
                 _textBox.Invoke(new Action<string>((t) => { _textBox.AppendText(t + Environment.NewLine + Environment.NewLine); }), content);
             else
                 _textBox.AppendText(content + Environment.NewLine + Environment.NewLine);
+
+            //记录日志到文件中
+            LogHelper.LogInfo(content, true);
         }
     }
 }

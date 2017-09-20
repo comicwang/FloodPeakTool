@@ -20,6 +20,8 @@ using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
 using iTelluro.GlobeEngine.Mathematics;
 using iTelluro.GlobeEngine.Graphics3D;
+using System.Collections;
+using FuncforHFLL;
 
 namespace FloodPeakToolUI.UI
 {
@@ -32,40 +34,102 @@ namespace FloodPeakToolUI.UI
         public RainstormAttenuationControl()
         {
             InitializeComponent();
+            InitializeCombox();
+        }
+
+        private void InitializeCombox()
+        {
+            List<SimpleModel> dataSource = new List<SimpleModel>()
+            {
+                new SimpleModel(){ Display="10分钟频率统计",Value="MAX_10_MIN"},
+                new SimpleModel(){Display="30分钟频率统计",Value="MAX_30_MIN"},
+                new SimpleModel(){Display="1小时频率统计" ,Value="[MAX _1_HOUR]"},
+                new SimpleModel(){Display="3小时频率统计" ,Value="[MAX _3_HOUR]"},
+                new SimpleModel(){Display="6小时频率统计" ,Value="[MAX _6_HOUR]"},
+                new SimpleModel(){Display="12小时频率统计",Value="[MAX _12_HOUR]"},
+                new SimpleModel(){Display="48小时频率统计",Value="[MAX _48_HOUR]"},
+                new SimpleModel(){Display="72小时频率统计",Value="[MAX _72_HOUR]"},
+                new SimpleModel(){Display="1天频率统计"   ,Value="MAX_1_DAY"},
+                new SimpleModel(){Display="3天频率统计"   ,Value="MAX_3_DAY"},
+                new SimpleModel(){Display="5天频率统计"   ,Value="MAX_5_DAY"},
+                new SimpleModel(){Display="7天频率统计"   ,Value="MAX_7_DAY"},
+                new SimpleModel(){Display="15天频率统计"  ,Value="MAX_15_DAY"},
+                new SimpleModel(){Display="30天频率统计"  ,Value="MAX_30_DAY"}
+            };
+
+            cmbPercent.DataSource = dataSource;
+            cmbPercent.DisplayMember = "Display";
+            cmbPercent.ValueMember = "Value";
+            cmbPercent.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (!backgroundWorker1.IsBusy)
             {
-                MyConsole.AppendLine("开始计算...");
-      
-                progressBar1.Visible = true;
-                backgroundWorker1.RunWorkerAsync();
+                FormOutput.AppendLog("开始计算...");
+
+                //progressBar1.Visible = true;
+                string state = txtState.Text;
+                string percent = cmbPercent.SelectedValue.ToString();
+                backgroundWorker1.RunWorkerAsync(new string[] { state, percent });
             }
             else
             {
-                MyConsole.AppendLine("当前后台正在计算...");
+                FormOutput.AppendLog("当前后台正在计算...");
             }
         }
 
-        #region 计算暴雨损失系数
+        #region 计算暴雨频率
 
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            string[] args = e.Argument as string[];  //state-percent
+            FormOutput.AppendLog("读取数据库某个站点某个统计频率的年统计最大值...");
+            //读取数据库某个站点某个统计频率的年统计最大值
+            string commandText = string.Format("select {0} from RAINFALL_YEAR_MAX where MONITORNUM='{1}' order by {0} desc", args[1], args[0]);
+            DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnSting(), CommandType.Text, commandText);
+            //整理数据
+            List<PercentStaticsModel> lstStatics = new List<PercentStaticsModel>();
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                PercentStaticsModel temp = new PercentStaticsModel()
+                {
+                    RowIndex = i + 1,
+                    MaxValue = Convert.ToDecimal(ds.Tables[0].Rows[i][0]),
+                    CArg =((decimal)(i + 1))/ ds.Tables[0].Rows.Count
+                };
+                lstStatics.Add(temp);
+            }
+            //统计值的数量为ds.Tables[0].Rows.Count个
+            string filePath = Path.Combine(Application.StartupPath, "SStatic.xls");
+            if(File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            //保存数据到xls
+            XmlHelper.SaveDataToExcelFile<PercentStaticsModel>(lstStatics, filePath);
+
+            //开始计算水文频率曲线
+            Class1 C = new Class1();
+            e.Result = (double[,])C.miaodian().ToArray();
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
-
+           // progressBar1.Visible = false;
+           // progressBar1.Value = 0;
+            double[,] result = e.Result as double[,];
+            CaculatePercentUI resutUI = new CaculatePercentUI();
+            resutUI.Dock = DockStyle.Fill;
+            resutUI.BindResult(result);
+            _parent.ShowDock("水文频率计算与曲线配线", resutUI);
         }
 
         #endregion
@@ -107,22 +171,15 @@ namespace FloodPeakToolUI.UI
             _parent = Parent;
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
-            textBox4.BindConsole();
+            //textBox4.BindConsole();
             Parent.UIParent.Controls.Add(this);
         }
 
         #endregion
 
-        private void button2_Click(object sender, EventArgs e)
+        private void txtState_TextChanged(object sender, EventArgs e)
         {
-            //获取结果值
-            //BYPLResult result = new BYPLResult()
-            //{
-            //    AreaR = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-            //    LossR = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-            //    SubN = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
-            //};
-            //XmlHelp.Serialize<BYPLResult>(result, _xmlPath);
+            btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);
         }
 
     }

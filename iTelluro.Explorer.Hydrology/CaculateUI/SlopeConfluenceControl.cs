@@ -36,7 +36,7 @@ namespace FloodPeakToolUI.UI
         {
             if (!backgroundWorker1.IsBusy)
             {
-                MyConsole.AppendLine("开始计算...");
+                FormOutput.AppendLog("开始计算...");
                 //保存计算参数
                 List<NodeModel> result = new List<NodeModel>();
                 NodeModel model = fileChooseControl1.SelectedValue;
@@ -63,12 +63,12 @@ namespace FloodPeakToolUI.UI
                 string tifPath = fileChooseControl1.FilePath;//影像路径
                 string mainShp = fileChooseControl3.FilePath; //主河槽shp
                 string argShp = fileChooseControl2.FilePath;//流速系数
-                progressBar1.Visible = true;
+                //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync(new string[] { mainShp, tifPath, argShp });
             }
             else
             {
-                MyConsole.AppendLine("当前后台正在计算...");
+                FormOutput.AppendLog("当前后台正在计算...");
             }
         }
 
@@ -98,21 +98,21 @@ namespace FloodPeakToolUI.UI
             RasterReader reader = new RasterReader(args[1]);
             double avgLength = 0;
             double avgSlope = 0;
-            MyConsole.AppendLine("开始计算线的交点...");
+            FormOutput.AppendLog("开始计算线的交点...");
             List<Point3d> pts = CalPoints(args[0]);
-            MyConsole.AppendLine("开始计算平均坡度和坡长...");
+            FormOutput.AppendLog("开始计算平均坡度和坡长...");
             CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
-            MyConsole.AppendLine("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
-            MyConsole.AppendLine("开始坡面流速系数...");
+            FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
+            FormOutput.AppendLog("开始坡面流速系数...");
             string outDemPath = Path.Combine(_parent.ProjectModel.ProjectPath, "WDEM.tif");
             double r = FlowVelocity(args[2], args[1], outDemPath);
-            MyConsole.AppendLine("结果--坡面流速系数为：" + r.ToString());
+            FormOutput.AppendLog("结果--坡面流速系数为：" + r.ToString());
             e.Result = new double[] { avgLength, avgSlope,r };
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -121,8 +121,8 @@ namespace FloodPeakToolUI.UI
             textBox1.Text = result[0].ToString();
             textBox2.Text = result[1].ToString();
             textBox3.Text = result[2].ToString();
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
+            //progressBar1.Visible = false;
+            //progressBar1.Value = 0;
 
         }
 
@@ -507,7 +507,7 @@ namespace FloodPeakToolUI.UI
             _parent = Parent;
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
-            textBox4.BindConsole();
+            //textBox4.BindConsole();
             //绑定数据源
             fileChooseControl1.BindSource(Parent);
             fileChooseControl2.BindSource(Parent);
@@ -516,7 +516,7 @@ namespace FloodPeakToolUI.UI
             _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "SlopeConfluence.xml");
             if (File.Exists(_xmlPath))
             {
-                PMHLResult result = XmlHelp.Deserialize<PMHLResult>(_xmlPath);
+                PMHLResult result = XmlHelper.Deserialize<PMHLResult>(_xmlPath);
                 if(result!=null)
                 {
                     textBox1.Text = result.L2 == 0 ? "" : result.L2.ToString();
@@ -539,7 +539,7 @@ namespace FloodPeakToolUI.UI
                 A2 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
             //保存结果
-            XmlHelp.Serialize<PMHLResult>(result, _xmlPath);
+            XmlHelper.Serialize<PMHLResult>(result, _xmlPath);
         }
 
     }

@@ -27,6 +27,7 @@ namespace FloodPeakUtility
         public static void ShowError(string msg)
         {
             MessageBox.Show(msg, "错误消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            LogHelper.LogErro(msg);
         }
 
         /// <summary>

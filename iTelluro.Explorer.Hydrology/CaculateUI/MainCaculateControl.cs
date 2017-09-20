@@ -38,14 +38,14 @@ namespace FloodPeakToolUI.UI
         {
             if (!backgroundWorker1.IsBusy)
             {
-                MyConsole.AppendLine("开始计算...");
+                FormOutput.AppendLog("开始计算...");
       
-                progressBar1.Visible = true;
+                //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync();
             }
             else
             {
-                MyConsole.AppendLine("当前后台正在计算...");
+                FormOutput.AppendLog("当前后台正在计算...");
             }
         }
 
@@ -58,13 +58,13 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
+            //progressBar1.Visible = false;
+            //progressBar1.Value = 0;
             CaculateResultUI resutUI = new CaculateResultUI();
             resutUI.Dock = DockStyle.Fill;
             _parent.ShowDock("洪峰流量统计结果", resutUI);
@@ -109,7 +109,7 @@ namespace FloodPeakToolUI.UI
             _parent = Parent;
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
-            textBox4.BindConsole();
+            //textBox4.BindConsole();
             Parent.UIParent.Controls.Add(this);
         }
 

@@ -38,7 +38,7 @@ namespace FloodPeakToolUI.UI
         {
             if (!backgroundWorker1.IsBusy)
             {
-                MyConsole.AppendLine("开始计算...");
+                FormOutput.AppendLog("开始计算...");
                 //保存计算参数
                 List<NodeModel> result = new List<NodeModel>();
                 NodeModel model = fileChooseControl1.SelectedValue;
@@ -58,12 +58,12 @@ namespace FloodPeakToolUI.UI
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
                 string argShp = fileChooseControl2.FilePath;//流速系数
-                progressBar1.Visible = true;
+                //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync(new string[] {tifPath, argShp });
             }
             else
             {
-                MyConsole.AppendLine("当前后台正在计算...");
+                FormOutput.AppendLog("当前后台正在计算...");
             }
         }
 
@@ -112,7 +112,7 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar1.Value = e.ProgressPercentage;
+            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -121,8 +121,8 @@ namespace FloodPeakToolUI.UI
             textBox1.Text = result[0].ToString();
             textBox2.Text = result[1].ToString();
             textBox3.Text = result[2].ToString();
-            progressBar1.Visible = false;
-            progressBar1.Value = 0;
+           // progressBar1.Visible = false;
+           // progressBar1.Value = 0;
 
         }
 
@@ -134,7 +134,7 @@ namespace FloodPeakToolUI.UI
         /// <param name="outDemPath"></param>
         public void RainLoss(string shppath, string inputDemPath, string outDemPath, List<Point2d> pointlist, ref DoWorkEventArgs e)
         {
-            MyConsole.AppendLine("按范围裁剪栅格..");
+            FormOutput.AppendLog("按范围裁剪栅格..");
             ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
 
             //读取裁剪后的栅格
@@ -161,12 +161,12 @@ namespace FloodPeakToolUI.UI
                 totalcount += s.count;
             }
             double F = 0;
-            MyConsole.AppendLine("开始计算流域面积..");
+            FormOutput.AppendLog("开始计算流域面积..");
             WatershedArea(pointlist, inputDemPath, ref F);
-            MyConsole.AppendLine("开始计算损失指数,折减系数..");
+            FormOutput.AppendLog("开始计算损失指数,折减系数..");
             double R = total / totalcount;//损失指数
             double N = 1 / (1 + 0.016 * F * 0.6);//折减系数
-            MyConsole.AppendLine("流域面积:" + F.ToString("f3") + "损失指数：" + R.ToString("f3") + "；折减系数：" + N.ToString("f3"));
+            FormOutput.AppendLog("流域面积:" + F.ToString("f3") + "损失指数：" + R.ToString("f3") + "；折减系数：" + N.ToString("f3"));
             e.Result = new double[] { F, R, N };
         }
 
@@ -368,7 +368,7 @@ namespace FloodPeakToolUI.UI
             _parent = Parent;
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
-            textBox4.BindConsole();
+            //textBox4.BindConsole();
             //绑定数据源
             fileChooseControl1.BindSource(Parent);
             fileChooseControl2.BindSource(Parent);
@@ -376,7 +376,7 @@ namespace FloodPeakToolUI.UI
             _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "Rainstormloss.xml");
             if (File.Exists(_xmlPath))
             {
-                BYSSResult result = XmlHelp.Deserialize<BYSSResult>(_xmlPath);
+                BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
                 if (result != null)
                 {
                     textBox1.Text = result.AreaR == 0 ? "" : result.AreaR.ToString();
@@ -398,7 +398,7 @@ namespace FloodPeakToolUI.UI
                 LossR = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
                 SubN = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
-            XmlHelp.Serialize<BYSSResult>(result, _xmlPath);
+            XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
         }
 
     }
