@@ -79,10 +79,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigNames.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="ICaculateMemo.cs" />
     <Compile Include="LayerLoader.cs" />
     <Compile Include="LogHelper.cs" />
+    <Compile Include="Model\BYSJResult.cs" />
     <Compile Include="Model\BYSSResult.cs" />
     <Compile Include="Model\CaculateEventArgs.cs" />
     <Compile Include="Model\HCHLResult.cs" />

@@ -382,7 +382,7 @@ namespace FloodPeakToolUI.UI
             fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
 
             //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "Rainstormloss.xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss + ".xml");
             if (File.Exists(_xmlPath))
             {
                 BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
@@ -409,6 +409,7 @@ namespace FloodPeakToolUI.UI
                 SubN = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
             XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
     }

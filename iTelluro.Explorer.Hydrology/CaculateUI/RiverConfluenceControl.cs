@@ -299,13 +299,15 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
+
             //绑定数据源
             NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.HCHL).ToArray();
             fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
             fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[1].NodeName : string.Empty);
             fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[2].NodeName : string.Empty);
+
             //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "RiverConfluence.xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RiverConfluence + ".xml");
             if (File.Exists(_xmlPath))
             {
                 HCHLResult result = XmlHelper.Deserialize<HCHLResult>(_xmlPath);
@@ -331,6 +333,7 @@ namespace FloodPeakToolUI.UI
                 A1 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
             XmlHelper.Serialize<HCHLResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
     }

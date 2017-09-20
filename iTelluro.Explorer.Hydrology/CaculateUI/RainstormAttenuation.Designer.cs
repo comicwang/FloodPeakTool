@@ -30,12 +30,12 @@
         {
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.cmbLevel = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnCaculate = new System.Windows.Forms.Button();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.txtd = new System.Windows.Forms.TextBox();
+            this.txtnd = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.txtSd = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -69,15 +69,16 @@
             this.cmbLevel.Size = new System.Drawing.Size(121, 20);
             this.cmbLevel.TabIndex = 21;
             // 
-            // button2
+            // btnSave
             // 
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(145, 182);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(82, 41);
-            this.button2.TabIndex = 19;
-            this.button2.Text = "保存结果";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Location = new System.Drawing.Point(145, 182);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(82, 41);
+            this.btnSave.TabIndex = 19;
+            this.btnSave.Text = "保存结果";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCaculate
             // 
@@ -91,19 +92,19 @@
             this.btnCaculate.UseVisualStyleBackColor = true;
             this.btnCaculate.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox7
+            // txtd
             // 
-            this.textBox7.Location = new System.Drawing.Point(106, 144);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(122, 21);
-            this.textBox7.TabIndex = 13;
+            this.txtd.Location = new System.Drawing.Point(106, 144);
+            this.txtd.Name = "txtd";
+            this.txtd.Size = new System.Drawing.Size(122, 21);
+            this.txtd.TabIndex = 13;
             // 
-            // textBox6
+            // txtnd
             // 
-            this.textBox6.Location = new System.Drawing.Point(106, 120);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(122, 21);
-            this.textBox6.TabIndex = 17;
+            this.txtnd.Location = new System.Drawing.Point(106, 120);
+            this.txtnd.Name = "txtnd";
+            this.txtnd.Size = new System.Drawing.Size(122, 21);
+            this.txtnd.TabIndex = 17;
             // 
             // label7
             // 
@@ -115,12 +116,12 @@
             this.label7.TabIndex = 10;
             this.label7.Text = "衰减时间参数d";
             // 
-            // textBox5
+            // txtSd
             // 
-            this.textBox5.Location = new System.Drawing.Point(107, 96);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(121, 21);
-            this.textBox5.TabIndex = 12;
+            this.txtSd.Location = new System.Drawing.Point(107, 96);
+            this.txtSd.Name = "txtSd";
+            this.txtSd.Size = new System.Drawing.Size(121, 21);
+            this.txtSd.TabIndex = 12;
             // 
             // label6
             // 
@@ -204,12 +205,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.cmbLevel);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCaculate);
-            this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.txtd);
+            this.Controls.Add(this.txtnd);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.txtSd);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
@@ -230,12 +231,12 @@
 
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ComboBox cmbLevel;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCaculate;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox txtd;
+        private System.Windows.Forms.TextBox txtnd;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox txtSd;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label5;

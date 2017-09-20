@@ -508,13 +508,15 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
+
             //绑定数据源
             NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.PMHL).ToArray();
             fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
             fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[1].NodeName : string.Empty);
             fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[2].NodeName : string.Empty);
+
             //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), "SlopeConfluence.xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.SlopeConfluence + ".xml");
             if (File.Exists(_xmlPath))
             {
                 PMHLResult result = XmlHelper.Deserialize<PMHLResult>(_xmlPath);
@@ -541,6 +543,7 @@ namespace FloodPeakToolUI.UI
             };
             //保存结果
             XmlHelper.Serialize<PMHLResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
     }

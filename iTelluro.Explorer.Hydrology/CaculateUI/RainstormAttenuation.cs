@@ -116,26 +116,42 @@ namespace FloodPeakToolUI.UI
             //textBox4.BindConsole();
             //默认选中剧烈程度第一行
             cmbLevel.SelectedIndex = 0;
+            //显示之前的结果
+
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormSub + ".xml");
+            if (File.Exists(_xmlPath))
+            {
+                BYSJResult result = XmlHelper.Deserialize<BYSJResult>(_xmlPath);
+                if (result != null)
+                {
+                    txtSd.Text = result.Sd == 0 ? "" : result.Sd.ToString();
+                    txtnd.Text = result.nd == 0 ? "" : result.nd.ToString();
+                    txtd.Text = result.d == 0 ? "" : result.d.ToString();
+                }
+            }
+            
+
             Parent.UIParent.Controls.Add(this);
         }
 
         #endregion
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //获取结果值
-            //BYSJResult result = new BYSJResult()
-            //{
-            //    AreaR = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-            //    LossR = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-            //    SubN = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
-            //};
-            //XmlHelp.Serialize<BYSJResult>(result, _xmlPath);
-        }
-
         private void txtState_TextChanged(object sender, EventArgs e)
         {
             btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            //保存获取结果值
+            BYSJResult result = new BYSJResult()
+            {
+                Sd = string.IsNullOrEmpty(txtSd.Text) ? 0 : Convert.ToDouble(txtSd.Text),
+                nd = string.IsNullOrEmpty(txtnd.Text) ? 0 : Convert.ToDouble(txtnd.Text),
+                d = string.IsNullOrEmpty(txtd.Text) ? 0 : Convert.ToDouble(txtd.Text)
+            };
+            XmlHelper.Serialize<BYSJResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
     }

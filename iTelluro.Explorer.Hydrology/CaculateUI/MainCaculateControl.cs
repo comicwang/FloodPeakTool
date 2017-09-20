@@ -117,8 +117,12 @@ namespace FloodPeakToolUI.UI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            FormCaculateArgView form = new FormCaculateArgView();
-            form.ShowDialog();
+            string projectForld = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+            FormCaculateArgView form = new FormCaculateArgView(projectForld);
+            if (DialogResult.OK == form.ShowDialog())
+            {
+                MsgBox.ShowInfo("保存成功！");
+            }
         }
 
     }
