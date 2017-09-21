@@ -17,6 +17,10 @@ using iTelluro.Explorer.DOMImport.Model;
 using FloodPeakUtility;
 using iTelluro.GlobeEngine.DataSource.Layer;
 using iTelluro.Explorer.DOMImport.Utility;
+using iTelluro.Explorer.VectorLoader.Utility;
+using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
+using iTelluro.Explorer.VectorLoader.ShpSymbolConfig;
+using iTelluro.Explorer.Vector;
 
 namespace FloodPeakUtility.UI
 {
@@ -45,6 +49,8 @@ namespace FloodPeakUtility.UI
         private ProjectModel _projectModel = null;
         //切片
         private DomLoader _domLoader = null;
+        //shp文件加载
+        private ShpLayerLoader _shpLoader = null;
 
         #endregion
 
@@ -117,6 +123,9 @@ namespace FloodPeakUtility.UI
         {
             _globeView = app;
             _domLoader = new DomLoader(app);
+            _shpLoader = new ShpLayerLoader(app);
+            //加载所有配置文件的shp图层信息
+            _shpLoader.LoadConfigShpLayers();
         }
 
         public PnlLeftControl(GlobeView globeView, TabControl tabControl)
@@ -420,6 +429,76 @@ namespace FloodPeakUtility.UI
             IsChanged = true;
         }
 
+        /// <summary>
+        /// 获取globeview的DataLayers和FloatLayers中已经存在的图层名称
+        /// </summary>
+        /// <returns></returns>
+        private List<string> GetExistLayerNames()
+        {
+            List<string> names = new List<string>();
+            foreach (DataLayer lyr in _globeView.GlobeLayers.DataLayers)
+            {
+                names.Add(lyr.Name);
+            }
+            foreach (FloatLayer lyr in _globeView.GlobeLayers.FloatLayers)
+            {
+                names.Add(lyr.Name);
+            }
+            return names;
+        }
+
+        /// <summary>
+        /// 根据图层名获取抽象图层
+        /// </summary>
+        /// <param name="lyrName">图层名</param>
+        /// <returns>AbstractLayer对象</returns>
+        private AbstractLayer GetLayerByName(string lyrName)
+        {
+            foreach (AbstractLayer lyr in _globeView.GlobeLayers.DataLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    return lyr;
+                }
+            }
+            foreach (AbstractLayer lyr in _globeView.GlobeLayers.FloatLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    return lyr;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据图层名称来定位图层
+        /// </summary>
+        /// <param name="lyrName"></param>
+        private void LocLyrByName(string lyrName)
+        {
+            foreach (DataLayer lyr in _globeView.GlobeLayers.DataLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    double lon = (lyr.East + lyr.West) / 2;
+                    double lat = (lyr.North + lyr.South) / 2;
+                    double alt = Math.Abs(lyr.East - lyr.West) / 360 * _globeView.GlobeViewSetting.EquatorialRadius * 4 * Math.PI;
+                    _globeView.GlobeCamera.GotoLatLonAltitude(lat, lon, alt);
+                }
+            }
+            foreach (FloatLayer lyr in _globeView.GlobeLayers.FloatLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    double lon = (lyr.Rect.East + lyr.Rect.West) / 2;
+                    double lat = (lyr.Rect.North + lyr.Rect.South) / 2;
+                    double alt = Math.Abs(lyr.Rect.East - lyr.Rect.West) / 360 * _globeView.GlobeViewSetting.EquatorialRadius * 4 * Math.PI;
+                    _globeView.GlobeCamera.GotoLatLonAltitude(lat, lon, alt);
+                }
+            }
+        }
+
         #endregion
 
         #region events
@@ -495,35 +574,63 @@ namespace FloodPeakUtility.UI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void ctxImportShp_Click(object sender, EventArgs e)
-        {   //第一个为图层节点
+        { //第一个为图层节点
             Node pnode = advTreeMain.Nodes[0];
+            //List<string> existlyrs = this.GetExistLayerNames();
             frmLoadVector frm = new frmLoadVector(new List<string>());
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 string name = string.Empty;
                 string path = string.Empty;
-                if (frm.LineLayer != null)
+                switch (frm.Reader.GeoBigType)
                 {
-                    name = frm.LineLayer.LayerName;
-                    path = frm.LineLayer.ShpLayerPath;
+                    case GeometryBigType.Point:
+                        name = frm.PntLayer.LayerName;
+                        //图层去重
+                        NodeModel checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
+                        if (checkModel != null)
+                        {
+                            MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
+                            return;
+                        }
+                        path = frm.PntLayer.ShpLayerPath;
+                        ShpPointLayer pntLyr = frm.PntLayer;
+                        //保存图层信息到配置文件
+                        ShpPointConfig.AppendLayer(pntLyr);
+                        _shpLoader.LoadShpPointLayer(pntLyr);
+                        break;
+                    case GeometryBigType.Line:
+                        name = frm.LineLayer.LayerName;
+                        //图层去重
+                        checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
+                        if (checkModel != null)
+                        {
+                            MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
+                            return;
+                        }
+                        path = frm.LineLayer.ShpLayerPath;
+                        ShpLineLayer lineLyr = frm.LineLayer;
+                        ShpLineConfig.AppendLayer(lineLyr);
+                        _shpLoader.LoadShpLineLayer(lineLyr);
+                        break;
+                    case GeometryBigType.Polygon:
+                        name = frm.PolyLayer.LayerName;
+                        //图层去重
+                        checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
+                        if (checkModel != null)
+                        {
+                            MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
+                            return;
+                        }
+                        path = frm.PolyLayer.ShpLayerPath;
+                        ShpPolygonLayer polyLyr = frm.PolyLayer;
+                        ShpPolygonConfig.AppendLayer(polyLyr);
+                        _shpLoader.LoadShpPolygonLayer(polyLyr);
+                        break;
+                    default:
+                        break;
                 }
-                else if (frm.PntLayer != null)
-                {
-                    name = frm.PntLayer.LayerName;
-                    path = frm.PntLayer.ShpLayerPath;
-                }
-                else if (frm.PolyLayer != null)
-                {
-                    name = frm.PolyLayer.LayerName;
-                    path = frm.PolyLayer.ShpLayerPath;
-                }
-                //图层去重
-                NodeModel checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
-                if (checkModel != null)
-                {
-                    MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
-                    return;
-                }
+
 
                 NodeModel model = new NodeModel();
                 model.PNode = pnode.Name;
@@ -533,6 +640,7 @@ namespace FloodPeakUtility.UI
                 model.NodeId = Guid.NewGuid().ToString();
                 model.CanRemove = true;
                 model.Path = path;
+                model.BigType = frm.Reader.GeoBigType;
                 pnode.Nodes.Add(CreateNode(model));
             }
         }
@@ -545,7 +653,58 @@ namespace FloodPeakUtility.UI
         private void ctxDeleteNode_Click(object sender, EventArgs e)
         {
             Node node = advTreeMain.SelectedNode;
-            node.Remove();       
+            try
+            {
+                string lyrName = node.Text;
+                foreach (DataLayer lyr in _globeView.GlobeLayers.DataLayers)
+                {
+                    if (lyr.Name == lyrName)
+                    {
+                        _globeView.GlobeLayers.DataLayers.Remove(lyr);
+                    }
+                }
+                foreach (FloatLayer lyr in _globeView.GlobeLayers.FloatLayers)
+                {
+                    if (lyr.Name == lyrName)
+                    {
+                        _globeView.GlobeLayers.FloatLayers.Remove(lyr);
+                    }
+                }
+                //删除tif配置
+                string path = Path.Combine(Path.GetDirectoryName(_projectPath), lyrName + ".xml");
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                //删除shp配置
+                else if (node.Tag is NodeModel)
+                {
+                    GeometryBigType geoType = ((NodeModel)node.Tag).BigType;
+                    switch (geoType)
+                    {
+                        case GeometryBigType.Point:
+                            ShpPointConfig.DeleteLayer(lyrName);
+                            _shpLoader.PntLyrList.Remove(lyrName);
+                            break;
+                        case GeometryBigType.Line:
+                            ShpLineConfig.DeleteLayer(lyrName);
+                            _shpLoader.LineLyrList.Remove(lyrName);
+                            break;
+                        case GeometryBigType.Polygon:
+                            ShpPolygonConfig.DeleteLayer(lyrName);
+                            _shpLoader.PolyLyrList.Remove(lyrName);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                node.Remove();
+            }
+            catch (Exception ex)
+            {
+                MsgBox.ShowInfo(ex.Message);
+            }
         }
 
         /// <summary>
@@ -585,8 +744,8 @@ namespace FloodPeakUtility.UI
         {
             Node checkNode = e.Cell.Parent;
 
-            LonLatDataLayer lyr = (LonLatDataLayer)_globeView.GlobeLayers.DataLayers.FindLayer(checkNode.Text);
-            //开始加载
+            AbstractLayer lyr = this.GetLayerByName(checkNode.Text);
+            //影像图层加载
             if (lyr == null)
             {
                 string path = Path.Combine(Path.GetDirectoryName(_projectPath), checkNode.Text + ".xml");
@@ -595,17 +754,15 @@ namespace FloodPeakUtility.UI
                 DomLayerInfo lyrInfo = XmlHelper.Deserialize<DomLayerInfo>(path);
                 if (lyrInfo == null)
                     return;
-                //加载影像图层
                 lyr = LayerLoader.CreateDomLyr(lyrInfo, _globeView);
             }
-            lyr.Visible = e.Cell.Checked;
+
+            if (lyr != null)
+                lyr.Visible = e.Cell.Checked;
             //飞行
             if (e.Cell.Checked)
             {
-                double Lat = (lyr.South + lyr.North) / 2;
-                double lon = (lyr.East + lyr.West) / 2;
-                if (_globeView.GlobeCamera.CameraLatitude != Lat || _globeView.GlobeCamera.CameraLongitude != lon)
-                    _globeView.GlobeCamera.FlyTo(lon, Lat, 1000);
+                this.LocLyrByName(checkNode.Text);
             }
         }
 
@@ -704,5 +861,6 @@ namespace FloodPeakUtility.UI
         }
 
         #endregion
+
     }
 }

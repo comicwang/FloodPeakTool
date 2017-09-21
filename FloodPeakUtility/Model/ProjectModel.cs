@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iTelluro.Explorer.Vector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,5 +38,7 @@ namespace FloodPeakUtility.Model
         public int ImageIndex { get; set; }
         [XmlElement("Path")]
         public string Path { get; set; }
+        [XmlElement("BigType")]
+        public GeometryBigType BigType { get; set; }
     }
 }

@@ -20,6 +20,7 @@ using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
 using iTelluro.GlobeEngine.Mathematics;
 using iTelluro.GlobeEngine.Graphics3D;
+using System.Text.RegularExpressions;
 
 namespace FloodPeakToolUI.UI
 {
@@ -59,7 +60,7 @@ namespace FloodPeakToolUI.UI
                 string tifPath = fileChooseControl1.FilePath;//影像路径
                 string argShp = fileChooseControl2.FilePath;//流速系数
                 //progressBar1.Visible = true;
-                backgroundWorker1.RunWorkerAsync(new string[] {tifPath, argShp });
+                backgroundWorker1.RunWorkerAsync(new string[] { tifPath, argShp });
             }
             else
             {
@@ -89,25 +90,38 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            
             string[] args = e.Argument as string[];
             string inputDemPath = args[0];
             string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM1.tif");
             string shppath = args[1];
             ShpReader shp = new ShpReader(shppath);
+
             OSGeo.OGR.Feature ofea;
             List<Point2d> ptlist = new List<Point2d>();
             while (((ofea = shp.layer.GetNextFeature()) != null))
             {
                 int count = ofea.GetGeometryRef().GetPointCount();
-                for (int i = 0; i < count; i++)
+                string a = "";
+                ofea.GetGeometryRef().ExportToWkt(out a);
+                Regex reg = new Regex(@"\(([^)&^(]*)\)");
+                Match m = reg.Match(a);
+                string pointstr = "";
+                if (m.Success)
                 {
-                    Point2d p = new Point2d(ofea.GetGeometryRef().GetX(i), ofea.GetGeometryRef().GetY(i));
+                    pointstr = m.Result("$1").TrimStart('(').TrimEnd(')');
+                }
+                for (int i = 0; i < pointstr.Split(',').Length; i++)
+                {
+                    string[] point = pointstr.Split(',')[i].Split(' ');
+                    double x = double.Parse(point[0]);
+                    double y = double.Parse(point[1]);
+                    Point2d p = new Point2d(x, y);
                     ptlist.Add(p);
                 }
             }
-            RainLoss(shppath, inputDemPath, outDemPath, ptlist,ref e);
-
+            //释放资源
+            shp.Dispose();
+            RainLoss(shppath, inputDemPath, outDemPath, ptlist, ref e);
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -118,15 +132,12 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             double[] result = e.Result as double[];
-            if (result != null && result.Length > 3)
+            if (result != null && result.Length >= 3)
             {
-                textBox1.Text = result[0].ToString();
-                textBox2.Text = result[1].ToString();
-                textBox3.Text = result[2].ToString();
+                textBox1.Text = result[0].ToString("f3");
+                textBox2.Text = result[1].ToString("f3");
+                textBox3.Text = result[2].ToString("f3");
             }
-           // progressBar1.Visible = false;
-           // progressBar1.Value = 0;
-
         }
 
         /// <summary>
@@ -137,6 +148,17 @@ namespace FloodPeakToolUI.UI
         /// <param name="outDemPath"></param>
         public void RainLoss(string shppath, string inputDemPath, string outDemPath, List<Point2d> pointlist, ref DoWorkEventArgs e)
         {
+            //计算流域面积
+            double F = 0;
+            double sf = 0;
+            FormOutput.AppendLog("开始计算流域面积..");
+            WatershedArea(pointlist, inputDemPath, ref F, ref sf);
+            sf = sf / 1000000;
+            FormOutput.AppendLog(string.Format("流域面积为：{0}km²", sf.ToString("f3")));
+
+            //计算折减系数
+            FormOutput.AppendLog("开始计算损失指数,折减系数..");
+
             FormOutput.AppendLog("按范围裁剪栅格..");
             ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
             if (File.Exists(outDemPath) == false)
@@ -144,9 +166,8 @@ namespace FloodPeakToolUI.UI
                 FormOutput.AppendLog("裁剪失败！");
                 return;
             }
-            //读取裁剪后的栅格
-            RasterReader raster = new RasterReader(outDemPath);
-
+            FormOutput.AppendLog("开始读取裁剪后的栅格数据..");
+            RasterReader raster = new RasterReader(inputDemPath);
             int row = raster.RowCount;
             int col = raster.ColumnCount;
             int count = raster.RasterCount;
@@ -156,25 +177,37 @@ namespace FloodPeakToolUI.UI
 
             Band band = raster.DataSet.GetRasterBand(1);
 
+            //无效值
+            FormOutput.AppendLog("获取栅格数据无效值..");
+            double nodatavalue;
+            int hasval;
+            band.GetNoDataValue(out nodatavalue, out hasval);
+            FormOutput.AppendLog("栅格数据无效值为" + nodatavalue);
             double[] readData = new double[row * col];
             band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
 
+            //销毁
+            band.Dispose();
+            raster.Dispose();
+
+            FormOutput.AppendLog("开始整理损失指数数据..");
             var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
             double total = 0;
             double totalcount = 0;
             foreach (var s in res)
             {
-                total += s.Key * s.count;
-                totalcount += s.count;
+                if (s.Key != nodatavalue)
+                {
+                    total += s.Key * s.count;
+                    totalcount += s.count;
+                }
             }
-            double F = 0;
-            FormOutput.AppendLog("开始计算流域面积..");
-            WatershedArea(pointlist, inputDemPath, ref F);
-            FormOutput.AppendLog("开始计算损失指数,折减系数..");
-            double R = total / totalcount;//损失指数
-            double N = 1 / (1 + 0.016 * F * 0.6);//折减系数
-            FormOutput.AppendLog("流域面积:" + F.ToString("f3") + "损失指数：" + R.ToString("f3") + "；折减系数：" + N.ToString("f3"));
-            e.Result = new double[] { F, R, N };
+            double R = total / totalcount;//暴雨损失系数
+            R = R / 1000;
+            double r = 0;//暴雨损失指数 数据无法提供，
+            double N = 1 / (1 + 0.016 * sf * 0.6);//折减系数
+            FormOutput.AppendLog("损失指数：" + R.ToString("f3") + "；折减系数：" + N.ToString("f3"));
+            e.Result = new double[] { sf, R, N };
         }
 
         private class TerrainPoint
@@ -191,7 +224,7 @@ namespace FloodPeakToolUI.UI
         /// 流域面积F，单位平方千米
         /// </summary>
         private TerrainPoint[,] _terrainTile;
-        private void WatershedArea(List<Point2d> pointlist, string rasterpath, ref double _resultSurfaceArea)
+        private void WatershedArea(List<Point2d> pointlist, string rasterpath, ref double _resultProjectArea, ref double _resultSurfaceArea)
         {
             if (pointlist.Count >= 3)
             {
@@ -208,94 +241,94 @@ namespace FloodPeakToolUI.UI
                 }
 
                 // NTS多边形
-                iTelluroLib.GeoTools.Geometries.Coordinate[] coords =
-                        new iTelluroLib.GeoTools.Geometries.Coordinate[pointlist.Count + 1];
+                iTelluroLib.GeoTools.Geometries.Coordinate[] coords = new iTelluroLib.GeoTools.Geometries.Coordinate[pointlist.Count + 1];
 
                 for (int i = 0; i < pointlist.Count; i++)
                 {
                     coords[i] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[i].X, pointlist[i].Y);
                 }
-                coords[pointlist.Count] =
-                    new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[0].X, pointlist[0].Y);
+                coords[pointlist.Count] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[0].X, pointlist[0].Y);
 
                 // 创建多边形
-                iTelluroLib.GeoTools.Geometries.Polygon _analysisPolygon =
-                        new iTelluroLib.GeoTools.Geometries.Polygon(
-                                                new iTelluroLib.GeoTools.Geometries.LinearRing(coords)
-                                                );
+                iTelluroLib.GeoTools.Geometries.LinearRing ring = new iTelluroLib.GeoTools.Geometries.LinearRing(coords);
+                iTelluroLib.GeoTools.Geometries.Polygon _analysisPolygon = new iTelluroLib.GeoTools.Geometries.Polygon(ring);
 
                 RasterReader raster = new RasterReader(rasterpath);
+                double _widthStep = raster.CellSizeX;
+                double _heightStep = raster.CellSizeY;
+
                 // 网格大小：行、列数
-                int _widthNum = (int)((_analysisRect.East - _analysisRect.West) / raster.CellSizeX);
-                int _heightNum = (int)((_analysisRect.North - _analysisRect.South) / raster.CellSizeX);
+                int _widthNum = (int)((_analysisRect.East - _analysisRect.West) / _widthStep);
+                int _heightNum = (int)((_analysisRect.North - _analysisRect.South) / _heightStep);
+
                 _terrainTile = new TerrainPoint[_widthNum, _heightNum];
 
-                double _cellArea = CaculateCellAera(raster);
-                _resultSurfaceArea = 0;
-                double _resultProjectArea = 0;
+                //构建高程矩阵
+                double[] x = new double[_widthNum * _heightNum];
+                double[] y = new double[_widthNum * _heightNum];
+                double[] z = new double[_widthNum * _heightNum];
+                int pos = 0;
+                for (int i = 0; i < _widthNum; i++)
+                {
+                    for (int j = 0; j < _heightNum; j++)
+                    {
+                        x[pos] = _analysisRect.West + i * _widthStep;
+                        y[pos] = _analysisRect.South + j * _heightStep;
+                        z[pos] = ReadBand(raster, i, j);
+                        pos++;
+                    }
+                }
+                //释放资源
+                raster.Dispose();
+                pos = 0;
+                for (int i = 0; i < _widthNum; i++)
+                {
+                    for (int j = 0; j < _heightNum; j++)
+                    {
+                        TerrainPoint tp = new TerrainPoint();
+                        tp.Longitude = x[pos];
+                        tp.Latitude = y[pos];
+                        tp.Altitude = z[pos];
+                        tp.col = i;
+                        tp.row = j;
+                        pos++;
+                        _terrainTile[i, j] = tp;
+                    }
+                }
+
+                double _cellArea = CaculateCellAera(_widthNum, _heightNum);
                 //坡度计算
                 for (int i = 0; i < _widthNum; i++)
                 {
                     for (int j = 0; j < _heightNum; j++)
                     {
                         TerrainPoint tp = _terrainTile[i, j];
-
-                        iTelluroLib.GeoTools.Geometries.Point currentPoint =
-                                    new iTelluroLib.GeoTools.Geometries.Point(
-                                                                tp.Longitude, tp.Latitude);
-
+                        iTelluroLib.GeoTools.Geometries.Point currentPoint = new iTelluroLib.GeoTools.Geometries.Point(tp.Longitude, tp.Latitude);
                         if (_analysisPolygon.Contains(currentPoint))
                         {
                             _resultProjectArea += _cellArea;
-
-                            // 计算坡度
+                            //计算坡度
                             double slope = GetSlope(tp);
                             double currentCellArea = _cellArea / Math.Cos(slope);
                             _resultSurfaceArea += currentCellArea;
                         }
                     }
                 }
-            }
+            }/* end if point.count>3 */
+        }
+
+        public double ReadBand(RasterReader reader, int col, int row)
+        {
+            double[] d = null;
+            reader.ReadBand(col, row, 1, 1, out d);
+            return d[0];
         }
 
         /// <summary>
         /// 单个网格的投影面积（m为单位）计算, 取计算范围的中心位置
         /// </summary>
-        private double CaculateCellAera(RasterReader raster)
+        private double CaculateCellAera(int _widthNum, int _heightNum)
         {
-            int _widthNum = (int)((raster.MapRectEast - raster.MapRectWest) / raster.CellSizeX);
-            int _heightNum = (int)((raster.MapRectNorth - raster.MapRectSouth) / raster.CellSizeY);
-
-            int row = raster.RowCount;
-            int col = raster.ColumnCount;
-
-            int xsize = raster.DataSet.RasterXSize;
-            int ysize = raster.DataSet.RasterYSize;
-
-            Band band = raster.DataSet.GetRasterBand(1);
-            double[] gt = new double[6];
-            raster.DataSet.GetGeoTransform(gt);
-
-            double[] readData = new double[row * col];
-            band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-            //构建高程矩阵
-            for (int i = 0; i < row; i++)
-            {
-                for (int j = 0; j < col; j++)
-                {
-                    double x = gt[0] + i * gt[1] + j * gt[2];
-                    double y = gt[3] + i * gt[4] + j * gt[5];
-                    double z = _globeView.GetElevation(x, y);
-                    TerrainPoint tp = new TerrainPoint();
-                    tp.Longitude = x;
-                    tp.Latitude = y;
-                    tp.Altitude = z;
-                    tp.col = i;
-                    tp.row = j;
-                    _terrainTile[i, j] = tp;
-                }
-            }
-
             int ti, tj;
             ti = _widthNum / 2;
             tj = _heightNum / 2;
@@ -311,28 +344,28 @@ namespace FloodPeakToolUI.UI
 
         private double GetSlope(TerrainPoint tp)
         {
-            double zx, zy, ex;
+            double zx = 0, zy = 0, ex = 0;
+            if (tp.col - 1 > 0 && tp.row - 1 > 0 && tp.row + 1 < _terrainTile.GetLength(1) && tp.col + 1 < _terrainTile.GetLength(0))
+            {
+                iTelluro.GlobeEngine.DataSource.Geometry.Point3d d1 = MathEngine.SphericalToCartesianD(
+                                       Angle.FromDegrees(tp.Latitude),
+                                       Angle.FromDegrees(_terrainTile[tp.col - 1, tp.row].Longitude),//lon - demSpan
+                                       GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
+                                       );
 
-            iTelluro.GlobeEngine.DataSource.Geometry.Point3d d1 = MathEngine.SphericalToCartesianD(
-                                        Angle.FromDegrees(tp.Latitude),
-                                        Angle.FromDegrees(_terrainTile[tp.col - 1, tp.row].Longitude),//lon - demSpan
-                                        GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
-                                        );
+                iTelluro.GlobeEngine.DataSource.Geometry.Point3d d2 = MathEngine.SphericalToCartesianD(
+                                            Angle.FromDegrees(tp.Latitude),
+                                            Angle.FromDegrees(_terrainTile[tp.col + 1, tp.row].Longitude),//lon + demSpan),
+                                            GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
+                                            );
 
-            iTelluro.GlobeEngine.DataSource.Geometry.Point3d d2 = MathEngine.SphericalToCartesianD(
-                                        Angle.FromDegrees(tp.Latitude),
-                                        Angle.FromDegrees(_terrainTile[tp.col + 1, tp.row].Longitude),//lon + demSpan),
-                                        GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
-                                        );
-
-            iTelluro.GlobeEngine.DataSource.Geometry.Point3d segment = d2 - d1;
-            ex = segment.Length;
-
-            //zx = (elv[1, 2] - elv[1, 0]) / ex;
-            //zy = (elv[2, 1] - elv[0, 1]) / ex;
-            zx = (_terrainTile[tp.col + 1, tp.row + 0].Altitude - _terrainTile[tp.col - 1, tp.row + 0].Altitude) / ex;
-            zy = (_terrainTile[tp.col + 0, tp.row + 1].Altitude - _terrainTile[tp.col + 0, tp.row - 1].Altitude) / ex;
-
+                iTelluro.GlobeEngine.DataSource.Geometry.Point3d segment = d2 - d1;
+                ex = segment.Length;
+                //zx = (elv[1, 2] - elv[1, 0]) / ex;
+                //zy = (elv[2, 1] - elv[0, 1]) / ex;
+                zx = (_terrainTile[tp.col + 1, tp.row + 0].Altitude - _terrainTile[tp.col - 1, tp.row + 0].Altitude) / ex;
+                zy = (_terrainTile[tp.col + 0, tp.row + 1].Altitude - _terrainTile[tp.col + 0, tp.row - 1].Altitude) / ex;
+            }
             return Math.Atan(Math.Sqrt(zx * zx + zy * zy));
         }
 
@@ -377,8 +410,8 @@ namespace FloodPeakToolUI.UI
             //绑定控制台输出
             //textBox4.BindConsole();
             //绑定数据源，显示查询条件
-            NodeModel[] nodes= Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
-            fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0)?nodes[0].NodeName:string.Empty);
+            NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
+            fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
             fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
 
             //显示之前的结果
@@ -393,7 +426,7 @@ namespace FloodPeakToolUI.UI
                     textBox3.Text = result.SubN == 0 ? "" : result.SubN.ToString();
                 }
             }
-            
+
             Parent.UIParent.Controls.Add(this);
         }
 
@@ -411,6 +444,5 @@ namespace FloodPeakToolUI.UI
             XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
             MsgBox.ShowInfo("保存成功！");
         }
-
     }
 }

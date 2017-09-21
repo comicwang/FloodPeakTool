@@ -18,6 +18,8 @@ using System.IO;
 using FloodPeakUtility.Model;
 using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
+using OSGeo.OGR;
+using iTelluro.DataTools.Utility.GIS;
 
 namespace FloodPeakToolUI.UI
 {
@@ -102,9 +104,10 @@ namespace FloodPeakToolUI.UI
             List<Point3d> pts = CalPoints(args[0]);
             FormOutput.AppendLog("开始计算平均坡度和坡长...");
             CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
+            reader.Dispose();
             FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
             FormOutput.AppendLog("开始坡面流速系数...");
-            string outDemPath = Path.Combine(_parent.ProjectModel.ProjectPath, "WDEM.tif");
+            string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM.tif");
             double r = FlowVelocity(args[2], args[1], outDemPath);
             FormOutput.AppendLog("结果--坡面流速系数为：" + r.ToString());
             e.Result = new double[] { avgLength, avgSlope,r };
@@ -135,7 +138,10 @@ namespace FloodPeakToolUI.UI
         {
             //按范围裁剪栅格
             ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
-
+            if (File.Exists(outDemPath) == false)
+            {
+                return 0;
+            }
             //读取裁剪后的栅格
             RasterReader raster = new RasterReader(outDemPath);
 
@@ -148,16 +154,25 @@ namespace FloodPeakToolUI.UI
 
             Band band = raster.DataSet.GetRasterBand(1);
 
+            //无效值
+            double nodatavalue;
+            int hasval;
+            band.GetNoDataValue(out nodatavalue, out hasval);
+
             double[] readData = new double[row * col];
             band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-
+            band.Dispose();
+            raster.Dispose();
             var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
             double total = 0;
             double totalcount = 0;
             foreach (var s in res)
             {
-                total += s.Key * s.count;
-                totalcount += s.count;
+                if (total != nodatavalue)
+                {
+                    total += s.Key * s.count;
+                    totalcount += s.count;
+                }
             }
             double R = total / totalcount;
             return R;
@@ -176,26 +191,26 @@ namespace FloodPeakToolUI.UI
             double totalSlope = 0;
             if (points != null && points.Count > 0)
             {
+                int count = 0;
                 for (int i = 0; i < points.Count; i++)
                 {
                     Point3d startpt = points[i];
                     List<Point3d> resultPt = GetMaxSlopePoints(points[i], reader);
                     double singleLength = 0;
                     double singleSlope = 0;
-                    for (int j = 1; j < resultPt.Count; j++)
+                    for (int j = 0; j < resultPt.Count; j++)
                     {
-                        Point3d point1 = resultPt[i - 1];
-                        Point3d point2 = resultPt[i];
+                        Point3d point1 = resultPt[i];
+                        Point3d point2 = resultPt[resultPt.Count - 1];
                         singleLength += Length(point1, point2);
                     }
-                    singleSlope = Math.Asin(Math.Abs(startpt.Z - resultPt[resultPt.Count - 1].Z));
+                    singleSlope = Math.Abs((startpt.Z - resultPt[resultPt.Count - 1].Z) / (Length(startpt, resultPt[resultPt.Count - 1])));
                     totalSlope += singleSlope;
                     totalLength += singleLength;
-                    avglength = totalLength / points.Count;
-                    avgslope = totalSlope / points.Count;
-                    backgroundWorker1.ReportProgress(100 * i / points.Count);
-                    // Application.DoEvents();
+                    count = points.Count * resultPt.Count;
                 }
+                avglength = totalLength / count;
+                avgslope = totalSlope / points.Count;
             }
         }
 
@@ -224,14 +239,11 @@ namespace FloodPeakToolUI.UI
             double cellSizeX = reader.CellSizeX;
             double cellSizeY = reader.CellSizeY;
 
-            int row = reader.RowCount;
-            int col = reader.ColumnCount;
+            int row = reader.RowCount / 50;
+            int col = reader.ColumnCount / 50;
 
             double[] adfGeoTransform = new double[6];
             reader.DataSet.GetGeoTransform(adfGeoTransform);
-
-            int xoffset = ((int)((point.X - reader.MapRectWest) / cellSizeX)) + 1;
-            int yoffset = ((int)((reader.MapRectNorth - point.Y) / cellSizeY)) + 1;
 
             int _maxR = 0;
             int _maxC = 0;
@@ -393,14 +405,14 @@ namespace FloodPeakToolUI.UI
                         _maxR = r;
                         _maxC = c;
                     }
-                    double px = point.X + _maxR * adfGeoTransform[1] + _maxC * adfGeoTransform[2];
-                    double py = point.Y + _maxR * adfGeoTransform[4] + _maxC * adfGeoTransform[5];
-                    double pz = _globeView.GetElevation(px, py);
+                    double px = point.X + r * adfGeoTransform[1] + c * adfGeoTransform[2];
+                    double py = point.Y + r * adfGeoTransform[4] + c * adfGeoTransform[5];
+                    double pz = ReadBand(reader, _maxR, _maxC);//_globeView.GetElevation(px, py);
                     Point3d maxPoint = new Point3d(px, py, pz);
                     outresult.Add(maxPoint);
-                    //Application.DoEvents();
+                    Application.DoEvents();
                 }/* end for c */
-               // Application.DoEvents();
+                Application.DoEvents();
             }/* enf for r */
             return outresult;
         }
@@ -431,7 +443,6 @@ namespace FloodPeakToolUI.UI
                 double startlat = ofea.GetGeometryRef().GetY(0);
                 double startElevation = _globeView.GetElevation(startlon, startlat);
                 Point3d startPoint = new Point3d(startlon, startlat, startElevation);
-
                 if (!interPoints.Contains(startPoint))
                 {
                     //元数据中包含
@@ -464,9 +475,26 @@ namespace FloodPeakToolUI.UI
                     }
                 }
             }
-            List<Point3d> result = interPoints.Distinct<Point3d>().ToList();
+            List<Point3d> to = interPoints.Distinct<Point3d>().ToList();
+            List<Point3d> result = new List<Point3d>();
+            if (shp.IsProjected)
+            {
+                SpatialReference srf = new SpatialReference(shp.GetSridWkt());
+                SpatialReference srt = new SpatialReference(Const.WGS84);
+                CoordinateTransformation ctf = new CoordinateTransformation(srf, srt);
+                double[] transPoint = new double[3];
+                for (int i = 0; i < to.Count; i++)
+                {
+                    ctf.TransformPoint(transPoint, to[i].X, to[i].Y, to[i].Z);
+                    double endElevation = _globeView.GetElevation(transPoint[0], transPoint[1]);
+                    Point3d p = new Point3d(transPoint[0], transPoint[1], endElevation);
+                    result.Add(p);
+                }
+            }
+            shp.Dispose();
             return result;
         }
+
 
         #endregion
 

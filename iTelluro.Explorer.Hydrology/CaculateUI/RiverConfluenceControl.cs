@@ -18,6 +18,7 @@ using System.IO;
 using FloodPeakUtility.Model;
 using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
+using iTelluro.DataTools.Utility.DEM;
 
 namespace FloodPeakToolUI.UI
 {
@@ -100,7 +101,7 @@ namespace FloodPeakToolUI.UI
             FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
 
             FormOutput.AppendLog("开始计算主河纵降比...");
-            double j = CalRiverLonGradient(args[0]);
+            double j = CalRiverLonGradient(args[0], args[1]);
             FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
 
             FormOutput.AppendLog("开始计算河槽流域系数...");
@@ -134,13 +135,13 @@ namespace FloodPeakToolUI.UI
         /// </summary>
         public double FlowVelocity(string shppath, string inputDemPath, string outDemPath)
         {
+
             //按范围裁剪栅格
             ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
             if (File.Exists(outDemPath) == false)
             {
                 return 0;
             }
-
             //读取裁剪后的栅格
             RasterReader raster = new RasterReader(outDemPath);
 
@@ -153,16 +154,26 @@ namespace FloodPeakToolUI.UI
 
             Band band = raster.DataSet.GetRasterBand(1);
 
+            //无效值
+            double nodatavalue;
+            int hasval;
+            band.GetNoDataValue(out nodatavalue, out hasval);
+
             double[] readData = new double[row * col];
             band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-
+            //销毁
+            raster.Dispose();
+            band.Dispose();
             var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
             double total = 0;
             double totalcount = 0;
             foreach (var s in res)
             {
-                total += s.Key * s.count;
-                totalcount += s.count;
+                if (total != nodatavalue)
+                {
+                    total += s.Key * s.count;
+                    totalcount += s.count;
+                }
             }
             double R = total / totalcount;
             return R;
@@ -176,9 +187,10 @@ namespace FloodPeakToolUI.UI
         /// j = h1-h0/l
         /// 或者 J = (h0+h1)l1 + (h1+h2)l2 +...+ (hn-1 + hn)ln/L*L 
         /// </summary>
-        private double CalRiverLonGradient(string shppath)
+        private double CalRiverLonGradient(string shppath, string tifPath)
         {
             ShpReader shp = new ShpReader(shppath);
+            RasterReader reader = new RasterReader(tifPath);
             OSGeo.OGR.Feature ofea;
             List<Point3d> points = new List<Point3d>();
             double J = 0;
@@ -190,13 +202,24 @@ namespace FloodPeakToolUI.UI
                 {
                     double lon = ofea.GetGeometryRef().GetX(i);
                     double lat = ofea.GetGeometryRef().GetY(i);
-                    float elevation = _globeView.GetElevation(lon, lat);
-                    points.Add(new Point3d(lon, lat, elevation));
+                    int c = DemHelp.GetColFromLongitude(lon, lat);
+                    int r = DemHelp.GetRowFromLatitude(lon, lat);
+                    double z = ReadBand(reader, c, r);
+                    //float elevation = _globeView.GetElevation(lon, lat);
+                    points.Add(new Point3d(lon, lat, z));
                 }
             }
+            shp.Dispose();
             //计算河道纵比降
             J = GetLonGradient(points);
             return J;
+        }
+
+        public double ReadBand(RasterReader reader, int col, int row)
+        {
+            double[] d = null;
+            reader.ReadBand(col, row, 1, 1, out d);
+            return d[0];
         }
 
         private double GetLonGradient(List<Point3d> points)
@@ -243,6 +266,7 @@ namespace FloodPeakToolUI.UI
                 sumLength += length;
                 //WriteText(string.Format("河道id为:{0}的长度是{1,7:f3} m", id, length.ToString("f3")));
             }
+            shp.Dispose();
             return sumLength;
         }
 
@@ -258,6 +282,7 @@ namespace FloodPeakToolUI.UI
             double l = SpatialAnalysis.CaculateGCDistance(from.Y, from.X, to.Y, to.X);
             return l;
         }
+
 
         #endregion
 
