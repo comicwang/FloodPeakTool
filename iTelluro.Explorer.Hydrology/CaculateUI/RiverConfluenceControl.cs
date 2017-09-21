@@ -22,16 +22,52 @@ using iTelluro.DataTools.Utility.DEM;
 
 namespace FloodPeakToolUI.UI
 {
+    /// <summary>
+    /// 主河槽参数计算UI
+    /// </summary>
     [Export(typeof(ICaculateMemo))]
     public partial class RiverConfluenceControl : UserControl, ICaculateMemo
     {
+        #region 字段
+
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath;
+
+        #endregion
+
+        #region 构造函数
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public RiverConfluenceControl()
         {
             InitializeComponent();
         }
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 保存结果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //获取结果值
+            HCHLResult result = new HCHLResult()
+            {
+                L1 = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
+                l1 = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
+                A1 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
+            };
+            XmlHelper.Serialize<HCHLResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -90,6 +126,8 @@ namespace FloodPeakToolUI.UI
             button1.Enabled = File.Exists(fileChooseControl1.FilePath) && File.Exists(fileChooseControl2.FilePath) && File.Exists(fileChooseControl3.FilePath);
         }
 
+        #endregion
+
         #region 计算河槽长度和纵比降,以及河槽流速系数
 
 
@@ -105,11 +143,11 @@ namespace FloodPeakToolUI.UI
             FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
 
             FormOutput.AppendLog("开始计算河槽流域系数...");
-            string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM.tif");
-            double r = FlowVelocity(args[2], args[1], outDemPath);
-            FormOutput.AppendLog("河槽流速系数：" + r.ToString("f3"));
+            double? r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
+            if (r.HasValue)
+                FormOutput.AppendLog("河槽流速系数：" + r.Value.ToString("f3"));
 
-            e.Result = new double[] { riverlength, j, r };
+            e.Result = new double[] { riverlength, j, r.GetValueOrDefault(0) };
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -126,57 +164,6 @@ namespace FloodPeakToolUI.UI
            // progressBar1.Visible = false;
            // progressBar1.Value = 0;
 
-        }
-
-        /// <summary>
-        /// 河槽流速系数计算
-        /// 坡面流速系数计算
-        /// R=(1.02*26 + 1.00*10 + 0.83*7+0.93*10)/(26+10+10+7) = 0.97
-        /// </summary>
-        public double FlowVelocity(string shppath, string inputDemPath, string outDemPath)
-        {
-
-            //按范围裁剪栅格
-            ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
-            if (File.Exists(outDemPath) == false)
-            {
-                return 0;
-            }
-            //读取裁剪后的栅格
-            RasterReader raster = new RasterReader(outDemPath);
-
-            int row = raster.RowCount;
-            int col = raster.ColumnCount;
-            int count = raster.RasterCount;
-
-            int xsize = raster.DataSet.RasterXSize;
-            int ysize = raster.DataSet.RasterYSize;
-
-            Band band = raster.DataSet.GetRasterBand(1);
-
-            //无效值
-            double nodatavalue;
-            int hasval;
-            band.GetNoDataValue(out nodatavalue, out hasval);
-
-            double[] readData = new double[row * col];
-            band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-            //销毁
-            raster.Dispose();
-            band.Dispose();
-            var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
-            double total = 0;
-            double totalcount = 0;
-            foreach (var s in res)
-            {
-                if (total != nodatavalue)
-                {
-                    total += s.Key * s.count;
-                    totalcount += s.count;
-                }
-            }
-            double R = total / totalcount;
-            return R;
         }
 
         /// <summary>
@@ -347,19 +334,6 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //获取结果值
-            HCHLResult result = new HCHLResult()
-            {
-                L1 = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-                l1 = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-                A1 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
-            };
-            XmlHelper.Serialize<HCHLResult>(result, _xmlPath);
-            MsgBox.ShowInfo("保存成功！");
-        }
 
     }
 }

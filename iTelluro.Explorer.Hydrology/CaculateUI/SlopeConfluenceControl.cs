@@ -97,6 +97,7 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];
+
             RasterReader reader = new RasterReader(args[1]);
             double avgLength = 0;
             double avgSlope = 0;
@@ -106,11 +107,13 @@ namespace FloodPeakToolUI.UI
             CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
             reader.Dispose();
             FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
-            FormOutput.AppendLog("开始坡面流速系数...");
-            string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM.tif");
-            double r = FlowVelocity(args[2], args[1], outDemPath);
-            FormOutput.AppendLog("结果--坡面流速系数为：" + r.ToString());
-            e.Result = new double[] { avgLength, avgSlope,r };
+
+            FormOutput.AppendLog("开始计算坡面流速系数...");
+            double? r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
+            if (r.HasValue)
+                FormOutput.AppendLog("结果--坡面流速系数为：" + r.Value.ToString());
+
+            e.Result = new double[] { avgLength, avgSlope, r.GetValueOrDefault(0) };
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -127,55 +130,6 @@ namespace FloodPeakToolUI.UI
             //progressBar1.Visible = false;
             //progressBar1.Value = 0;
 
-        }
-
-        /// <summary>
-        /// 河槽流速系数计算
-        /// 坡面流速系数计算
-        /// R=(1.02*26 + 1.00*10 + 0.83*7+0.93*10)/(26+10+10+7) = 0.97
-        /// </summary>
-        public double FlowVelocity(string shppath, string inputDemPath, string outDemPath)
-        {
-            //按范围裁剪栅格
-            ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
-            if (File.Exists(outDemPath) == false)
-            {
-                return 0;
-            }
-            //读取裁剪后的栅格
-            RasterReader raster = new RasterReader(outDemPath);
-
-            int row = raster.RowCount;
-            int col = raster.ColumnCount;
-            int count = raster.RasterCount;
-
-            int xsize = raster.DataSet.RasterXSize;
-            int ysize = raster.DataSet.RasterYSize;
-
-            Band band = raster.DataSet.GetRasterBand(1);
-
-            //无效值
-            double nodatavalue;
-            int hasval;
-            band.GetNoDataValue(out nodatavalue, out hasval);
-
-            double[] readData = new double[row * col];
-            band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-            band.Dispose();
-            raster.Dispose();
-            var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
-            double total = 0;
-            double totalcount = 0;
-            foreach (var s in res)
-            {
-                if (total != nodatavalue)
-                {
-                    total += s.Key * s.count;
-                    totalcount += s.count;
-                }
-            }
-            double R = total / totalcount;
-            return R;
         }
 
         /// <summary>
@@ -202,9 +156,9 @@ namespace FloodPeakToolUI.UI
                     {
                         Point3d point1 = resultPt[i];
                         Point3d point2 = resultPt[resultPt.Count - 1];
-                        singleLength += Length(point1, point2);
+                        singleLength += RasterCoefficientReader.Length(point1, point2);
                     }
-                    singleSlope = Math.Abs((startpt.Z - resultPt[resultPt.Count - 1].Z) / (Length(startpt, resultPt[resultPt.Count - 1])));
+                    singleSlope = Math.Abs((startpt.Z - resultPt[resultPt.Count - 1].Z) / (RasterCoefficientReader.Length(startpt, resultPt[resultPt.Count - 1])));
                     totalSlope += singleSlope;
                     totalLength += singleLength;
                     count = points.Count * resultPt.Count;
@@ -212,18 +166,6 @@ namespace FloodPeakToolUI.UI
                 avglength = totalLength / count;
                 avgslope = totalSlope / points.Count;
             }
-        }
-
-        /// <summary>
-        /// 求两点距离
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        private double Length(Point3d from, Point3d to)
-        {
-            double l = SpatialAnalysis.CaculateGCDistance(from.Y, from.X, to.Y, to.X);
-            return l;
         }
 
         /// <summary>
@@ -254,11 +196,11 @@ namespace FloodPeakToolUI.UI
             {
                 for (int c = 0; c < col; c++)
                 {
-                    double center = ReadBand(reader, c, r);
+                    double center = RasterCoefficientReader.ReadBand(reader, c, r);
                     //东方,列+1，行不变,p(i,j)-p(i,j+1)
                     if (c + 1 < col)
                     {
-                        double e = center - ReadBand(reader, c + 1, r);
+                        double e = center - RasterCoefficientReader.ReadBand(reader, c + 1, r);
                         dstDic.Add(e);
                     }
                     else
@@ -269,7 +211,7 @@ namespace FloodPeakToolUI.UI
                     //东南,列+1，行+1,p(i,j)-p(i+1,j+1)
                     if (c + 1 < col && r + 1 < row)
                     {
-                        double es = (center - ReadBand(reader, c + 1, r + 1)) / Math.Sqrt(2);
+                        double es = (center - RasterCoefficientReader.ReadBand(reader, c + 1, r + 1)) / Math.Sqrt(2);
                         dstDic.Add(es);
                     }
                     else
@@ -280,7 +222,7 @@ namespace FloodPeakToolUI.UI
                     //南，列+0，行+1
                     if (r + 1 < row)
                     {
-                        double s = center - ReadBand(reader, c, r + 1);
+                        double s = center - RasterCoefficientReader.ReadBand(reader, c, r + 1);
                         dstDic.Add(s);
                     }
                     else
@@ -291,7 +233,7 @@ namespace FloodPeakToolUI.UI
                     //西南
                     if (0 < c - 1 && 0 < r - 1)
                     {
-                        double ws = (center - ReadBand(reader, c - 1, r - 1)) / Math.Sqrt(2);
+                        double ws = (center - RasterCoefficientReader.ReadBand(reader, c - 1, r - 1)) / Math.Sqrt(2);
                         dstDic.Add(ws);
                     }
                     else
@@ -302,7 +244,7 @@ namespace FloodPeakToolUI.UI
                     //西
                     if (0 < c - 1)
                     {
-                        double w = center - ReadBand(reader, c - 1, r);
+                        double w = center - RasterCoefficientReader.ReadBand(reader, c - 1, r);
                         dstDic.Add(w);
                     }
                     else
@@ -313,7 +255,7 @@ namespace FloodPeakToolUI.UI
                     //西北
                     if (0 < c - 1 && 0 < r - 1)
                     {
-                        double wn = (center - ReadBand(reader, c - 1, r - 1)) / Math.Sqrt(2);
+                        double wn = (center - RasterCoefficientReader.ReadBand(reader, c - 1, r - 1)) / Math.Sqrt(2);
                         dstDic.Add(wn);
                     }
                     else
@@ -324,7 +266,7 @@ namespace FloodPeakToolUI.UI
                     //北
                     if (0 < r - 1)
                     {
-                        double n = center - ReadBand(reader, c, r - 1);
+                        double n = center - RasterCoefficientReader.ReadBand(reader, c, r - 1);
                         dstDic.Add(n);
                     }
                     else
@@ -335,7 +277,7 @@ namespace FloodPeakToolUI.UI
                     //东北
                     if (0 < r - 1 && c + 1 < col)
                     {
-                        double en = (center - ReadBand(reader, c + 1, r - 1)) / Math.Sqrt(2);
+                        double en = (center - RasterCoefficientReader.ReadBand(reader, c + 1, r - 1)) / Math.Sqrt(2);
                         dstDic.Add(en);
                     }
                     else
@@ -407,7 +349,7 @@ namespace FloodPeakToolUI.UI
                     }
                     double px = point.X + r * adfGeoTransform[1] + c * adfGeoTransform[2];
                     double py = point.Y + r * adfGeoTransform[4] + c * adfGeoTransform[5];
-                    double pz = ReadBand(reader, _maxR, _maxC);//_globeView.GetElevation(px, py);
+                    double pz = RasterCoefficientReader.ReadBand(reader, _maxR, _maxC);//_globeView.GetElevation(px, py);
                     Point3d maxPoint = new Point3d(px, py, pz);
                     outresult.Add(maxPoint);
                     Application.DoEvents();
@@ -415,13 +357,6 @@ namespace FloodPeakToolUI.UI
                 Application.DoEvents();
             }/* enf for r */
             return outresult;
-        }
-
-        public double ReadBand(RasterReader reader, int col, int row)
-        {
-            double[] d = null;
-            reader.ReadBand(col, row, 1, 1, out d);
-            return d[0];
         }
 
         /// <summary>

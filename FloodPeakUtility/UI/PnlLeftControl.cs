@@ -499,6 +499,66 @@ namespace FloodPeakUtility.UI
             }
         }
 
+        /// <summary>
+        /// 是否存在点shp
+        /// </summary>
+        /// <param name="lyr"></param>
+        /// <returns></returns>
+        private bool ShpPointLyrExits(ShpPointLayer lyr)
+        {
+            ShpPointLayerList lst = ShpPointConfig.ReadConfigFile();
+            if (lst.Count == 0)
+                return false;
+            foreach (var item in lst.LayerList)
+            {
+                if (item.LayerName == lyr.LayerName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 是否存在线shp
+        /// </summary>
+        /// <param name="lyr"></param>
+        /// <returns></returns>
+        private bool ShpLineLyrExits(ShpLineLayer lyr)
+        {
+            ShpLineLayerList lst = ShpLineConfig.ReadConfigFile();
+            if (lst.Count == 0)
+                return false;
+            foreach (var item in lst.LayerList)
+            {
+                if (item.LayerName == lyr.LayerName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 是否存在面shp
+        /// </summary>
+        /// <param name="lyr"></param>
+        /// <returns></returns>
+        private bool ShpPolygonLyrExits(ShpPolygonLayer lyr)
+        {
+            ShpPolygonLayerList lst = ShpPolygonConfig.ReadConfigFile();
+            if (lst.Count == 0)
+                return false;
+            foreach (var item in lst.LayerList)
+            {
+                if (item.LayerName == lyr.LayerName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region events
@@ -596,6 +656,8 @@ namespace FloodPeakUtility.UI
                         path = frm.PntLayer.ShpLayerPath;
                         ShpPointLayer pntLyr = frm.PntLayer;
                         //保存图层信息到配置文件
+                        if (this.ShpPointLyrExits(pntLyr))
+                            ShpPointConfig.DeleteLayer(pntLyr.LayerName);
                         ShpPointConfig.AppendLayer(pntLyr);
                         _shpLoader.LoadShpPointLayer(pntLyr);
                         break;
@@ -610,6 +672,8 @@ namespace FloodPeakUtility.UI
                         }
                         path = frm.LineLayer.ShpLayerPath;
                         ShpLineLayer lineLyr = frm.LineLayer;
+                        if (this.ShpLineLyrExits(lineLyr))
+                            ShpLineConfig.DeleteLayer(lineLyr.LayerName);
                         ShpLineConfig.AppendLayer(lineLyr);
                         _shpLoader.LoadShpLineLayer(lineLyr);
                         break;
@@ -624,6 +688,8 @@ namespace FloodPeakUtility.UI
                         }
                         path = frm.PolyLayer.ShpLayerPath;
                         ShpPolygonLayer polyLyr = frm.PolyLayer;
+                        if (this.ShpPolygonLyrExits(polyLyr))
+                            ShpPolygonConfig.DeleteLayer(polyLyr.LayerName);
                         ShpPolygonConfig.AppendLayer(polyLyr);
                         _shpLoader.LoadShpPolygonLayer(polyLyr);
                         break;
@@ -861,6 +927,5 @@ namespace FloodPeakUtility.UI
         }
 
         #endregion
-
     }
 }

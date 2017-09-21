@@ -92,7 +92,6 @@ namespace FloodPeakToolUI.UI
         {
             string[] args = e.Argument as string[];
             string inputDemPath = args[0];
-            string outDemPath = Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), "WDEM1.tif");
             string shppath = args[1];
             ShpReader shp = new ShpReader(shppath);
 
@@ -121,7 +120,7 @@ namespace FloodPeakToolUI.UI
             }
             //释放资源
             shp.Dispose();
-            RainLoss(shppath, inputDemPath, outDemPath, ptlist, ref e);
+            RainLoss(shppath, inputDemPath, ptlist, ref e);
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -131,12 +130,12 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            double[] result = e.Result as double[];
+            double?[] result = e.Result as double?[];
             if (result != null && result.Length >= 3)
             {
-                textBox1.Text = result[0].ToString("f3");
-                textBox2.Text = result[1].ToString("f3");
-                textBox3.Text = result[2].ToString("f3");
+                textBox1.Text = result[0].GetValueOrDefault(0).ToString("f3");
+                textBox2.Text = result[1].GetValueOrDefault(0).ToString("f3");
+                textBox3.Text = result[2].GetValueOrDefault(0).ToString("f3");
             }
         }
 
@@ -146,7 +145,7 @@ namespace FloodPeakToolUI.UI
         /// <param name="shppath"></param>
         /// <param name="inputDemPath"></param>
         /// <param name="outDemPath"></param>
-        public void RainLoss(string shppath, string inputDemPath, string outDemPath, List<Point2d> pointlist, ref DoWorkEventArgs e)
+        public void RainLoss(string shppath, string inputDemPath, List<Point2d> pointlist, ref DoWorkEventArgs e)
         {
             //计算流域面积
             double F = 0;
@@ -158,56 +157,14 @@ namespace FloodPeakToolUI.UI
 
             //计算折减系数
             FormOutput.AppendLog("开始计算损失指数,折减系数..");
-
-            FormOutput.AppendLog("按范围裁剪栅格..");
-            ImgCut.CutTiff(shppath, inputDemPath, outDemPath);
-            if (File.Exists(outDemPath) == false)
-            {
-                FormOutput.AppendLog("裁剪失败！");
-                return;
-            }
-            FormOutput.AppendLog("开始读取裁剪后的栅格数据..");
-            RasterReader raster = new RasterReader(inputDemPath);
-            int row = raster.RowCount;
-            int col = raster.ColumnCount;
-            int count = raster.RasterCount;
-
-            int xsize = raster.DataSet.RasterXSize;
-            int ysize = raster.DataSet.RasterYSize;
-
-            Band band = raster.DataSet.GetRasterBand(1);
-
-            //无效值
-            FormOutput.AppendLog("获取栅格数据无效值..");
-            double nodatavalue;
-            int hasval;
-            band.GetNoDataValue(out nodatavalue, out hasval);
-            FormOutput.AppendLog("栅格数据无效值为" + nodatavalue);
-            double[] readData = new double[row * col];
-            band.ReadRaster(0, 0, xsize, ysize, readData, row, col, 0, 0);
-
-            //销毁
-            band.Dispose();
-            raster.Dispose();
-
-            FormOutput.AppendLog("开始整理损失指数数据..");
-            var res = readData.GroupBy(t => t).Select(t => new { count = t.Count(), Key = t.Key }).ToArray();
-            double total = 0;
-            double totalcount = 0;
-            foreach (var s in res)
-            {
-                if (s.Key != nodatavalue)
-                {
-                    total += s.Key * s.count;
-                    totalcount += s.count;
-                }
-            }
-            double R = total / totalcount;//暴雨损失系数
-            R = R / 1000;
             double r = 0;//暴雨损失指数 数据无法提供，
             double N = 1 / (1 + 0.016 * sf * 0.6);//折减系数
-            FormOutput.AppendLog("损失指数：" + R.ToString("f3") + "；折减系数：" + N.ToString("f3"));
-            e.Result = new double[] { sf, R, N };
+            FormOutput.AppendLog("折减系数：" + N.ToString("f3"));
+
+            double? R = RasterCoefficientReader.ReadCoeficient(shppath, inputDemPath);
+            if (R.HasValue)
+                FormOutput.AppendLog("损失指数：" + R.Value.ToString("f3"));
+            e.Result = new double?[] { sf, R, N };
         }
 
         private class TerrainPoint
@@ -274,7 +231,7 @@ namespace FloodPeakToolUI.UI
                     {
                         x[pos] = _analysisRect.West + i * _widthStep;
                         y[pos] = _analysisRect.South + j * _heightStep;
-                        z[pos] = ReadBand(raster, i, j);
+                        z[pos] = RasterCoefficientReader.ReadBand(raster, i, j);
                         pos++;
                     }
                 }
@@ -315,13 +272,6 @@ namespace FloodPeakToolUI.UI
                     }
                 }
             }/* end if point.count>3 */
-        }
-
-        public double ReadBand(RasterReader reader, int col, int row)
-        {
-            double[] d = null;
-            reader.ReadBand(col, row, 1, 1, out d);
-            return d[0];
         }
 
         /// <summary>
