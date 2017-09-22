@@ -68,7 +68,8 @@ namespace FloodPeakUtility
             if (_lstPrc.Count > 0)
                 foreach (var prs in _lstPrc)
                 {
-                    prs.Kill();
+                    if (prs != null)
+                        prs.Kill();
                 }
         }
 
@@ -83,7 +84,8 @@ namespace FloodPeakUtility
                 {
                     if (prs.Key == ptr)
                     {
-                        prs.Value.Kill();
+                        if (prs.Value != null)
+                            prs.Value.Kill();
                         _lstPrc.Remove(prs.Value);
                         break;
                     }

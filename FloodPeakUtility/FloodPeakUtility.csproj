@@ -91,8 +91,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigNames.cs" />
-    <Compile Include="Guids.cs" />
+    <Compile Include="Cons\CollectionCons.cs" />
+    <Compile Include="Cons\ConfigNames.cs" />
+    <Compile Include="Cons\Guids.cs" />
     <Compile Include="ICaculateMemo.cs" />
     <Compile Include="LayerLoader.cs" />
     <Compile Include="LogHelper.cs" />
