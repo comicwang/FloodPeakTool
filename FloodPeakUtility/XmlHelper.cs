@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
 using Microsoft.Office.Interop.Excel;
+using System.Threading;
 
 namespace FloodPeakUtility
 {
@@ -27,10 +28,21 @@ namespace FloodPeakUtility
         {
             if (File.Exists(xmlPath))
             {
-                using (StreamReader reader = new StreamReader(xmlPath))
+                //解决文件占用的问题
+                while (true)
                 {
-                    XmlSerializer xs = new XmlSerializer(typeof(T));
-                    return xs.Deserialize(reader) as T;
+                    try
+                    {
+                        using (StreamReader reader = new StreamReader(xmlPath))
+                        {
+                            XmlSerializer xs = new XmlSerializer(typeof(T));
+                            return xs.Deserialize(reader) as T;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }
             return default(T);

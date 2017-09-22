@@ -40,21 +40,24 @@ namespace FloodPeakUtility
             psInfo.Arguments = argsment;
             process.StartInfo = psInfo;
             process.Start();
+            _lstPrc.Add(process);
         }
 
-        public static void RunMethodExit(string argsment, DataReceivedEventHandler receiveHandler)
+        public static string RunMethodExit(string argsment)
         {
             string exePath = Path.Combine(Application.StartupPath, "CaculateServer.exe");
             if (File.Exists(exePath) == false)
                 throw new ArgumentNullException("指定的文件不存在");
             Process process = new Process();
             ProcessStartInfo psInfo = new ProcessStartInfo(exePath);
+            psInfo.UseShellExecute = false;
+            psInfo.RedirectStandardOutput = true;
+            psInfo.CreateNoWindow = true;
             psInfo.WindowStyle = ProcessWindowStyle.Hidden;
             psInfo.Arguments = argsment;
-            process.StartInfo = psInfo;           
-            process.OutputDataReceived += receiveHandler;
+            process.StartInfo = psInfo;
             process.Start();
-            process.WaitForExit();
+            return process.StandardOutput.ReadToEnd();
         }
 
         /// <summary>

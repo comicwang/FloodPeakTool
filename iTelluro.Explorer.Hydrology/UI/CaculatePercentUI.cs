@@ -210,13 +210,27 @@ namespace FloodPeakToolUI.UI
                     builder.Append(numCs.Value.ToString());
                     builder.Append(" ");
                     builder.Append("c1-" + numkik.Value);
-                    RunExeHelper.RunMethodExit(builder.ToString(), (sender1, e1) =>
-                        {
-                            if (!string.IsNullOrEmpty(e1.Data))
-                            {
-                                numQm.Value = Convert.ToDecimal(e1.Data);
-                            }
-                        });
+                    string result = RunExeHelper.RunMethodExit(builder.ToString());
+                    numQm.Value = Convert.ToDecimal(result);
+                }
+                else if(numkik.Value==0)
+                {
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append(MethodName.ResearchCure);
+                    builder.Append(" ");
+                    builder.Append(numX.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append(numCv.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append(numCs.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append("c2-" + numQm.Value);
+                    string result = RunExeHelper.RunMethodExit(builder.ToString());
+                    numkik.Value = Convert.ToDecimal(result);
+                }
+                else
+                {
+                    MsgBox.ShowInfo("请将需要反查的值设置为0");
                 }
             }
             catch (Exception ex)
