@@ -300,7 +300,6 @@
             0,
             0});
             this.numQm.Name = "numQm";
-            this.numQm.ReadOnly = true;
             this.numQm.Size = new System.Drawing.Size(92, 21);
             this.numQm.TabIndex = 52;
             // 

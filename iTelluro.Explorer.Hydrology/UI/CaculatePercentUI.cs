@@ -11,6 +11,9 @@ using FuncforHFLL;
 using FloodPeakUtility;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.IO;
+using FloodPeakUtility.UI;
+using System.Diagnostics;
 
 namespace FloodPeakToolUI.UI
 {
@@ -78,6 +81,8 @@ namespace FloodPeakToolUI.UI
            GWL_STYLE = -16,
            WS_DLGFRAME = 0x00400000;
 
+        private IntPtr _currentPtr = IntPtr.Zero;
+
         /// <summary>
         /// 计算频率UI
         /// </summary>
@@ -101,23 +106,7 @@ namespace FloodPeakToolUI.UI
                 txtNihe.Text = args.Nihe;
             }
             //初始化曲线
-            if (windowPtr != IntPtr.Zero)
-            {
-                IntPtr hwndHost = this.panel2.Handle;
-
-                Int32 wndStyle = GetWindowLong(windowPtr, GWL_STYLE);
-                wndStyle &= ~WS_BORDER;
-                //wndStyle &= ~WS_THICKFRAME;
-                SetWindowLong(windowPtr, GWL_STYLE, wndStyle);
-                ShowWindow(windowPtr, _SW.SW_HIDE);
-                RECT pr;
-                GetWindowRect(hwndHost, out pr);
-                // GetClientRect(hwndHost,ref pr);
-                SetParent(windowPtr, hwndHost);
-                MoveWindow(windowPtr, 0, 0, pr.right - pr.left, pr.bottom - pr.top, true);
-
-                ShowWindow(windowPtr, _SW.SW_SHOW);
-            }
+            this.DockFigure(windowPtr);
         }
 
         /// <summary>
@@ -137,17 +126,66 @@ namespace FloodPeakToolUI.UI
         /// <param name="e"></param>
         private void btnCaculate_Click(object sender, EventArgs e)
         {
-            double X = Convert.ToDouble(numX.Value);
-            MWNumericArray XX = new MWNumericArray(X);
-            double Cv = Convert.ToDouble(numCv.Value);
-            MWNumericArray Cvv = new MWNumericArray(Cv);
-            double Cs = Convert.ToDouble(numCs.Value);
-            MWNumericArray Css = new MWNumericArray(Cs);
-            //double k = Convert.ToDouble(numkik.Value);
-            //MWNumericArray kik = new MWNumericArray(k);
-            Class1 CC = new Class1();
-            double[,] Nihe = (double[,])CC.peixian(Cvv, Css, XX).ToArray();
-            txtNihe.Text = Nihe[0, 0].ToString();
+            FormOutput.AppendLog("开始重新适配曲线,获取新的拟合度和曲线..");
+            StringBuilder builder = new StringBuilder();
+            builder.Append(MethodName.NiHeCure);
+            builder.Append(" ");
+            builder.Append(numX.Value.ToString());
+            builder.Append(" ");
+            builder.Append(numCv.Value.ToString());
+            builder.Append(" ");
+            builder.Append(numCs.Value.ToString());
+            RunExeHelper.RunMethod(builder.ToString());
+            RunExeHelper.FindFigureAndTodo(ShowNiHe);
+        }
+
+        /// <summary>
+        /// 将Figure窗口Dock到Panel上
+        /// </summary>
+        /// <param name="windowPtr"></param>
+        private void DockFigure(IntPtr windowPtr)
+        {
+            if (windowPtr != IntPtr.Zero)
+            {  
+                //杀死其他进程
+                RunExeHelper.KillByIntPtr(_currentPtr);
+
+                IntPtr hwndHost = this.panel2.Handle;
+                Int32 wndStyle = GetWindowLong(windowPtr, GWL_STYLE);
+                wndStyle &= ~WS_BORDER;
+                //wndStyle &= ~WS_THICKFRAME;
+                SetWindowLong(windowPtr, GWL_STYLE, wndStyle);
+                ShowWindow(windowPtr, _SW.SW_HIDE);
+                RECT pr;
+                GetWindowRect(hwndHost, out pr);
+                // GetClientRect(hwndHost,ref pr);
+                SetParent(windowPtr, hwndHost);
+                MoveWindow(windowPtr, 0, 0, pr.right - pr.left, pr.bottom - pr.top, true);
+                ShowWindow(windowPtr, _SW.SW_SHOW);
+                _currentPtr = windowPtr;
+            }
+        }
+
+        /// <summary>
+        /// 用于接取后台数据
+        /// </summary>
+        /// <param name="windowPtr"></param>
+        private void ShowNiHe(IntPtr windowPtr)
+        {
+            string cv = XmlHelper.Deserialize<string>(Path.Combine(Application.StartupPath, ConfigNames.TempName));
+            FormOutput.AppendLog(string.Format("计算结果：拟合度【{0}】", cv));
+            if (cv != null)
+            {
+                if (panel2.InvokeRequired)
+                {
+                    panel2.Invoke(new Action(() =>
+                        {
+                            txtNihe.Text = cv;
+                            this.DockFigure(windowPtr);
+                        }));
+
+                }
+            }
         }
 
         /// <summary>
@@ -159,32 +197,27 @@ namespace FloodPeakToolUI.UI
         {
             try
             {
-                double X = Convert.ToDouble(numX.Value);
-                MWNumericArray XX = new MWNumericArray(X);
-                double Cv = Convert.ToDouble(numCv.Value);
-                MWNumericArray Cvv = new MWNumericArray(Cv);
-                double Cs = Convert.ToDouble(numCs.Value);
-                MWNumericArray Css = new MWNumericArray(Cs);
-                double k = Convert.ToDouble(numkik.Value);
-                MWNumericArray kik = new MWNumericArray(k);
-                double Q = Convert.ToDouble(numQm.Value);
-                MWNumericArray Qm = new MWNumericArray(Q);
-                Class1 CC = new Class1();
-                if (k == 0 && Q == 0)
-                    return;
-                else if (k != 0 && Q != 0)
-                    return;
-                else if (k != 0 && Q == 0)
+                //反查值
+                if (numQm.Value == 0)
                 {
-                    double[,] Xcha = (double[,])CC.chaxun1(Cvv, Css, XX, kik).ToArray();
-                    numQm.Value = Convert.ToDecimal(Xcha[0, 0]);
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append(MethodName.ResearchCure);
+                    builder.Append(" ");
+                    builder.Append(numX.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append(numCv.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append(numCs.Value.ToString());
+                    builder.Append(" ");
+                    builder.Append("c1-" + numkik.Value);
+                    RunExeHelper.RunMethodExit(builder.ToString(), (sender1, e1) =>
+                        {
+                            if (!string.IsNullOrEmpty(e1.Data))
+                            {
+                                numQm.Value = Convert.ToDecimal(e1.Data);
+                            }
+                        });
                 }
-                else if (k == 0 && Q != 0)
-                {
-                    double[,] Xcha = (double[,])CC.chaxun2(Cvv, Css, XX, Qm).ToArray();
-                    numkik.Value = Convert.ToDecimal(Xcha[0, 0]);
-                }
-
             }
             catch (Exception ex)
             {

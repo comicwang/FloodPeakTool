@@ -118,7 +118,7 @@ namespace FloodPeakToolUI.UI
             cmbLevel.SelectedIndex = 0;
             //显示之前的结果
 
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormSub + ".xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormSub);
             if (File.Exists(_xmlPath))
             {
                 BYSJResult result = XmlHelper.Deserialize<BYSJResult>(_xmlPath);

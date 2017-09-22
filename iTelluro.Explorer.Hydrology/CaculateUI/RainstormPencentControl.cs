@@ -117,7 +117,7 @@ namespace FloodPeakToolUI.UI
             XmlHelper.SaveDataToExcelFile<PercentStaticsModel>(lstStatics, filePath);
 
             FormOutput.AppendLog("开始计算水文频率曲线..");
-            RunExeHelper.RunMethod("SWCure");
+            RunExeHelper.RunMethod(MethodName.SWCure);
 
         }
 
@@ -133,7 +133,7 @@ namespace FloodPeakToolUI.UI
 
         private void ShowResult(IntPtr windowPtr)
         {
-            CvCure cv = XmlHelper.Deserialize<CvCure>(Path.Combine(Application.StartupPath, "Cv.xml"));
+            CvCure cv = XmlHelper.Deserialize<CvCure>(Path.Combine(Application.StartupPath, ConfigNames.SvCure));
             FormOutput.AppendLog(string.Format("计算结果：统计样本平均值X【{0}】,变差系数Cv【{1}】,偏态系数Cs【{2}】,拟合度【{3}】", cv.X, cv.Cv, cv.Cs, cv.Nihe));
             if (cv != null)
             {

@@ -34,7 +34,7 @@ namespace FloodPeakUtility.UI
         /// <param name="content">日志信息</param>
         public static void AppendLog(string content)
         {
-            if (_form == null ||_form.IsDisposed)
+            if (_form == null || _form.IsDisposed)
             {
                 _form = new FormOutput();
                 _form.StartPosition = FormStartPosition.CenterScreen;
@@ -46,7 +46,6 @@ namespace FloodPeakUtility.UI
                         _form.BindConsole();
                         _form.Show();
                         _form.WindowState = FormWindowState.Normal;
-                        _form.StartPosition = FormStartPosition.CenterScreen;
                         _form.Activate();
                     }));
             }
@@ -55,10 +54,10 @@ namespace FloodPeakUtility.UI
                 _form.BindConsole();
                 _form.Show();
                 _form.WindowState = FormWindowState.Normal;
-                _form.StartPosition = FormStartPosition.CenterScreen;
                 _form.Activate();
             }
             MyConsole.AppendLine(content);
         }
+
     }
 }

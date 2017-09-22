@@ -25,7 +25,7 @@ namespace FloodPeakToolUI.UI
         {
             _projectForlder = projectForlder;
             //根据文件夹来获取里面的参数文件
-            string xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormSub + ".xml");
+            string xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormSub);
             //暴雨衰减赋值
             if (File.Exists(xmlPath))
             {
@@ -68,7 +68,7 @@ namespace FloodPeakToolUI.UI
             //保存参数
 
             //暴雨衰减保存
-            string xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormSub + ".xml");
+            string xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormSub);
             BYSJResult bysj = new BYSJResult()
             {
                 Sd = string.IsNullOrWhiteSpace(txtsd.Text) ? 0 : Convert.ToDouble(txtsd.Text),

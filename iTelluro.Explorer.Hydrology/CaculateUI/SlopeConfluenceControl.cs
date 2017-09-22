@@ -479,7 +479,7 @@ namespace FloodPeakToolUI.UI
             fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[2].NodeName : string.Empty);
 
             //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.SlopeConfluence + ".xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.SlopeConfluence);
             if (File.Exists(_xmlPath))
             {
                 PMHLResult result = XmlHelper.Deserialize<PMHLResult>(_xmlPath);

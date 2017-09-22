@@ -18,13 +18,18 @@ namespace FloodPeakUtility
         /// <summary>
         /// 记录计算后台，在程序退出的时候，杀死这些后台
         /// </summary>
-        private static List<Process> _processes = new List<Process>();
+        private static List<Process> _lstPrc = new List<Process>();
+        private static Dictionary<IntPtr, Process> _dicProcPtr = new Dictionary<IntPtr, Process>();
+
+        //记录当前进程，用于标识进程和Figure的关系
+        private static Process _currentProcess = null;
+
 
         /// <summary>
         /// 运行一个计算的后台
         /// </summary>
-        /// <param name="methodName">需要计算的后台名称</param>
-        public static void RunMethod(string methodName)
+        /// <param name="argsment">需要计算的后台名称</param>
+        public static void RunMethod(string argsment)
         {
             string exePath = Path.Combine(Application.StartupPath, "CaculateServer.exe");
             if (File.Exists(exePath) == false)
@@ -32,12 +37,24 @@ namespace FloodPeakUtility
             Process process = new Process();
             ProcessStartInfo psInfo = new ProcessStartInfo(exePath);
             psInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            psInfo.Arguments = methodName;
+            psInfo.Arguments = argsment;
             process.StartInfo = psInfo;
             process.Start();
-            _processes.Add(process);
-            // process.WaitForExit();
-            // return process.ExitCode == 0;
+        }
+
+        public static void RunMethodExit(string argsment, DataReceivedEventHandler receiveHandler)
+        {
+            string exePath = Path.Combine(Application.StartupPath, "CaculateServer.exe");
+            if (File.Exists(exePath) == false)
+                throw new ArgumentNullException("指定的文件不存在");
+            Process process = new Process();
+            ProcessStartInfo psInfo = new ProcessStartInfo(exePath);
+            psInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            psInfo.Arguments = argsment;
+            process.StartInfo = psInfo;           
+            process.OutputDataReceived += receiveHandler;
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -45,10 +62,28 @@ namespace FloodPeakUtility
         /// </summary>
         public static void KillAll()
         {
-            if (_processes.Count > 0)
-                foreach (Process prs in _processes)
+            if (_lstPrc.Count > 0)
+                foreach (var prs in _lstPrc)
                 {
                     prs.Kill();
+                }
+        }
+
+        /// <summary>
+        /// 根据句柄来关闭进程
+        /// </summary>
+        /// <param name="ptr">句柄值</param>
+        public static void KillByIntPtr(IntPtr ptr)
+        {
+            if (_dicProcPtr.Count > 0)
+                foreach (var prs in _dicProcPtr)
+                {
+                    if (prs.Key == ptr)
+                    {
+                        prs.Value.Kill();
+                        _lstPrc.Remove(prs.Value);
+                        break;
+                    }
                 }
         }
 
@@ -70,6 +105,7 @@ namespace FloodPeakUtility
                         //找到之后延时100ms，以防后台和前台资源占用.
                         Thread.Sleep(100);
                         todo(hwndControl);
+                        _dicProcPtr.Add(hwndControl, _currentProcess);
                         break;
                     }
                 }

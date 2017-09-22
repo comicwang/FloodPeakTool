@@ -365,7 +365,7 @@ namespace FloodPeakToolUI.UI
             fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
 
             //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss + ".xml");
+            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss);
             if (File.Exists(_xmlPath))
             {
                 BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
