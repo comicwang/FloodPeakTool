@@ -92,28 +92,33 @@ namespace FloodPeakToolUI.UI
             DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnSting(), CommandType.Text, commandText);
             //整理数据
             List<PercentStaticsModel> lstStatics = new List<PercentStaticsModel>();
+            string points = string.Empty;
             for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
                 PercentStaticsModel temp = new PercentStaticsModel()
                 {
                     RowIndex = i + 1,
                     MaxValue = Convert.ToDecimal(ds.Tables[0].Rows[i][0]),
-                    CArg =((decimal)(i + 1))/ ds.Tables[0].Rows.Count
+                    CArg = ((decimal)(i + 1)) / ds.Tables[0].Rows.Count
                 };
                 lstStatics.Add(temp);
+                points += ds.Tables[0].Rows[i][0];
+                if (i < ds.Tables[0].Rows.Count - 1)
+                    points += ",";
             }
-            //统计值的数量为ds.Tables[0].Rows.Count个
+            FormOutput.AppendLog(string.Format("统计值的数量为{0}个..", ds.Tables[0].Rows.Count));
+            FormOutput.AppendLog(string.Format("统计值为[{0}]", points));
             string filePath = Path.Combine(Application.StartupPath, "SStatic.xls");
-            if(File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
             //保存数据到xls
             XmlHelper.SaveDataToExcelFile<PercentStaticsModel>(lstStatics, filePath);
 
-            //开始计算水文频率曲线
-            Class1 C = new Class1();
-            e.Result = (double[,])C.miaodian().ToArray();
+            FormOutput.AppendLog("开始计算水文频率曲线..");
+            RunExeHelper.RunMethod("SWCure");
+
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -123,13 +128,27 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-           // progressBar1.Visible = false;
-           // progressBar1.Value = 0;
-            double[,] result = e.Result as double[,];
-            CaculatePercentUI resutUI = new CaculatePercentUI();
-            resutUI.Dock = DockStyle.Fill;
-            resutUI.BindResult(result);
-            _parent.ShowDock("水文频率计算与曲线配线", resutUI);
+            RunExeHelper.FindFigureAndTodo(ShowResult);
+        }
+
+        private void ShowResult(IntPtr windowPtr)
+        {
+            CvCure cv = XmlHelper.Deserialize<CvCure>(Path.Combine(Application.StartupPath, "Cv.xml"));
+            FormOutput.AppendLog(string.Format("计算结果：统计样本平均值X【{0}】,变差系数Cv【{1}】,偏态系数Cs【{2}】,拟合度【{3}】", cv.X, cv.Cv, cv.Cs, cv.Nihe));
+            if (cv != null)
+            {
+                if (_parent.InvokeRequired)
+                {
+                    _parent.Invoke(new Action(() =>
+                    {
+                        CaculatePercentUI resutUI = new CaculatePercentUI();
+                        resutUI.Dock = DockStyle.Fill;                      
+                        _parent.ShowDock("水文频率计算与曲线配线", resutUI);
+                        resutUI.BindResult(cv, windowPtr);
+                    }));
+                }
+
+            }
         }
 
         #endregion

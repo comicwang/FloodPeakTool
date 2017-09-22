@@ -20,11 +20,9 @@ namespace FloodPeakTool
         [STAThread]
         static void Main(string[] args)
         {
-            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-                Application.Run(new MainForm(args));
+            Application.Run(new MainForm(args));
 
         }
     }

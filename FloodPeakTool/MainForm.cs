@@ -309,6 +309,17 @@ namespace FloodPeakTool
             }
         }
 
+        /// <summary>
+        /// 捕获窗口退出事件
+        /// 用于杀死所有后台计算进程
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            RunExeHelper.KillAll();
+        }
+
         #endregion
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -330,6 +341,5 @@ namespace FloodPeakTool
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             IMemo = Memos.Where(t => t.CaculateName == item.Text).FirstOrDefault();
         }
-
     }
 }

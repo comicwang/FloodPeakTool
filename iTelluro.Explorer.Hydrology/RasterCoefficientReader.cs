@@ -37,7 +37,7 @@ namespace FloodPeakToolUI
                     return null;
                 }
                 FormOutput.AppendLog("开始读取裁剪后的栅格数据..");
-                raster = new RasterReader(outDemPath);
+                raster = new RasterReader(inputDemPath);
                 int row = raster.RowCount;
                 int col = raster.ColumnCount;
                // int count = raster.RasterCount;
