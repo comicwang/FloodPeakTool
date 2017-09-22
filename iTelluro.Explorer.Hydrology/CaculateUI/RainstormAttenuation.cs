@@ -134,7 +134,8 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Result.ToString() == "1")
+
+            if (e.Result != null)
                 RunExeHelper.FindFigureAndTodo(ShowResult);
         }
 

@@ -101,6 +101,8 @@ namespace FloodPeakToolUI.UI
             }
             for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
+                if (ds.Tables[0].Rows[i][0] == DBNull.Value)
+                    continue;
                 PercentStaticsModel temp = new PercentStaticsModel()
                 {
                     RowIndex = i + 1,
@@ -134,7 +136,7 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Result.ToString() == "1")
+            if (e.Result!=null)
                 RunExeHelper.FindFigureAndTodo(ShowResult);
         }
 

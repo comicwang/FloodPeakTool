@@ -389,7 +389,8 @@ namespace FloodPeakToolUI.UI
             {
                 F = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
                 R = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-                N = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
+                N = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text),
+                r1 = string.IsNullOrEmpty(txtr1.Text) ? 0 : Convert.ToDouble(txtr1.Text)
             };
             XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
             MsgBox.ShowInfo("保存成功！");

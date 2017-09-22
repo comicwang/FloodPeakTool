@@ -31,7 +31,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.txtr1 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -49,7 +49,7 @@
             // 
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.textBox5);
+            this.groupBox1.Controls.Add(this.txtr1);
             this.groupBox1.Controls.Add(this.textBox3);
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Controls.Add(this.label4);
@@ -88,12 +88,12 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox5
+            // txtr1
             // 
-            this.textBox5.Location = new System.Drawing.Point(106, 87);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(122, 21);
-            this.textBox5.TabIndex = 1;
+            this.txtr1.Location = new System.Drawing.Point(106, 87);
+            this.txtr1.Name = "txtr1";
+            this.txtr1.Size = new System.Drawing.Size(122, 21);
+            this.txtr1.TabIndex = 1;
             // 
             // textBox3
             // 
@@ -210,7 +210,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox txtr1;
         private System.Windows.Forms.Label label4;
     }
 }

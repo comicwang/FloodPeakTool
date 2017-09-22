@@ -106,7 +106,7 @@ namespace FloodPeakToolUI.UI
                           txteps2.Text,
                           txttc.Text
                 };
-                backgroundWorker1.RunWorkerAsync();
+                backgroundWorker1.RunWorkerAsync(args);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             //bysj,byss,hchl,pmhl,Qm,p1,eps1,eps2,tc
-            object[] args = e.Result as object[];
+            object[] args = e.Argument as object[];
             BYSJResult bysj=args[0] as BYSJResult;
             BYSSResult byss=args[1] as BYSSResult;
             HCHLResult hchl=args[2] as HCHLResult;
@@ -133,20 +133,35 @@ namespace FloodPeakToolUI.UI
             builder.Append(args[5]);
             builder.Append(" ");
             builder.Append(args[4]);
+            builder.Append(" ");
             builder.Append(args[6]);
+            builder.Append(" ");
             builder.Append(bysj.Sd);
+            builder.Append(" ");
             builder.Append(byss.R);
+            builder.Append(" ");
             builder.Append(bysj.d);
+            builder.Append(" ");
             builder.Append(bysj.nd);
+            builder.Append(" ");
             builder.Append(byss.r1);
+            builder.Append(" ");
             builder.Append(byss.F);
+            builder.Append(" ");
             builder.Append(hchl.L1);
+            builder.Append(" ");
             builder.Append(pmhl.L2);
+            builder.Append(" ");
             builder.Append(hchl.l1);
+            builder.Append(" ");
             builder.Append(pmhl.l2);
+            builder.Append(" ");
             builder.Append(hchl.A1);
+            builder.Append(" ");
             builder.Append(pmhl.A2);
+            builder.Append(" ");
             builder.Append(args[8]);
+            builder.Append(" ");
             builder.Append(args[7]);
             RunExeHelper.RunMethod(builder.ToString());
             e.Result = "1";
@@ -159,7 +174,7 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Result.ToString() == "1")
+            if (e.Result != null)
                 RunExeHelper.FindFigureAndTodo(ShowResult);
         }
 
