@@ -36,6 +36,11 @@ namespace FloodPeakUtility
         public static readonly string SvCure = "SvCure.xml";
 
         /// <summary>
+        /// 暴雨衰减参数文件名称
+        /// </summary>
+        public static readonly string SubCure = "SubCure.xml";
+
+        /// <summary>
         /// 临时文件名称
         /// </summary>
         public static readonly string TempName = "TempName.xml";
@@ -61,5 +66,10 @@ namespace FloodPeakUtility
         /// 曲线反查
         /// </summary>
         public static readonly string ResearchCure = "ResearchCure";
+
+        /// <summary>
+        /// 暴雨衰减
+        /// </summary>
+        public static readonly string RainStormSub = "RainStormSub";
     }
 }

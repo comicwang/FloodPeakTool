@@ -29,9 +29,28 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
+        private CaculateFirgureUI _resutUI=null;
         public RainstormAttenuation()
         {
             InitializeComponent();
+            InitializeCombox();
+        }
+
+        private void InitializeCombox()
+        {
+            List<SimpleModel> dataSource = new List<SimpleModel>()
+            {
+                new SimpleModel(){ Display="100年一遇",Value="1"},
+                new SimpleModel(){Display="50年一遇",Value="2"},
+                new SimpleModel(){Display="20年一遇" ,Value="5"},
+                new SimpleModel(){Display="10年一遇" ,Value="10"},
+                new SimpleModel(){Display="5年一遇" ,Value="20"},
+            };
+
+            cmbLevel.DataSource = dataSource;
+            cmbLevel.DisplayMember = "Display";
+            cmbLevel.ValueMember = "Value";
+            cmbLevel.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,10 +58,8 @@ namespace FloodPeakToolUI.UI
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
-
-                //progressBar1.Visible = true;
                 string state = txtState.Text;
-                string level = cmbLevel.Text;
+                string level = cmbLevel.SelectedValue.ToString();
                 backgroundWorker1.RunWorkerAsync(new string[] { state, level });
             }
             else
@@ -57,9 +74,57 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];
-            FormOutput.AppendLog(string.Format("开始从数据库中获取站号【{0}】频率为【{1}】的单点雨量值", args[0], args[1]));
+            FormOutput.AppendLog(string.Format("开始从数据库中获取站号【{0}】频率为【{1}%】的单点雨量值", args[0], args[1]));
 
-            string commandText = "select * from rainfall_percent where MONITORNUM='{0}' and [PERCENT]={1}";
+            string commandText = string.Format("select During,VALUE from rainfall_percent where MONITORNUM='{0}' and [PERCENT]={1} order by During", args[0], args[1]);
+            DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnSting(), CommandType.Text, commandText);
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                FormOutput.AppendLog("统计数据不足，请重新选择统计条件！");
+                return;
+            }
+            //将数据按照大于一小时和小于一小时来分类
+            string minHour = string.Empty;
+            string minHourValue = string.Empty;
+            string maxHour = string.Empty;
+            string maxHourValue = string.Empty;
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                double during = Convert.ToDouble(ds.Tables[0].Rows[i][0]);
+                double value = Convert.ToDouble(ds.Tables[0].Rows[i][1]);
+                if (during <= 1)
+                {
+                    minHour += during;
+                    minHour += ",";
+                    minHourValue += value;
+                    minHourValue += ",";
+                }
+                else
+                {
+                    maxHour += during;
+                    maxHour += ",";
+                    maxHourValue += value;
+                    maxHourValue += ",";
+                }
+            }
+            FormOutput.AppendLog(string.Format("计算参数：小于1小时时间段-【{0}】,值【{1}】,大于1小时时间段【{2}】,值【{3}】", minHour, minHourValue, maxHour, maxHourValue));
+            StringBuilder builder = new StringBuilder();
+            builder.Append(MethodName.RainStormSub);
+            builder.Append(" ");
+            builder.Append(minHour.Substring(0, minHour.Length - 1));
+            builder.Append(" ");
+            builder.Append(" ");
+            builder.Append(minHourValue.Substring(0, minHourValue.Length - 1));
+            builder.Append(" ");
+            builder.Append(" ");
+            builder.Append(maxHour.Substring(0, maxHour.Length - 1));
+            builder.Append(" ");
+            builder.Append(" ");
+            builder.Append(maxHourValue.Substring(0, maxHourValue.Length - 1));
+            builder.Append(" ");
+            FormOutput.AppendLog("开始计算暴雨衰减参数...");
+            RunExeHelper.RunMethod(builder.ToString());
+            e.Result = "1";
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -69,9 +134,42 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //progressBar1.Visible = false;
-            //progressBar1.Value = 0;
+            if (e.Result.ToString() == "1")
+                RunExeHelper.FindFigureAndTodo(ShowResult);
+        }
 
+        private void ShowResult(IntPtr windowPtr)
+        {
+            SubCure cv = XmlHelper.Deserialize<SubCure>(Path.Combine(Application.StartupPath, ConfigNames.SubCure));
+            FormOutput.AppendLog(string.Format("计算结果：暴雨雨力Sd【{0}】,衰减指数nd【{1}】,衰减时间参数d【{2}】,斜率n1【{3}】,斜率n2【{4}】", cv.Sd, cv.nd, cv.d, cv.n1,cv.n2));
+            if (cv.n2 / cv.n1 > 1.5)
+            {
+                FormOutput.AppendLog(string.Format("n2与n1的比为{0},结果无效", cv.n2 / cv.n1));
+                //return;
+            }
+            if (cv != null)
+            {
+                if (_parent.InvokeRequired)
+                {
+                    _parent.Invoke(new Action(() =>
+                    {
+                        if (_resutUI == null)
+                        {
+                            _resutUI = new CaculateFirgureUI();
+                            _resutUI.Dock = DockStyle.Fill;
+                            _parent.ShowDock("暴雨衰减曲线", _resutUI);
+                        }
+                        _resutUI.BindResult(windowPtr);
+                        txtSd.Text = cv.Sd.ToString("f3");
+                        txtnd.Text = cv.nd.ToString("f3");
+                        txtd.Text = cv.d.ToString("f3");
+                        txtn1.Text = cv.n1.ToString("f3");
+                        txtn2.Text = cv.n2.ToString("f3");
+                       
+                    }));
+                }
+
+            }
         }
 
         #endregion

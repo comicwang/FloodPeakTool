@@ -108,6 +108,7 @@
     <Compile Include="Model\ProjectChangedEventArgs.cs" />
     <Compile Include="Model\ProjectModel.cs" />
     <Compile Include="Model\SimpleModel.cs" />
+    <Compile Include="Model\SubCure.cs" />
     <Compile Include="MsgBox.cs" />
     <Compile Include="MyConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

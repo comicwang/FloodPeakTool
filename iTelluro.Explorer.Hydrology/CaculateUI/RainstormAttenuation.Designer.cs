@@ -37,9 +37,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtSd = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtn2 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txtn1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtState = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -133,12 +133,12 @@
             this.label6.TabIndex = 5;
             this.label6.Text = "衰减指数nd";
             // 
-            // textBox1
+            // txtn2
             // 
-            this.textBox1.Location = new System.Drawing.Point(107, 72);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 21);
-            this.textBox1.TabIndex = 14;
+            this.txtn2.Location = new System.Drawing.Point(107, 72);
+            this.txtn2.Name = "txtn2";
+            this.txtn2.Size = new System.Drawing.Size(121, 21);
+            this.txtn2.TabIndex = 14;
             // 
             // label5
             // 
@@ -149,12 +149,12 @@
             this.label5.TabIndex = 8;
             this.label5.Text = "暴雨雨力Sd";
             // 
-            // textBox3
+            // txtn1
             // 
-            this.textBox3.Location = new System.Drawing.Point(106, 48);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(122, 21);
-            this.textBox3.TabIndex = 15;
+            this.txtn1.Location = new System.Drawing.Point(106, 48);
+            this.txtn1.Name = "txtn1";
+            this.txtn1.Size = new System.Drawing.Size(122, 21);
+            this.txtn1.TabIndex = 15;
             // 
             // label4
             // 
@@ -212,9 +212,9 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtSd);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtn2);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.txtn1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtState);
             this.Controls.Add(this.label3);
@@ -238,9 +238,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtSd;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtn2;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtn1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtState;
         private System.Windows.Forms.Label label3;

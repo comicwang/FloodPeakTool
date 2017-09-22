@@ -89,7 +89,7 @@
             this.groupBox1.Location = new System.Drawing.Point(0, 297);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(701, 202);
-            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "洪峰流量统计结果";
             // 

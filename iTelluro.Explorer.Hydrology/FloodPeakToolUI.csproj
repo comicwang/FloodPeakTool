@@ -181,6 +181,12 @@
     <Compile Include="UI\CaculatePercentUI.Designer.cs">
       <DependentUpon>CaculatePercentUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\CaculateFirgureUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CaculateFirgureUI.Designer.cs">
+      <DependentUpon>CaculateFirgureUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\CaculateResultUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -240,6 +246,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\CaculatePercentUI.resx">
       <DependentUpon>CaculatePercentUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CaculateFirgureUI.resx">
+      <DependentUpon>CaculateFirgureUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\CaculateResultUI.resx">
       <DependentUpon>CaculateResultUI.cs</DependentUpon>
