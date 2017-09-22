@@ -81,9 +81,30 @@ namespace CaculateServer
                         double[,] Xcha = (double[,])CC.chaxun2(Cvv, Css, XX, kik).ToArray();
                         Console.WriteLine(Xcha[0, 0]);
                     }
+                   // c3-站号-时间段
                     else if(type=="c3")
                     {
-
+                        string state = args[4].Split('-')[1];
+                        string time = args[4].Split('-')[2];
+                        double value = 0;
+                        string commandText = string.Empty;
+                        Class1 CC = new Class1();
+                        foreach (double item in CollectionCons.StaticsPercents)
+                        {
+                            try
+                            {
+                                MWNumericArray kik = new MWNumericArray(item);                            
+                                double[,] Xcha = (double[,])CC.chaxun1(Cvv, Css, XX, kik).ToArray();
+                                value = Xcha[0, 0];
+                                commandText = string.Format("insert into RAINFALL_PERCENT values(NEWID(),'{0}',{1},{2},{3},{4},{5},{6},{7},'{8}',{9})", state, "null", "null", "null", X, Cv, Cs, item, time, value);
+                                SqlHelper.ExecuteNonQuery(SqlHelper.GetConnSting(), System.Data.CommandType.Text, commandText);
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine("入库失败-" + ex.Message);
+                            }
+                        }
+                        Console.WriteLine("入库成功！");                       
                     }
                 }
             }            

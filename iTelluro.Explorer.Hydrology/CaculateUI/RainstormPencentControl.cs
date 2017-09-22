@@ -31,6 +31,7 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
+        private CaculatePercentUI _resutUI = null;
         public RainstormAttenuationControl()
         {
             InitializeComponent();
@@ -86,13 +87,18 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];  //state-percent
-            FormOutput.AppendLog("读取数据库某个站点某个统计频率的年统计最大值...");
+            FormOutput.AppendLog(string.Format("读取数据库站点【{0}】时间段为【{1}】的年统计最大值...", args[1], args[0]));
             //读取数据库某个站点某个统计频率的年统计最大值
             string commandText = string.Format("select {0} from RAINFALL_YEAR_MAX where MONITORNUM='{1}' order by {0} desc", args[1], args[0]);
             DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnSting(), CommandType.Text, commandText);
             //整理数据
             List<PercentStaticsModel> lstStatics = new List<PercentStaticsModel>();
             string points = string.Empty;
+            if (ds.Tables[0].Rows.Count==0)
+            {
+                FormOutput.AppendLog("统计数据不足，请重新选择统计条件！");
+                return;
+            }
             for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
             {
                 PercentStaticsModel temp = new PercentStaticsModel()
@@ -118,7 +124,7 @@ namespace FloodPeakToolUI.UI
 
             FormOutput.AppendLog("开始计算水文频率曲线..");
             RunExeHelper.RunMethod(MethodName.SWCure);
-
+            e.Result = "1";
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -128,7 +134,8 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            RunExeHelper.FindFigureAndTodo(ShowResult);
+            if (e.Result.ToString() == "1")
+                RunExeHelper.FindFigureAndTodo(ShowResult);
         }
 
         private void ShowResult(IntPtr windowPtr)
@@ -141,10 +148,15 @@ namespace FloodPeakToolUI.UI
                 {
                     _parent.Invoke(new Action(() =>
                     {
-                        CaculatePercentUI resutUI = new CaculatePercentUI();
-                        resutUI.Dock = DockStyle.Fill;                      
-                        _parent.ShowDock("水文频率计算与曲线配线", resutUI);
-                        resutUI.BindResult(cv, windowPtr);
+                        if (_resutUI == null)
+                        {
+                            _resutUI = new CaculatePercentUI();
+                            _resutUI.Dock = DockStyle.Fill;
+                            _parent.ShowDock("水文频率计算与曲线配线", _resutUI);
+                        }
+                        cv.State = txtState.Text;
+                        cv.Time = cmbPercent.SelectedValue.ToString();
+                        _resutUI.BindResult(cv, windowPtr);
                     }));
                 }
 

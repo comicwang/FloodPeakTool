@@ -81,7 +81,18 @@ namespace FloodPeakToolUI.UI
            GWL_STYLE = -16,
            WS_DLGFRAME = 0x00400000;
 
+        /// <summary>
+        /// 当前Figure窗口句柄值
+        /// </summary>
         private IntPtr _currentPtr = IntPtr.Zero;
+        /// <summary>
+        /// 当前站号
+        /// </summary>
+        private string _cuurentState = string.Empty;
+        /// <summary>
+        /// 当前范围值
+        /// </summary>
+        private string _currentTime = string.Empty;
 
         /// <summary>
         /// 计算频率UI
@@ -104,6 +115,8 @@ namespace FloodPeakToolUI.UI
                 numCv.Value = Convert.ToDecimal(args.Cv);
                 numCs.Value = Convert.ToDecimal(args.Cs);
                 txtNihe.Text = args.Nihe;
+                _cuurentState = args.State;
+                _currentTime = args.Time;
             }
             //初始化曲线
             this.DockFigure(windowPtr);
@@ -246,17 +259,45 @@ namespace FloodPeakToolUI.UI
         /// <param name="e"></param>
         private void btnInsert_Click(object sender, EventArgs e)
         {
-         
+            if (bgwCaculate.IsBusy == false)
+            {
+                FormOutput.AppendLog(string.Format("开始入库时间段为{0},站号为{1}的概率数据", _currentTime, _cuurentState));
+                CvCure arg = new CvCure()
+                {
+                    State = _cuurentState,
+                    Time = _currentTime,
+                    X = Convert.ToDouble(numX.Value),
+                    Cv = Convert.ToDouble(numCv.Value),
+                    Cs = Convert.ToDouble(numCs.Value)
+                };
+                bgwCaculate.RunWorkerAsync(arg);
+            }
+            else
+            {
+                FormOutput.AppendLog("当前后台正在入库，请稍候");
+            }
         }
 
         private void bgwCaculate_DoWork(object sender, DoWorkEventArgs e)
         {
-
+            CvCure cv = e.Argument as CvCure;
+            StringBuilder builder = new StringBuilder();
+            builder.Append(MethodName.ResearchCure);
+            builder.Append(" ");
+            builder.Append(cv.X);
+            builder.Append(" ");
+            builder.Append(cv.Cv);
+            builder.Append(" ");
+            builder.Append(cv.Cs);
+            builder.Append(" ");
+            builder.Append("c3-" + cv.State + "-" + cv.Time);
+            e.Result = RunExeHelper.RunMethodExit(builder.ToString());
         }
 
         private void bgwCaculate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            if (e.Result != null)
+                FormOutput.AppendLog(e.Result.ToString());
         }
     }
 }
