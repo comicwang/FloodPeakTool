@@ -31,16 +31,16 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txttc = new System.Windows.Forms.TextBox();
+            this.txteps2 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txteps1 = new System.Windows.Forms.TextBox();
+            this.txtp1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtQm = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -70,20 +70,6 @@
             this.label4.TabIndex = 18;
             this.label4.Text = "产流历时初值tc_0";
             // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "100年一遇",
-            "50年一遇",
-            "20年一遇",
-            "10年一遇"});
-            this.comboBox1.Location = new System.Drawing.Point(115, 1);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(112, 20);
-            this.comboBox1.TabIndex = 17;
-            // 
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -95,19 +81,19 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox5
+            // txttc
             // 
-            this.textBox5.Location = new System.Drawing.Point(115, 100);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(112, 21);
-            this.textBox5.TabIndex = 11;
+            this.txttc.Location = new System.Drawing.Point(115, 100);
+            this.txttc.Name = "txttc";
+            this.txttc.Size = new System.Drawing.Size(112, 21);
+            this.txttc.TabIndex = 11;
             // 
-            // textBox1
+            // txteps2
             // 
-            this.textBox1.Location = new System.Drawing.Point(115, 75);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(112, 21);
-            this.textBox1.TabIndex = 12;
+            this.txteps2.Location = new System.Drawing.Point(115, 75);
+            this.txteps2.Name = "txteps2";
+            this.txteps2.Size = new System.Drawing.Size(112, 21);
+            this.txteps2.TabIndex = 12;
             // 
             // label5
             // 
@@ -118,19 +104,19 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "迭代精度eps2";
             // 
-            // textBox3
+            // txteps1
             // 
-            this.textBox3.Location = new System.Drawing.Point(115, 50);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(112, 21);
-            this.textBox3.TabIndex = 13;
+            this.txteps1.Location = new System.Drawing.Point(115, 50);
+            this.txteps1.Name = "txteps1";
+            this.txteps1.Size = new System.Drawing.Size(112, 21);
+            this.txteps1.TabIndex = 13;
             // 
-            // textBox2
+            // txtp1
             // 
-            this.textBox2.Location = new System.Drawing.Point(115, 25);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(112, 21);
-            this.textBox2.TabIndex = 14;
+            this.txtp1.Location = new System.Drawing.Point(115, 25);
+            this.txtp1.Name = "txtp1";
+            this.txtp1.Size = new System.Drawing.Size(112, 21);
+            this.txtp1.TabIndex = 14;
             // 
             // label3
             // 
@@ -159,19 +145,26 @@
             this.label1.TabIndex = 10;
             this.label1.Text = "洪峰流量初值Qm_0";
             // 
+            // txtQm
+            // 
+            this.txtQm.Location = new System.Drawing.Point(115, 0);
+            this.txtQm.Name = "txtQm";
+            this.txtQm.Size = new System.Drawing.Size(112, 21);
+            this.txtQm.TabIndex = 14;
+            // 
             // MainCaculateControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox5);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txttc);
+            this.Controls.Add(this.txteps2);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.txteps1);
+            this.Controls.Add(this.txtQm);
+            this.Controls.Add(this.txtp1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -187,15 +180,15 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txttc;
+        private System.Windows.Forms.TextBox txteps2;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txteps1;
+        private System.Windows.Forms.TextBox txtp1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtQm;
     }
 }

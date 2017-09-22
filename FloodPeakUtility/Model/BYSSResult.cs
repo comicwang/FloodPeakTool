@@ -9,11 +9,13 @@ namespace FloodPeakUtility.Model
     [XmlRoot("RainstormLoss")]
     public class BYSSResult
     {
-        [XmlElement("Area")]
-        public double AreaR { get; set; }
-        [XmlElement("LoosR")]
-        public double LossR { get; set; }
-         [XmlElement("SubN")]
-        public double SubN { get; set; }
+        [XmlElement("F")]
+        public double F { get; set; }
+        [XmlElement("R")]
+        public double R { get; set; }
+        [XmlElement("N")]
+        public double N { get; set; }
+        [XmlElement("r1")]
+        public double r1 { get; set; }
     }
 }

@@ -371,9 +371,9 @@ namespace FloodPeakToolUI.UI
                 BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
                 if (result != null)
                 {
-                    textBox1.Text = result.AreaR == 0 ? "" : result.AreaR.ToString();
-                    textBox2.Text = result.LossR == 0 ? "" : result.LossR.ToString();
-                    textBox3.Text = result.SubN == 0 ? "" : result.SubN.ToString();
+                    textBox1.Text = result.F == 0 ? "" : result.F.ToString();
+                    textBox2.Text = result.R == 0 ? "" : result.R.ToString();
+                    textBox3.Text = result.N == 0 ? "" : result.N.ToString();
                 }
             }
 
@@ -387,9 +387,9 @@ namespace FloodPeakToolUI.UI
             //获取结果值
             BYSSResult result = new BYSSResult()
             {
-                AreaR = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-                LossR = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-                SubN = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
+                F = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
+                R = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
+                N = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
             };
             XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
             MsgBox.ShowInfo("保存成功！");

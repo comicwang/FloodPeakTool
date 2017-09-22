@@ -29,6 +29,7 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
+        private CaculateResultUI _resutUI = null;
         public MainCaculateControl()
         {
             InitializeComponent();
@@ -36,11 +37,75 @@ namespace FloodPeakToolUI.UI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtQm.Text) || string.IsNullOrWhiteSpace(txtp1.Text) || string.IsNullOrWhiteSpace(txteps1.Text) || string.IsNullOrWhiteSpace(txteps2.Text) || string.IsNullOrWhiteSpace(txttc.Text))
+            {
+                MsgBox.ShowInfo("请确定参数完整！");
+                return;
+            }
+            string projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+            //根据文件夹来获取里面的参数文件
+            string xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormSub);
+            //暴雨衰减赋值
+            BYSJResult bysj;
+            if (File.Exists(xmlPath))
+            {
+                bysj = XmlHelper.Deserialize<BYSJResult>(xmlPath);
+            }
+            else
+            {
+                MsgBox.ShowInfo("请确定参数完整！");
+                return;
+            }
+            //暴雨损失赋值
+            xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormLoss + ".xml");
+            BYSSResult byss;
+            if (File.Exists(xmlPath))
+            {
+                byss = XmlHelper.Deserialize<BYSSResult>(xmlPath);
+            }
+            else
+            {
+                MsgBox.ShowInfo("请确定参数完整！");
+                return;
+            }
+            //河槽汇流赋值
+            xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence + ".xml");
+            HCHLResult hchl;
+            if (File.Exists(xmlPath))
+            {
+                hchl = XmlHelper.Deserialize<HCHLResult>(xmlPath);
+            }
+            else
+            {
+                MsgBox.ShowInfo("请确定参数完整！");
+                return;
+            }
+            //坡面汇流赋值
+            xmlPath = Path.Combine(projectForlder, ConfigNames.SlopeConfluence + ".xml");
+            PMHLResult pmhl;
+            if (File.Exists(xmlPath))
+            {
+                pmhl = XmlHelper.Deserialize<PMHLResult>(xmlPath);
+            }
+            else
+            {
+                MsgBox.ShowInfo("请确定参数完整！");
+                return;
+            }
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
-      
-                //progressBar1.Visible = true;
+                object[] args = new object[] {
+                         bysj,
+                         byss,
+                         hchl,
+                         pmhl,
+                          txtQm.Text,
+                          txtp1.Text,
+                          txteps1.Text,
+                          txteps2.Text,
+                          txttc.Text
+                };
                 backgroundWorker1.RunWorkerAsync();
             }
             else
@@ -49,11 +114,42 @@ namespace FloodPeakToolUI.UI
             }
         }
 
-        #region 计算暴雨衰减
+        #region 计算洪峰流量
 
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            //bysj,byss,hchl,pmhl,Qm,p1,eps1,eps2,tc
+            object[] args = e.Result as object[];
+            BYSJResult bysj=args[0] as BYSJResult;
+            BYSSResult byss=args[1] as BYSSResult;
+            HCHLResult hchl=args[2] as HCHLResult;
+            PMHLResult pmhl=args[3] as PMHLResult;
+            //获取计算需要的参数值
+            //p1,Qm,eps1,sd,R,d,nd,r1,F,L1,L2,I1,I2,A1,A2,tc,eps2
+            StringBuilder builder = new StringBuilder();
+            builder.Append(MethodName.FloodPeak);
+            builder.Append(" ");
+            builder.Append(args[5]);
+            builder.Append(" ");
+            builder.Append(args[4]);
+            builder.Append(args[6]);
+            builder.Append(bysj.Sd);
+            builder.Append(byss.R);
+            builder.Append(bysj.d);
+            builder.Append(bysj.nd);
+            builder.Append(byss.r1);
+            builder.Append(byss.F);
+            builder.Append(hchl.L1);
+            builder.Append(pmhl.L2);
+            builder.Append(hchl.l1);
+            builder.Append(pmhl.l2);
+            builder.Append(hchl.A1);
+            builder.Append(pmhl.A2);
+            builder.Append(args[8]);
+            builder.Append(args[7]);
+            RunExeHelper.RunMethod(builder.ToString());
+            e.Result = "1";
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -63,11 +159,31 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //progressBar1.Visible = false;
-            //progressBar1.Value = 0;
-            CaculateResultUI resutUI = new CaculateResultUI();
-            resutUI.Dock = DockStyle.Fill;
-            _parent.ShowDock("洪峰流量统计结果", resutUI);
+            if (e.Result.ToString() == "1")
+                RunExeHelper.FindFigureAndTodo(ShowResult);
+        }
+
+        private void ShowResult(IntPtr windowPtr)
+        {
+            MainResult cv = XmlHelper.Deserialize<MainResult>(Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), ConfigNames.FloodPeak));
+            //FormOutput.AppendLog(string.Format("计算结果：统计样本平均值X【{0}】,变差系数Cv【{1}】,偏态系数Cs【{2}】,拟合度【{3}】", cv.X, cv.Cv, cv.Cs, cv.Nihe));
+            if (cv != null)
+            {
+                if (_parent.InvokeRequired)
+                {
+                    _parent.Invoke(new Action(() =>
+                    {
+                        if (_resutUI == null)
+                        {
+                            _resutUI = new CaculateResultUI();
+                            _resutUI.Dock = DockStyle.Fill;
+                            _parent.ShowDock("洪峰流量结果与曲线图", _resutUI);
+                        }
+                        _resutUI.BindResult(cv, windowPtr);
+                    }));
+                }
+
+            }
         }
 
         #endregion

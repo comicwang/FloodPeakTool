@@ -202,6 +202,72 @@ namespace CaculateServer
                 }
 
                 #endregion
+
+                #region 洪峰流量
+
+                else if (methodName == MethodName.FloodPeak)
+                {
+                    //p1,Qm,eps1,sd,R,d,nd,r1,F,L1,L2,I1,I2,A1,A2,tc,eps2
+
+                    MWNumericArray p1_0 = new MWNumericArray(Convert.ToDouble(args[1]));
+                    //MWArray p1_0 = MWArray(p);
+                    MWNumericArray Qm_0 = new MWNumericArray(Convert.ToDouble(args[2]));
+                    //MWArray Qm_0 = MWArray(Q);
+                    MWNumericArray eps = new MWNumericArray(Convert.ToDouble(args[3]));
+                    //MWArray eps = MWArray(ee);
+                    MWNumericArray sd = new MWNumericArray(Convert.ToDouble(args[4]));
+                    //MWArray sd = MWArray(s);
+                    MWNumericArray R = new MWNumericArray(Convert.ToDouble(args[5]));
+                    //MWArray R = MWArray(RR);
+                    MWNumericArray d = new MWNumericArray(Convert.ToDouble(args[6]));
+                    //MWArray d = MWArray(dd);
+                    MWNumericArray nd = new MWNumericArray(Convert.ToDouble(args[7]));
+                    //MWArray nd = MWArray(ndd);
+                    MWNumericArray r1 = new MWNumericArray(Convert.ToDouble(args[8]));
+                    //MWArray r1 = MWArray(rr1);
+                    MWNumericArray F = new MWNumericArray(Convert.ToDouble(args[9]));
+                    //MWArray F = MWArray(FF);
+                    MWNumericArray L1 = new MWNumericArray(Convert.ToDouble(args[10]));
+                    //MWArray L1 = MWArray(LL1);
+                    MWNumericArray L2 = new MWNumericArray(Convert.ToDouble(args[11]));
+                    //MWArray L2 = MWArray(LL2);
+                    MWNumericArray I1 = new MWNumericArray(Convert.ToDouble(args[12]));
+                    //MWArray I1 = MWArray(II1);
+                    MWNumericArray I2 = new MWNumericArray(Convert.ToDouble(args[13]));
+                    //MWArray I2 = MWArray(II2);
+                    MWNumericArray A1 = new MWNumericArray(Convert.ToDouble(args[14]));
+                    //MWArray A1 = MWArray(AA1);
+                    MWNumericArray A2 = new MWNumericArray(Convert.ToDouble(args[15]));
+                    //MWArray A2 = MWArray(AA2);
+                    MWNumericArray tc = new MWNumericArray(Convert.ToDouble(args[16]));
+                    MWNumericArray eps1 = new MWNumericArray(Convert.ToDouble(args[17]));
+                    try
+                    {
+                        Class1 C = new Class1();
+                        MainResult result = new MainResult();
+                        MWArray A = C.fun_main(p1_0, Qm_0, eps, sd, R, d, nd, r1, F, L1, L2, I1, I2, A1, A2);
+                        double[,] AA = (double[,])A.ToArray();
+                        result.Qm = AA[0, 0];
+                        result.p1 = AA[0, 1];
+                        result.tQ = AA[0, 2];
+                        result.d1 = AA[0, 3];
+
+                        MWArray B = C.func_getTc(sd, R, d, nd, r1, AA[0, 0], AA[0, 1], AA[0, 2], F, tc, eps1);
+                        double[,] BB = (double[,])B.ToArray();
+                        result.t = BB[0, 0];
+                        result.a1tc = BB[0, 1];
+                        result.d2 = BB[0, 5];
+                        XmlHelper.Serialize<MainResult>(result, Path.Combine(args[18], ConfigNames.FloodPeak));
+                        C.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    Console.ReadKey();
+                }
+
+                #endregion
             }            
         }
     }

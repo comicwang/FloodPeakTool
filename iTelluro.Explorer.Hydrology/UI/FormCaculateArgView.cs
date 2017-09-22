@@ -39,9 +39,9 @@ namespace FloodPeakToolUI.UI
             if (File.Exists(xmlPath))
             {
                 BYSSResult byss = XmlHelper.Deserialize<BYSSResult>(xmlPath);
-                txtF.Text = byss.AreaR.ToString();
-                txtR.Text = byss.LossR.ToString();
-                txtr1.Text = byss.SubN.ToString();
+                txtF.Text = byss.F.ToString();
+                txtR.Text = byss.R.ToString();
+                txtr1.Text = byss.N.ToString();
             }
             //河槽汇流赋值
             xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence + ".xml");
@@ -81,9 +81,9 @@ namespace FloodPeakToolUI.UI
             xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormLoss + ".xml");
             BYSSResult byss = new BYSSResult()
             {
-                AreaR = string.IsNullOrWhiteSpace(txtF.Text) ? 0 : Convert.ToDouble(txtF.Text),
-                LossR = string.IsNullOrWhiteSpace(txtR.Text) ? 0 : Convert.ToDouble(txtR.Text),
-                SubN = string.IsNullOrWhiteSpace(txtr1.Text) ? 0 : Convert.ToDouble(txtr1.Text),
+                F = string.IsNullOrWhiteSpace(txtF.Text) ? 0 : Convert.ToDouble(txtF.Text),
+                R = string.IsNullOrWhiteSpace(txtR.Text) ? 0 : Convert.ToDouble(txtR.Text),
+                N = string.IsNullOrWhiteSpace(txtr1.Text) ? 0 : Convert.ToDouble(txtr1.Text),
             };
             XmlHelper.Serialize<BYSSResult>(byss, xmlPath);
 

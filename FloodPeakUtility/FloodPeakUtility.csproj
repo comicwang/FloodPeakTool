@@ -103,6 +103,7 @@
     <Compile Include="Model\CvCure.cs" />
     <Compile Include="Model\HCHLResult.cs" />
     <Compile Include="Model\ImportType.cs" />
+    <Compile Include="Model\MainResult.cs" />
     <Compile Include="Model\PercentStaticsModel.cs" />
     <Compile Include="Model\PMHLResult.cs" />
     <Compile Include="Model\ProjectChangedEventArgs.cs" />

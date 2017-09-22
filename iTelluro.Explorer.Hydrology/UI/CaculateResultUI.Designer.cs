@@ -31,19 +31,18 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.txtQm = new System.Windows.Forms.TextBox();
+            this.txtt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtP1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.txtd2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.txtd1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.txta1tc = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.txttQ = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -71,19 +70,18 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.txtQm);
+            this.groupBox1.Controls.Add(this.txtt);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.txtP1);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox7);
+            this.groupBox1.Controls.Add(this.txtd2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBox6);
+            this.groupBox1.Controls.Add(this.txtd1);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.textBox5);
+            this.groupBox1.Controls.Add(this.txta1tc);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBox3);
+            this.groupBox1.Controls.Add(this.txttQ);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.Location = new System.Drawing.Point(0, 297);
@@ -93,29 +91,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "洪峰流量统计结果";
             // 
-            // button2
+            // txtQm
             // 
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(488, 147);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(82, 41);
-            this.button2.TabIndex = 34;
-            this.button2.Text = "保存结果";
-            this.button2.UseVisualStyleBackColor = true;
+            this.txtQm.Location = new System.Drawing.Point(186, 33);
+            this.txtQm.Name = "txtQm";
+            this.txtQm.Size = new System.Drawing.Size(126, 21);
+            this.txtQm.TabIndex = 27;
             // 
-            // textBox2
+            // txtt
             // 
-            this.textBox2.Location = new System.Drawing.Point(186, 33);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(126, 21);
-            this.textBox2.TabIndex = 27;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(444, 68);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(126, 21);
-            this.textBox4.TabIndex = 28;
+            this.txtt.Location = new System.Drawing.Point(444, 68);
+            this.txtt.Name = "txtt";
+            this.txtt.Size = new System.Drawing.Size(126, 21);
+            this.txtt.TabIndex = 28;
             // 
             // label2
             // 
@@ -126,12 +114,12 @@
             this.label2.TabIndex = 21;
             this.label2.Text = "洪峰流量Qm";
             // 
-            // textBox1
+            // txtP1
             // 
-            this.textBox1.Location = new System.Drawing.Point(444, 33);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(126, 21);
-            this.textBox1.TabIndex = 29;
+            this.txtP1.Location = new System.Drawing.Point(444, 33);
+            this.txtP1.Name = "txtP1";
+            this.txtP1.Size = new System.Drawing.Size(126, 21);
+            this.txtP1.TabIndex = 29;
             // 
             // label3
             // 
@@ -142,12 +130,12 @@
             this.label3.TabIndex = 22;
             this.label3.Text = "造峰历时tQ";
             // 
-            // textBox7
+            // txtd2
             // 
-            this.textBox7.Location = new System.Drawing.Point(513, 108);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(57, 21);
-            this.textBox7.TabIndex = 30;
+            this.txtd2.Location = new System.Drawing.Point(513, 108);
+            this.txtd2.Name = "txtd2";
+            this.txtd2.Size = new System.Drawing.Size(57, 21);
+            this.txtd2.TabIndex = 30;
             // 
             // label1
             // 
@@ -158,12 +146,12 @@
             this.label1.TabIndex = 23;
             this.label1.Text = "洪峰历时系数P1";
             // 
-            // textBox6
+            // txtd1
             // 
-            this.textBox6.Location = new System.Drawing.Point(444, 107);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(57, 21);
-            this.textBox6.TabIndex = 31;
+            this.txtd1.Location = new System.Drawing.Point(444, 107);
+            this.txtd1.Name = "txtd1";
+            this.txtd1.Size = new System.Drawing.Size(57, 21);
+            this.txtd1.TabIndex = 31;
             // 
             // label5
             // 
@@ -174,12 +162,12 @@
             this.label5.TabIndex = 24;
             this.label5.Text = "产流期净雨强度a1tc";
             // 
-            // textBox5
+            // txta1tc
             // 
-            this.textBox5.Location = new System.Drawing.Point(186, 105);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(126, 21);
-            this.textBox5.TabIndex = 32;
+            this.txta1tc.Location = new System.Drawing.Point(186, 105);
+            this.txta1tc.Name = "txta1tc";
+            this.txta1tc.Size = new System.Drawing.Size(126, 21);
+            this.txta1tc.TabIndex = 32;
             // 
             // label4
             // 
@@ -190,12 +178,12 @@
             this.label4.TabIndex = 25;
             this.label4.Text = "洪水上涨历时t";
             // 
-            // textBox3
+            // txttQ
             // 
-            this.textBox3.Location = new System.Drawing.Point(186, 68);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(126, 21);
-            this.textBox3.TabIndex = 33;
+            this.txttQ.Location = new System.Drawing.Point(186, 68);
+            this.txttQ.Name = "txttQ";
+            this.txttQ.Size = new System.Drawing.Size(126, 21);
+            this.txttQ.TabIndex = 33;
             // 
             // label6
             // 
@@ -226,19 +214,18 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox txtQm;
+        private System.Windows.Forms.TextBox txtt;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtP1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox txtd2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox txtd1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox txta1tc;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txttQ;
         private System.Windows.Forms.Label label6;
 
     }
