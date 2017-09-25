@@ -559,6 +559,28 @@ namespace FloodPeakUtility.UI
             return false;
         }
 
+        /// <summary>
+        /// 根据名称删除三维球图层
+        /// </summary>
+        /// <param name="name"></param>
+        private void DeleteLayerByName(string name)
+        {
+            foreach (DataLayer lyr in _globeView.GlobeLayers.DataLayers)
+            {
+                if (lyr.Name == name)
+                {
+                    _globeView.GlobeLayers.DataLayers.Remove(lyr);
+                }
+            }
+            foreach (FloatLayer lyr in _globeView.GlobeLayers.FloatLayers)
+            {
+                if (lyr.Name == name)
+                {
+                    _globeView.GlobeLayers.FloatLayers.Remove(lyr);
+                }
+            }
+        }
+
         #endregion
 
         #region events
@@ -657,7 +679,11 @@ namespace FloodPeakUtility.UI
                         ShpPointLayer pntLyr = frm.PntLayer;
                         //保存图层信息到配置文件
                         if (this.ShpPointLyrExits(pntLyr))
+                        {
                             ShpPointConfig.DeleteLayer(pntLyr.LayerName);
+                            _shpLoader.PntLyrList.Remove(pntLyr.LayerName);
+                            this.DeleteLayerByName(pntLyr.LayerName);
+                        }
                         ShpPointConfig.AppendLayer(pntLyr);
                         _shpLoader.LoadShpPointLayer(pntLyr);
                         break;
@@ -673,7 +699,11 @@ namespace FloodPeakUtility.UI
                         path = frm.LineLayer.ShpLayerPath;
                         ShpLineLayer lineLyr = frm.LineLayer;
                         if (this.ShpLineLyrExits(lineLyr))
+                        {
                             ShpLineConfig.DeleteLayer(lineLyr.LayerName);
+                            _shpLoader.LineLyrList.Remove(lineLyr.LayerName);
+                            this.DeleteLayerByName(lineLyr.LayerName);
+                        }
                         ShpLineConfig.AppendLayer(lineLyr);
                         _shpLoader.LoadShpLineLayer(lineLyr);
                         break;
@@ -689,7 +719,11 @@ namespace FloodPeakUtility.UI
                         path = frm.PolyLayer.ShpLayerPath;
                         ShpPolygonLayer polyLyr = frm.PolyLayer;
                         if (this.ShpPolygonLyrExits(polyLyr))
+                        {
                             ShpPolygonConfig.DeleteLayer(polyLyr.LayerName);
+                            _shpLoader.PolyLyrList.Remove(polyLyr.LayerName);
+                            this.DeleteLayerByName(polyLyr.LayerName);
+                        }
                         ShpPolygonConfig.AppendLayer(polyLyr);
                         _shpLoader.LoadShpPolygonLayer(polyLyr);
                         break;
@@ -722,20 +756,7 @@ namespace FloodPeakUtility.UI
             try
             {
                 string lyrName = node.Text;
-                foreach (DataLayer lyr in _globeView.GlobeLayers.DataLayers)
-                {
-                    if (lyr.Name == lyrName)
-                    {
-                        _globeView.GlobeLayers.DataLayers.Remove(lyr);
-                    }
-                }
-                foreach (FloatLayer lyr in _globeView.GlobeLayers.FloatLayers)
-                {
-                    if (lyr.Name == lyrName)
-                    {
-                        _globeView.GlobeLayers.FloatLayers.Remove(lyr);
-                    }
-                }
+                this.DeleteLayerByName(lyrName);
                 //删除tif配置
                 string path = Path.Combine(Path.GetDirectoryName(_projectPath), lyrName + ".xml");
                 if (File.Exists(path))

@@ -106,7 +106,7 @@ namespace FloodPeakToolUI.UI
                 PercentStaticsModel temp = new PercentStaticsModel()
                 {
                     RowIndex = i + 1,
-                    MaxValue = Convert.ToDecimal(ds.Tables[0].Rows[i][0]),
+                    MaxValue = Convert.ToDecimal(ds.Tables[0].Rows[i][0]) * 10,
                     CArg = ((decimal)(i + 1)) / ds.Tables[0].Rows.Count
                 };
                 lstStatics.Add(temp);

@@ -23,12 +23,17 @@ using iTelluro.GlobeEngine.Graphics3D;
 
 namespace FloodPeakToolUI.UI
 {
+    /// <summary>
+    /// 洪峰流量计算界面
+    /// </summary>
     [Export(typeof(ICaculateMemo))]
     public partial class MainCaculateControl : UserControl, ICaculateMemo
     {
+
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
-        private string _xmlPath = string.Empty;
+        //项目文件夹路径
+        private string _projectForlder = string.Empty;
         private CaculateResultUI _resutUI = null;
         public MainCaculateControl()
         {
@@ -42,9 +47,9 @@ namespace FloodPeakToolUI.UI
                 MsgBox.ShowInfo("请确定参数完整！");
                 return;
             }
-            string projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+            _projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
             //根据文件夹来获取里面的参数文件
-            string xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormSub);
+            string xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormSub);
             //暴雨衰减赋值
             BYSJResult bysj;
             if (File.Exists(xmlPath))
@@ -57,7 +62,7 @@ namespace FloodPeakToolUI.UI
                 return;
             }
             //暴雨损失赋值
-            xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormLoss + ".xml");
+            xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormLoss);
             BYSSResult byss;
             if (File.Exists(xmlPath))
             {
@@ -69,7 +74,7 @@ namespace FloodPeakToolUI.UI
                 return;
             }
             //河槽汇流赋值
-            xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence + ".xml");
+            xmlPath = Path.Combine(_projectForlder, ConfigNames.RiverConfluence);
             HCHLResult hchl;
             if (File.Exists(xmlPath))
             {
@@ -81,7 +86,7 @@ namespace FloodPeakToolUI.UI
                 return;
             }
             //坡面汇流赋值
-            xmlPath = Path.Combine(projectForlder, ConfigNames.SlopeConfluence + ".xml");
+            xmlPath = Path.Combine(_projectForlder, ConfigNames.SlopeConfluence);
             PMHLResult pmhl;
             if (File.Exists(xmlPath))
             {
@@ -128,41 +133,64 @@ namespace FloodPeakToolUI.UI
             //获取计算需要的参数值
             //p1,Qm,eps1,sd,R,d,nd,r1,F,L1,L2,I1,I2,A1,A2,tc,eps2
             StringBuilder builder = new StringBuilder();
+            StringBuilder logBuilder=new StringBuilder();
+            logBuilder.AppendLine("*********洪峰流量计算参数**********");
             builder.Append(MethodName.FloodPeak);
             builder.Append(" ");
             builder.Append(args[5]);
+            logBuilder.AppendLine("P1："+args[5]);
             builder.Append(" ");
             builder.Append(args[4]);
+             logBuilder.AppendLine("Qm："+args[4]);
             builder.Append(" ");
             builder.Append(args[6]);
+             logBuilder.AppendLine("eps1："+args[6]);
             builder.Append(" ");
             builder.Append(bysj.Sd);
+             logBuilder.AppendLine("Sd："+bysj.Sd);
             builder.Append(" ");
             builder.Append(byss.R);
+             logBuilder.AppendLine("R："+byss.R);
             builder.Append(" ");
             builder.Append(bysj.d);
+             logBuilder.AppendLine("d："+bysj.d);
             builder.Append(" ");
             builder.Append(bysj.nd);
+             logBuilder.AppendLine("nd："+bysj.nd);
             builder.Append(" ");
             builder.Append(byss.r1);
+             logBuilder.AppendLine("r1："+byss.r1);
             builder.Append(" ");
             builder.Append(byss.F);
+             logBuilder.AppendLine("F："+byss.F);
             builder.Append(" ");
             builder.Append(hchl.L1);
+             logBuilder.AppendLine("L1："+hchl.L1);
             builder.Append(" ");
             builder.Append(pmhl.L2);
+             logBuilder.AppendLine("L2："+pmhl.L2);
             builder.Append(" ");
             builder.Append(hchl.l1);
+             logBuilder.AppendLine("I1："+hchl.l1);
             builder.Append(" ");
             builder.Append(pmhl.l2);
+             logBuilder.AppendLine("I2："+pmhl.l2);
             builder.Append(" ");
             builder.Append(hchl.A1);
+             logBuilder.AppendLine("A1："+hchl.A1);
             builder.Append(" ");
             builder.Append(pmhl.A2);
+             logBuilder.AppendLine("A2："+pmhl.A2);
             builder.Append(" ");
             builder.Append(args[8]);
+             logBuilder.AppendLine("tc："+args[8]);
             builder.Append(" ");
             builder.Append(args[7]);
+             logBuilder.AppendLine("eps2："+args[7]);
+            builder.Append(" ");
+            builder.Append(_projectForlder);
+            FormOutput.AppendLog(logBuilder.ToString());
+            FormOutput.AppendLog("***********************************");
             RunExeHelper.RunMethod(builder.ToString());
             e.Result = "1";
         }
@@ -181,7 +209,7 @@ namespace FloodPeakToolUI.UI
         private void ShowResult(IntPtr windowPtr)
         {
             MainResult cv = XmlHelper.Deserialize<MainResult>(Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), ConfigNames.FloodPeak));
-            //FormOutput.AppendLog(string.Format("计算结果：统计样本平均值X【{0}】,变差系数Cv【{1}】,偏态系数Cs【{2}】,拟合度【{3}】", cv.X, cv.Cv, cv.Cs, cv.Nihe));
+            FormOutput.AppendLog(string.Format("计算结果：洪峰流量Qm【{0}】,洪峰历时系数p1_0【{1}】,造峰历时tQ【{2}】,洪峰上涨历时t【{3}】,产流期净雨强a1tc【{4}】,迭代次数【{5}-{6}】", cv.Qm, cv.p1, cv.tQ, cv.t, cv.a1tc, cv.d1, cv.d2));
             if (cv != null)
             {
                 if (_parent.InvokeRequired)

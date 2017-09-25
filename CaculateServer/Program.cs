@@ -207,7 +207,7 @@ namespace CaculateServer
 
                 else if (methodName == MethodName.FloodPeak)
                 {
-                    //p1,Qm,eps1,sd,R,d,nd,r1,F,L1,L2,I1,I2,A1,A2,tc,eps2
+                    //p1,Qm,eps1,sd,R,d,nd,r1,F,L1,L2,I1,I2,A1,A2,tc,eps2,项目路径
 
                     MWNumericArray p1_0 = new MWNumericArray(Convert.ToDouble(args[1]));
                     //MWArray p1_0 = MWArray(p);
@@ -257,7 +257,7 @@ namespace CaculateServer
                         result.t = BB[0, 0];
                         result.a1tc = BB[0, 1];
                         result.d2 = BB[0, 5];
-                        XmlHelper.Serialize<MainResult>(result, Path.Combine(args[18], ConfigNames.FloodPeak));
+                        XmlHelper.Serialize<MainResult>(result,args[18]);
                         C.Dispose();
                     }
                     catch (Exception ex)

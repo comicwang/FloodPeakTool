@@ -88,7 +88,7 @@ namespace FloodPeakToolUI.UI
 
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
-            button1.Enabled = File.Exists(fileChooseControl1.FilePath) && File.Exists(fileChooseControl2.FilePath) && File.Exists(fileChooseControl3.FilePath);
+            button1.Enabled = File.Exists(fileChooseControl1.FilePath) || File.Exists(fileChooseControl2.FilePath) || File.Exists(fileChooseControl3.FilePath);
         }
 
         #region 计算流域平均坡长和坡度,以及坡面流速系数
@@ -98,21 +98,26 @@ namespace FloodPeakToolUI.UI
         {
             string[] args = e.Argument as string[];
 
-            RasterReader reader = new RasterReader(args[1]);
             double avgLength = 0;
             double avgSlope = 0;
-            FormOutput.AppendLog("开始计算线的交点...");
-            List<Point3d> pts = CalPoints(args[0]);
-            FormOutput.AppendLog("开始计算平均坡度和坡长...");
-            CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
-            reader.Dispose();
-            FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
-
-            FormOutput.AppendLog("开始计算坡面流速系数...");
-            double? r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
-            if (r.HasValue)
-                FormOutput.AppendLog("结果--坡面流速系数为：" + r.Value.ToString());
-
+            if (File.Exists(args[0]) && File.Exists(args[1]))
+            {
+                FormOutput.AppendLog("开始计算线的交点...");
+                RasterReader reader = new RasterReader(args[1]);
+                List<Point3d> pts = CalPoints(args[0]);
+                FormOutput.AppendLog("开始计算平均坡度和坡长...");
+                CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
+                reader.Dispose();
+                FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
+            }
+            double? r = null;
+            if (File.Exists(args[1]) && File.Exists(args[2]))
+            {
+                FormOutput.AppendLog("开始计算坡面流速系数...");
+                r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
+                if (r.HasValue)
+                    FormOutput.AppendLog("结果--坡面流速系数为：" + r.Value.ToString());
+            }
             e.Result = new double[] { avgLength, avgSlope, r.GetValueOrDefault(0) };
         }
 
@@ -124,12 +129,12 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             double[] result = e.Result as double[];
-            textBox1.Text = result[0].ToString();
-            textBox2.Text = result[1].ToString();
-            textBox3.Text = result[2].ToString();
-            //progressBar1.Visible = false;
-            //progressBar1.Value = 0;
-
+            if (Convert.ToDouble(result[0]) != 0)
+                textBox1.Text = result[0].ToString();
+            if (Convert.ToDouble(result[1]) != 0)
+                textBox2.Text = result[1].ToString();
+            if (Convert.ToDouble(result[2]) != 0)
+                textBox3.Text = result[2].ToString();
         }
 
         /// <summary>

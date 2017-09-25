@@ -123,7 +123,7 @@ namespace FloodPeakToolUI.UI
 
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
-            button1.Enabled = File.Exists(fileChooseControl1.FilePath) && File.Exists(fileChooseControl2.FilePath) && File.Exists(fileChooseControl3.FilePath);
+            button1.Enabled = File.Exists(fileChooseControl1.FilePath) || File.Exists(fileChooseControl2.FilePath) || File.Exists(fileChooseControl3.FilePath);
         }
 
         #endregion
@@ -134,18 +134,29 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];
-            FormOutput.AppendLog("开始计算主河道长度...");
-            double riverlength = FlowLength(args[0]);
-            FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
+            double riverlength = 0;
+            if (File.Exists(args[0]))
+            {
+                FormOutput.AppendLog("开始计算主河道长度...");
+                riverlength = FlowLength(args[0]);
 
-            FormOutput.AppendLog("开始计算主河纵降比...");
-            double j = CalRiverLonGradient(args[0], args[1]);
-            FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
-
-            FormOutput.AppendLog("开始计算河槽流域系数...");
-            double? r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
-            if (r.HasValue)
-                FormOutput.AppendLog("河槽流速系数：" + r.Value.ToString("f3"));
+                FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
+            }
+            double j = 0;
+            if (File.Exists(args[0])&& File.Exists(args[1]))
+            {
+                FormOutput.AppendLog("开始计算主河纵降比...");
+                j = CalRiverLonGradient(args[0], args[1]);
+                FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
+            }
+            double? r = null;
+            if (File.Exists(args[2]) && File.Exists(args[1]))
+            {
+                FormOutput.AppendLog("开始计算河槽流域系数...");
+                r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
+                if (r.HasValue)
+                    FormOutput.AppendLog("河槽流速系数：" + r.Value.ToString("f3"));
+            }
 
             e.Result = new double[] { riverlength, j, r.GetValueOrDefault(0) };
         }
@@ -158,12 +169,12 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             double[] result = e.Result as double[];
-            textBox1.Text = result[0].ToString();
-            textBox2.Text = result[1].ToString();
-            textBox3.Text = result[2].ToString();
-           // progressBar1.Visible = false;
-           // progressBar1.Value = 0;
-
+            if (Convert.ToDouble(result[0]) != 0)
+                textBox1.Text = result[0].ToString();
+            if (Convert.ToDouble(result[1]) != 0)
+                textBox2.Text = result[1].ToString();
+            if (Convert.ToDouble(result[2]) != 0)
+                textBox3.Text = result[2].ToString();
         }
 
         /// <summary>
