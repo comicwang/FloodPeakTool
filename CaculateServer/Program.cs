@@ -11,38 +11,48 @@ using System.Windows.Forms;
 
 namespace CaculateServer
 {
+    /// <summary>
+    /// 洪峰流量计算后台方法
+    /// （解决版本x86不兼容的问题）
+    /// </summary>
     class Program
     {
-        /// <summary>
-        /// 水文曲线计算后台
-        /// ars1-方法名称
-        /// </summary>
-        /// <param name="args"></param>
         static void Main(string[] args)
         {
             if (args != null && args.Length > 0)
             {
                 string methodName = args[0];//方法名称
+                Class1 C = null;
 
                 #region 水文曲线
                 if (methodName == MethodName.SWCure)
                 {
-                    Class1 C = new Class1();
-                    double[,] CC = (double[,])C.miaodian().ToArray();
-                    Console.WriteLine("Cv:" + CC[0, 0]);
-                    Console.WriteLine("Cs:" + CC[0, 1]);
-                    Console.WriteLine("X:" + CC[0, 2]);
-                    Console.WriteLine("Nihe:" + CC[0, 3]);
-                    XmlHelper.Serialize<CvCure>(new CvCure()
+                    try
                     {
-                        Cv = CC[0, 0],
-                        Cs = CC[0, 1],
-                        X = CC[0, 2],
-                        Nihe = CC[0, 3].ToString()
+                        C = new Class1();
+                        double[,] CC = (double[,])C.miaodian().ToArray();
+                        Console.WriteLine("Cv:" + CC[0, 0]);
+                        Console.WriteLine("Cs:" + CC[0, 1]);
+                        Console.WriteLine("X:" + CC[0, 2]);
+                        Console.WriteLine("Nihe:" + CC[0, 3]);
+                        XmlHelper.Serialize<CvCure>(new CvCure()
+                        {
+                            Cv = CC[0, 0],
+                            Cs = CC[0, 1],
+                            X = CC[0, 2],
+                            Nihe = CC[0, 3].ToString()
 
-                    }, Path.Combine(Application.StartupPath, ConfigNames.SvCure));
-                    C.Dispose();
-                    Console.ReadKey();  //不直接关闭
+                        }, Path.Combine(Application.StartupPath, ConfigNames.SvCure));
+                        Console.ReadKey();  //不直接关闭
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        C.Dispose();
+                    }
                 }
                 #endregion
 
@@ -50,18 +60,29 @@ namespace CaculateServer
 
                 else if (methodName == MethodName.NiHeCure)
                 {
-                    double X = Convert.ToDouble(args[1]);
-                    MWNumericArray XX = new MWNumericArray(X);
-                    double Cv = Convert.ToDouble(args[2]);
-                    MWNumericArray Cvv = new MWNumericArray(Cv);
-                    double Cs = Convert.ToDouble(args[3]);
-                    MWNumericArray Css = new MWNumericArray(Cs);
-                    Class1 CC = new Class1();
-                    double[,] Nihe = (double[,])CC.peixian(Cvv, Css, XX).ToArray();
-                    Console.WriteLine("Nihe:" + Nihe[0, 0]);
-                    XmlHelper.Serialize<string>(Nihe[0, 0].ToString(), Path.Combine(Application.StartupPath, ConfigNames.TempName));
-                    CC.Dispose();
-                    Console.ReadKey();
+                    try
+                    {
+                        double X = Convert.ToDouble(args[1]);
+                        MWNumericArray XX = new MWNumericArray(X);
+                        double Cv = Convert.ToDouble(args[2]);
+                        MWNumericArray Cvv = new MWNumericArray(Cv);
+                        double Cs = Convert.ToDouble(args[3]);
+                        MWNumericArray Css = new MWNumericArray(Cs);
+                        C = new Class1();
+                        double[,] Nihe = (double[,])C.peixian(Cvv, Css, XX).ToArray();
+                        Console.WriteLine("Nihe:" + Nihe[0, 0]);
+                        XmlHelper.Serialize<string>(Nihe[0, 0].ToString(), Path.Combine(Application.StartupPath, ConfigNames.TempName));
+                        C.Dispose();
+                        Console.ReadKey();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        C.Dispose();
+                    }
                 }
 
                 #endregion
@@ -82,16 +103,16 @@ namespace CaculateServer
                     {
                         double k = Convert.ToDouble(args[4].Split('-')[1]);
                         MWNumericArray kik = new MWNumericArray(k);
-                        Class1 CC = new Class1();
-                        double[,] Xcha = (double[,])CC.chaxun1(Cvv, Css, XX, kik).ToArray();
+                        C = new Class1();
+                        double[,] Xcha = (double[,])C.chaxun1(Cvv, Css, XX, kik).ToArray();
                         Console.WriteLine(Xcha[0, 0]);
                     }
                     else if (type == "c2")
                     {
                         double k = Convert.ToDouble(args[4].Split('-')[1]);
                         MWNumericArray kik = new MWNumericArray(k);
-                        Class1 CC = new Class1();
-                        double[,] Xcha = (double[,])CC.chaxun2(Cvv, Css, XX, kik).ToArray();
+                        C = new Class1();
+                        double[,] Xcha = (double[,])C.chaxun2(Cvv, Css, XX, kik).ToArray();
                         Console.WriteLine(Xcha[0, 0]);
                     }
                     // c3-站号-时间段
@@ -109,13 +130,13 @@ namespace CaculateServer
                         }
                         double value = 0;
                         string commandText = string.Empty;
-                        Class1 CC = new Class1();
+                        C = new Class1();
                         foreach (double item in CollectionCons.StaticsPercents)
                         {
                             try
                             {
                                 MWNumericArray kik = new MWNumericArray(item);
-                                double[,] Xcha = (double[,])CC.chaxun1(Cvv, Css, XX, kik).ToArray();
+                                double[,] Xcha = (double[,])C.chaxun1(Cvv, Css, XX, kik).ToArray();
                                 value = Xcha[0, 0];
                                 commandText = string.Format("insert into RAINFALL_PERCENT values(NEWID(),'{0}',{1},{2},{3},{4},{5},{6},{7},'{8}',{9})", state, "null", "null", "null", X, Cv, Cs, item, during, value);
                                 SqlHelper.ExecuteNonQuery(SqlHelper.GetConnSting(), System.Data.CommandType.Text, commandText);
@@ -137,7 +158,6 @@ namespace CaculateServer
                 else if (methodName == MethodName.RainStormSub)
                 {
                     //参数值 1-小于一小时的时间段，2-小于一小时的值，3-大于一小时的时间段，4-大于一小时的值
-                    Class1 C = new Class1();
 
                     List<double> list1 = new List<double>();
                     string[] minHour = args[2].Split(',');
@@ -169,6 +189,7 @@ namespace CaculateServer
                     MWNumericArray MatX2 = new MWNumericArray(list4.ToArray());
                     try
                     {
+                        C = new Class1();
                         SubCure sub = new SubCure();
                         MWArray polyData3 = C.polyfit_line(MatX1, MatY1);
                         MWArray polyData1 = C.polyfit_line(MatX1, MatY1);
@@ -188,8 +209,7 @@ namespace CaculateServer
                         sub.n2 = DataBox2[0, 0];
                         sub.j2 = DataBox2[0, 1];
                         XmlHelper.Serialize<SubCure>(sub, Path.Combine(Application.StartupPath, ConfigNames.SubCure));
-                        C.Dispose();
-
+                        Console.ReadKey();
                     }
                     catch (Exception ex)
                     {
@@ -197,7 +217,7 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        Console.ReadKey();
+                        C.Dispose();
                     }
                 }
 
@@ -243,7 +263,7 @@ namespace CaculateServer
                     MWNumericArray eps1 = new MWNumericArray(Convert.ToDouble(args[17]));
                     try
                     {
-                        Class1 C = new Class1();
+                        C = new Class1();
                         MainResult result = new MainResult();
                         MWArray A = C.fun_main(p1_0, Qm_0, eps, sd, R, d, nd, r1, F, L1, L2, I1, I2, A1, A2);
                         double[,] AA = (double[,])A.ToArray();
@@ -257,18 +277,21 @@ namespace CaculateServer
                         result.t = BB[0, 0];
                         result.a1tc = BB[0, 1];
                         result.d2 = BB[0, 5];
-                        XmlHelper.Serialize<MainResult>(result,args[18]);
-                        C.Dispose();
+                        XmlHelper.Serialize<MainResult>(result, args[18]);
+                        Console.ReadKey();
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-                    Console.ReadKey();
+                    finally
+                    {
+                        C.Dispose();
+                    }
                 }
 
                 #endregion
-            }            
+            }         
         }
     }
 }
