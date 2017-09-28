@@ -19,6 +19,8 @@ using FloodPeakUtility.Model;
 using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
 using iTelluro.DataTools.Utility.DEM;
+using OSGeo.OGR;
+using iTelluro.DataTools.Utility.GIS;
 
 namespace FloodPeakToolUI.UI
 {
@@ -33,6 +35,7 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath;
+        private Dictionary<Point2d, Geometry> _mainRiver = null;
 
         #endregion
 
@@ -135,20 +138,25 @@ namespace FloodPeakToolUI.UI
         {
             string[] args = e.Argument as string[];
             double riverlength = 0;
-            if (File.Exists(args[0]))
+            double j = 0;
+            if (File.Exists(args[0]) && File.Exists(args[1]))
             {
-                FormOutput.AppendLog("开始计算主河道长度...");
-                riverlength = FlowLength(args[0]);
+                FormOutput.AppendLog("开始递归所有河槽分支...");
+                List<Dictionary<Point2d, Geometry>> results = GetAllRivers(args[0]);
+
+                FormOutput.AppendLog(string.Format("共得到{0}条支流...", results.Count));
+
+                FormOutput.AppendLog("开始获取主河槽，并计算其长度...");
+               // _mainRiver = null;
+                riverlength = CaculateRiver(results, args[1], ref _mainRiver);
 
                 FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
-            }
-            double j = 0;
-            if (File.Exists(args[0])&& File.Exists(args[1]))
-            {
+
                 FormOutput.AppendLog("开始计算主河纵降比...");
-                j = CalRiverLonGradient(args[0], args[1]);
+                j = GetLonGradient(_mainRiver, args[1]);
                 FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
             }
+           
             double? r = null;
             if (File.Exists(args[2]) && File.Exists(args[1]))
             {
@@ -177,40 +185,277 @@ namespace FloodPeakToolUI.UI
                 textBox3.Text = result[2].ToString();
         }
 
-        /// <summary>
-        /// 计算河道纵比降；
-        /// 落差：河道两段的河底高程差
-        /// 总落差：河源与河口凉茶的河底高程差
-        /// 河床坡降：单位河长的落差叫河道纵降比
-        /// j = h1-h0/l
-        /// 或者 J = (h0+h1)l1 + (h1+h2)l2 +...+ (hn-1 + hn)ln/L*L 
-        /// </summary>
-        private double CalRiverLonGradient(string shppath, string tifPath)
+        private Dictionary<Point2d, Geometry> CopyDicGeometry(Dictionary<Point2d, Geometry> source)
         {
-            ShpReader shp = new ShpReader(shppath);
-            RasterReader reader = new RasterReader(tifPath);
-            OSGeo.OGR.Feature ofea;
-            List<Point3d> points = new List<Point3d>();
-            double J = 0;
-            while (((ofea = shp.layer.GetNextFeature()) != null))
+            Dictionary<Point2d, Geometry> result = new Dictionary<Point2d, Geometry>();
+            if (source != null && source.Count > 0)
             {
-                //点集个数
-                int count = ofea.GetGeometryRef().GetPointCount();
-                for (int i = 0; i < count; i++)
+                foreach (var item in source)
                 {
-                    double lon = ofea.GetGeometryRef().GetX(i);
-                    double lat = ofea.GetGeometryRef().GetY(i);
-                    int c = DemHelp.GetColFromLongitude(lon, lat);
-                    int r = DemHelp.GetRowFromLatitude(lon, lat);
-                    double z = ReadBand(reader, c, r);
-                    //float elevation = _globeView.GetElevation(lon, lat);
-                    points.Add(new Point3d(lon, lat, z));
+                    result.Add(item.Key, item.Value);
                 }
             }
-            shp.Dispose();
-            //计算河道纵比降
-            J = GetLonGradient(points);
-            return J;
+            return result;
+        }
+
+        private Boolean GeometryIsContainPoint(Point2d point, Geometry geo)
+        {
+            for (int a = 0; a < geo.GetPointCount(); a++)
+            {
+                if (point.X == geo.GetX(a) && point.Y == geo.GetY(a))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 递归所有支流
+        /// </summary>
+        /// <param name="sourcePoint"></param>
+        /// <param name="geoList"></param>
+        /// <param name="dic"></param>
+        private void GetLineByPoint(Point2d sourcePoint, List<Geometry> geoList, ref List<Dictionary<Point2d, Geometry>> dic)
+        {
+            Geometry geo = null;
+            Dictionary<Point2d, Geometry> temp = null;
+            if (dic != null && dic.Count > 0)
+            {
+                foreach (var dicItem in dic)
+                {
+                    foreach (var dicGeo in dicItem)
+                    {
+                        if (dicGeo.Key.X == sourcePoint.X && dicGeo.Key.Y == sourcePoint.Y)
+                        {
+                            geo = dicGeo.Value;
+                            temp = dicItem;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (temp == null)
+            {
+                temp = new Dictionary<Point2d, Geometry>();
+                dic.Add(temp);
+            }
+            Dictionary<Point2d, Geometry> temp1 = CopyDicGeometry(temp);
+            int index = 0;
+            List<Geometry> copyGeoList = new List<Geometry>();
+            copyGeoList.AddRange(geoList);
+            foreach (var GeoItem in copyGeoList)
+            {
+                Point2d findOutPoint = new Point2d(0, 0);
+                Point2d startp = new Point2d(GeoItem.GetX(0), GeoItem.GetY(0));
+                Point2d endp = new Point2d(GeoItem.GetX(GeoItem.GetPointCount() - 1), GeoItem.GetY(GeoItem.GetPointCount() - 1));
+                if (GeometryIsContainPoint(sourcePoint, GeoItem))
+                {
+                    if (startp == sourcePoint && ((geo != null && !GeometryIsContainPoint(endp, geo)) || geo == null))
+                    {
+                        findOutPoint = endp;
+                        index++;
+                    }
+                    else if (sourcePoint == endp && ((geo != null && !GeometryIsContainPoint(startp, geo)) || geo == null))
+                    {
+                        findOutPoint = startp;
+                        index++;
+                    }
+                    if (findOutPoint != new Point2d(0, 0) && !temp.ContainsKey(findOutPoint))
+                    {
+                        Dictionary<Point2d, Geometry> copyTemp = CopyDicGeometry(temp1);
+                        copyTemp.Add(findOutPoint, GeoItem);
+                        geoList.Remove(GeoItem);
+                        if (dic.Contains(temp))
+                        {
+                            dic.Remove(temp);
+                        }
+                        dic.Add(copyTemp);
+                        GetLineByPoint(findOutPoint, geoList, ref dic);
+                    }
+                }
+            }
+        }
+
+
+        private double GetLength(Point3d startPoint, Point3d endPoint)
+        {
+            double hLength = Length(startPoint, endPoint);
+            double zLength = endPoint.Z - startPoint.Z;
+            double sLength = zLength * zLength + hLength * hLength;
+            return Math.Sqrt(sLength);
+        }
+
+        private double GetElevationByPointInDEM(Point2d sourcePoint, RasterReader raster)
+        {
+            try
+            {
+                double[] adfGeoTransform = new double[6];
+                raster.DataSet.GetGeoTransform(adfGeoTransform);
+                double dTemp = adfGeoTransform[1] * adfGeoTransform[5] - adfGeoTransform[2] * adfGeoTransform[4];
+                double dRow = 0;
+                double dCol = 0;
+                dCol = (adfGeoTransform[5] * (sourcePoint.X - adfGeoTransform[0]) - adfGeoTransform[2] * (sourcePoint.Y - adfGeoTransform[3])) / dTemp + 0.5;
+                dRow = (adfGeoTransform[1] * (sourcePoint.Y - adfGeoTransform[3]) - adfGeoTransform[4] * (sourcePoint.X - adfGeoTransform[0])) / dTemp + 0.5;
+                int c = Convert.ToInt32(dCol);
+                int r = Convert.ToInt32(dRow);
+                return ReadBand(raster, c, r);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+
+        private double GetLonGradient(Dictionary<Point2d, Geometry> mainRiver,string tifPath)
+        {
+
+            RasterReader reader = new RasterReader(tifPath);
+            List<Point2d> pointList = new List<Point2d>();
+            List<Point3d> gradientPoints = new List<Point3d>();
+            foreach (var item in mainRiver)
+            {
+                for (int i = 0; i < item.Value.GetPointCount(); i++)
+                {
+                    Point2d temp = new Point2d(item.Value.GetX(i), item.Value.GetY(i));
+                    if (!pointList.Contains(temp))
+                    {
+                        pointList.Add(temp);
+                        gradientPoints.Add(new Point3d(item.Value.GetX(i), item.Value.GetY(i), GetElevationByPointInDEM(temp, reader)));
+                    }
+                }
+            }
+            double length = 0;
+            double z = 0;
+            double minElevation = gradientPoints[0].Z;
+            for (int i = 1; i < gradientPoints.Count; i++)
+            {
+                if (minElevation > gradientPoints[i].Z) minElevation = gradientPoints[i].Z;
+                Point3d point1 = gradientPoints[i - 1];
+                Point3d point2 = gradientPoints[i];
+                length += Length(point1, point2);
+                z += Length(point1, point2) * (point1.Z + point2.Z);
+            }
+            return z / (length * length);
+        }
+
+        /// <summary>
+        /// 获取河流的主点
+        /// </summary>
+        /// <param name="mainShp"></param>
+        /// <param name="featureList"></param>
+        /// <returns></returns>
+        private List<Point2d> GetRiverPoints(string mainShp,out List<OSGeo.OGR.Geometry> featureList)
+        {
+            ShpReader shp = new ShpReader(mainShp);
+            OSGeo.OGR.Feature ofea;
+            List<Point2d> linePoint = new List<Point2d>();
+            featureList = new List<OSGeo.OGR.Geometry>();
+            while (((ofea = shp.layer.GetNextFeature()) != null))
+            {
+                int count = ofea.GetGeometryRef().GetPointCount();
+                Point2d start = new Point2d(ofea.GetGeometryRef().GetX(0), ofea.GetGeometryRef().GetY(0));
+                Point2d end = new Point2d(ofea.GetGeometryRef().GetX(count - 1), ofea.GetGeometryRef().GetY(count - 1));
+                if (!linePoint.Contains(start))
+                {
+                    linePoint.Add(start);
+                }
+                if (!linePoint.Contains(end))
+                {
+                    linePoint.Add(end);
+                }
+
+                featureList.Add(ofea.GetGeometryRef());
+            }
+            return linePoint.OrderBy(t => t.Y).ToList();
+        }
+
+        private List<Dictionary<Point2d, Geometry>> GetAllRivers(string mainShp)
+        {
+            //获取主河槽
+          
+            ShpReader shp = new ShpReader(mainShp);
+            List<OSGeo.OGR.Feature> maxFeature = new List<OSGeo.OGR.Feature>();
+            List<Geometry> geoList = null;
+            List<Point2d> pts1 = GetRiverPoints(mainShp, out geoList);
+            List<Dictionary<Point2d, Geometry>> dic = new List<Dictionary<Point2d, Geometry>>();
+            GetLineByPoint(pts1[0], geoList, ref dic);
+
+            return dic;
+        }
+
+        private double CaculateRiver(List<Dictionary<Point2d, Geometry>> dic,string tifPath,ref Dictionary<Point2d, Geometry> mainRiver)
+        {
+            RasterReader reader = new RasterReader(tifPath);
+            //Dictionary<Point2d, Geometry> maxGeoLength = null;
+            double maxLength = 0;  //主河槽长度
+            List<Point3d> gradientPoints = new List<Point3d>();
+           // List<Point3d> gradientPoints1 = new List<Point3d>();
+            foreach (var geoLength in dic)
+            {
+                double tempLength = 0;
+                List<Point2d> pointListLength = new List<Point2d>();
+                gradientPoints = new List<Point3d>();
+                foreach (var length in geoLength)
+                {
+                    int pcount = length.Value.GetPointCount();
+                    for (int i = 0; i < pcount; i++)
+                    {
+                        Point2d temp = new Point2d(length.Value.GetX(i), length.Value.GetY(i));
+                        if (!pointListLength.Contains(temp))
+                        {
+                            pointListLength.Add(temp);
+                            gradientPoints.Add(new Point3d(length.Value.GetX(i), length.Value.GetY(i),      GetElevationByPointInDEM(temp, reader)));
+                        }
+                    }
+                }
+                for (int i = 1; i < gradientPoints.Count; i++)
+                {
+                    tempLength += GetLength(gradientPoints[i - 1], gradientPoints[i]);
+                }
+                if (maxLength < tempLength)
+                {
+                    maxLength = tempLength;
+                    mainRiver = geoLength;
+                    //gradientPoints1 = gradientPoints;
+                }
+            }
+            reader.Dispose();
+            return maxLength;         
+        }
+
+        private void CreateShp(string outpath,Dictionary<Point2d, Geometry> geoList,OSGeo.OSR.SpatialReference srt)
+        {
+            //注册ogr库
+            string pszDriverName = "ESRI Shapefile";
+            OSGeo.OGR.Ogr.RegisterAll();
+
+            //调用对shape文件读写的Driver接口
+            OSGeo.OGR.Driver poDriver = OSGeo.OGR.Ogr.GetDriverByName(pszDriverName);
+            if (poDriver == null)
+            {
+                MessageBox.Show("驱动错误！");
+            }
+            //创建河网shp
+            string shpPath = outpath;
+
+            OSGeo.OGR.DataSource poDs;
+            poDs = ShpHelp.GetShpDriver().CreateDataSource(shpPath, null);
+
+            //创建图层
+            OSGeo.OGR.Layer poLayer;
+            //OSGeo.OSR.SpatialReference srt = new OSGeo.OSR.SpatialReference(Const.WGS84);
+            poLayer = poDs.CreateLayer("rivernetline.shp", srt, wkbGeometryType.wkbLineString, null);
+            //创建一个Feature
+            OSGeo.OGR.Feature feature = new OSGeo.OGR.Feature(poLayer.GetLayerDefn());
+            foreach (var geo in geoList)
+            {
+                feature.SetGeometry(geo.Value);
+                poLayer.CreateFeature(feature);
+            }
+            feature.Dispose();
+            poDs.Dispose();
         }
 
         public double ReadBand(RasterReader reader, int col, int row)
@@ -220,55 +465,6 @@ namespace FloodPeakToolUI.UI
             return d[0];
         }
 
-        private double GetLonGradient(List<Point3d> points)
-        {
-            double length = 0;
-            double z = 0;
-            double minElevation = points[0].Z;
-            for (int i = 1; i < points.Count; i++)
-            {
-                if (minElevation > points[i].Z) minElevation = points[i].Z;
-                Point3d point1 = points[i - 1];
-                Point3d point2 = points[i];
-                length += Length(point1, point2);
-                z += Length(point1, point2) * (point1.Z + point2.Z);
-            }
-            //z = z - 2 * minElevation * length;
-            return z / (length * length);
-        }
-
-        /// <summary>
-        /// 计算河流长度
-        /// 主河道长度L，单位千米
-        /// </summary>
-        private double FlowLength(string shppath)
-        {
-            ShpReader shp = new ShpReader(shppath);
-            OSGeo.OGR.Feature ofea;
-            double sumLength = 0;
-            while (((ofea = shp.layer.GetNextFeature()) != null))
-            {
-                int id = ofea.GetFID();
-                double length = 0;
-                //点集个数
-                int count = ofea.GetGeometryRef().GetPointCount();
-                for (int i = 1; i < count; i++)
-                {
-                    double startLon = ofea.GetGeometryRef().GetX(i - 1);
-                    double startLat = ofea.GetGeometryRef().GetY(i - 1);
-                    double endLon = ofea.GetGeometryRef().GetX(i);
-                    double endLat = ofea.GetGeometryRef().GetY(i);
-                    //float elevation = _globeView.GetElevation(lon, lat);
-                    length += Length(new Point3d(startLon, startLat, 0), new Point3d(endLon, endLat, 0));
-                }
-                sumLength += length;
-                //WriteText(string.Format("河道id为:{0}的长度是{1,7:f3} m", id, length.ToString("f3")));
-            }
-            shp.Dispose();
-            return sumLength;
-        }
-
-
         /// <summary>
         /// 求两点距离
         /// </summary>
@@ -277,7 +473,7 @@ namespace FloodPeakToolUI.UI
         /// <returns></returns>
         private double Length(Point3d from, Point3d to)
         {
-            double l = SpatialAnalysis.CaculateGCDistance(from.Y, from.X, to.Y, to.X);
+            double l = Math.Sqrt((to.X - from.X) * (to.X - from.X) + (to.Y - from.Y) * (to.Y - from.Y));
             return l;
         }
 
@@ -345,6 +541,23 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(_mainRiver==null)
+            {
+                MsgBox.ShowInfo("暂时未计算主河槽");
+                return;
+            }
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "矢量文件|*.shp";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ShpReader shp=new ShpReader(fileChooseControl3.FilePath);
+                CreateShp(dialog.FileName, _mainRiver, shp.SpatialRef);
+                System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(dialog.FileName));
+            }
+        }
 
     }
 }

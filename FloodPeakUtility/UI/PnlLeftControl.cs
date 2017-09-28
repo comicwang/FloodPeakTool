@@ -507,7 +507,7 @@ namespace FloodPeakUtility.UI
         private bool ShpPointLyrExits(ShpPointLayer lyr)
         {
             ShpPointLayerList lst = ShpPointConfig.ReadConfigFile();
-            if (lst.Count == 0)
+            if (lst == null || lst.Count == 0)
                 return false;
             foreach (var item in lst.LayerList)
             {
@@ -527,7 +527,7 @@ namespace FloodPeakUtility.UI
         private bool ShpLineLyrExits(ShpLineLayer lyr)
         {
             ShpLineLayerList lst = ShpLineConfig.ReadConfigFile();
-            if (lst.Count == 0)
+            if (lst == null || lst.Count == 0)
                 return false;
             foreach (var item in lst.LayerList)
             {
@@ -547,7 +547,7 @@ namespace FloodPeakUtility.UI
         private bool ShpPolygonLyrExits(ShpPolygonLayer lyr)
         {
             ShpPolygonLayerList lst = ShpPolygonConfig.ReadConfigFile();
-            if (lst.Count == 0)
+            if (lst == null || lst.Count == 0)
                 return false;
             foreach (var item in lst.LayerList)
             {

@@ -56,9 +56,9 @@
             // 
             this.btnCaculate.Enabled = false;
             this.btnCaculate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCaculate.Location = new System.Drawing.Point(146, 51);
+            this.btnCaculate.Location = new System.Drawing.Point(160, 59);
             this.btnCaculate.Name = "btnCaculate";
-            this.btnCaculate.Size = new System.Drawing.Size(82, 41);
+            this.btnCaculate.Size = new System.Drawing.Size(67, 26);
             this.btnCaculate.TabIndex = 17;
             this.btnCaculate.Text = "点击计算";
             this.btnCaculate.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@
             // 
             // txtState
             // 
-            this.txtState.Location = new System.Drawing.Point(106, 24);
+            this.txtState.Location = new System.Drawing.Point(106, 29);
             this.txtState.Name = "txtState";
             this.txtState.Size = new System.Drawing.Size(122, 21);
             this.txtState.TabIndex = 15;
@@ -75,7 +75,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 28);
+            this.label2.Location = new System.Drawing.Point(31, 33);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 9;

@@ -103,7 +103,8 @@ namespace FloodPeakToolUI
         /// <returns></returns>
         public static double Length(Point3d from, Point3d to)
         {
-            double l = SpatialAnalysis.CaculateGCDistance(from.Y, from.X, to.Y, to.X);
+            //double l = SpatialAnalysis.CaculateGCDistance(from.Y, from.X, to.Y, to.X);
+            double l = Math.Sqrt((to.X - from.X) * (to.X - from.X) + (to.Y - from.Y) * (to.Y - from.Y));
             return l;
         }
     }

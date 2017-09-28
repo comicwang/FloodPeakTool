@@ -104,7 +104,7 @@ namespace FloodPeakToolUI.UI
             {
                 FormOutput.AppendLog("开始计算线的交点...");
                 RasterReader reader = new RasterReader(args[1]);
-                List<Point3d> pts = CalPoints(args[0]);
+                List<Point3d> pts = CalPoints(args[0],reader);
                 FormOutput.AppendLog("开始计算平均坡度和坡长...");
                 CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
                 reader.Dispose();
@@ -368,73 +368,60 @@ namespace FloodPeakToolUI.UI
         /// 计算线的交点
         /// 先获取每条线段的startpoint与endpoint，然后判断是否有重合
         /// </summary>
-        private List<Point3d> CalPoints(string path)
+        private List<Point3d> CalPoints(string path,RasterReader reader)
         {
-            List<Point3d> srcPoints = new List<Point3d>();
-            List<Point3d> interPoints = new List<Point3d>();
-            //遍历线段取首尾两个点坐标
             ShpReader shp = new ShpReader(path);
             OSGeo.OGR.Feature ofea;
+
+            List<Point3d> linePoint = new List<Point3d>();
+            List<OSGeo.OGR.Geometry> featureList = new List<OSGeo.OGR.Geometry>();
             while (((ofea = shp.layer.GetNextFeature()) != null))
             {
-                //点集个数
                 int count = ofea.GetGeometryRef().GetPointCount();
-                double startlon = ofea.GetGeometryRef().GetX(0);
-                double startlat = ofea.GetGeometryRef().GetY(0);
-                double startElevation = _globeView.GetElevation(startlon, startlat);
-                Point3d startPoint = new Point3d(startlon, startlat, startElevation);
-                if (!interPoints.Contains(startPoint))
+                Point3d start = new Point3d(ofea.GetGeometryRef().GetX(0), ofea.GetGeometryRef().GetY(0), GetElevationByPointInDEM(new Point2d(ofea.GetGeometryRef().GetX(0), ofea.GetGeometryRef().GetY(0)), reader));
+                Point3d end = new Point3d(ofea.GetGeometryRef().GetX(count - 1), ofea.GetGeometryRef().GetY(count - 1), GetElevationByPointInDEM(new Point2d(ofea.GetGeometryRef().GetX(0), ofea.GetGeometryRef().GetY(0)), reader));
+                if (!linePoint.Contains(start))
                 {
-                    //元数据中包含
-                    if (srcPoints.Contains(startPoint))
-                    {
-                        srcPoints.Remove(startPoint);
-                        interPoints.Add(startPoint);
-                    }
-                    else
-                    {
-                        srcPoints.Add(startPoint);
-                    }
+                    linePoint.Add(start);
+                }
+                if (!linePoint.Contains(end))
+                {
+                    linePoint.Add(end);
                 }
 
-                double endlon = ofea.GetGeometryRef().GetX(count - 1);
-                double endlat = ofea.GetGeometryRef().GetY(count - 1);
-                double endElevation = _globeView.GetElevation(endlon, endlat);
-                Point3d endPoint = new Point3d(endlon, endlat, endElevation);
-                if (!interPoints.Contains(endPoint))
-                {
-                    //元数据中包含
-                    if (srcPoints.Contains(endPoint))
-                    {
-                        srcPoints.Remove(endPoint);
-                        interPoints.Add(endPoint);
-                    }
-                    else
-                    {
-                        srcPoints.Add(endPoint);
-                    }
-                }
+                featureList.Add(ofea.GetGeometryRef());
             }
-            List<Point3d> to = interPoints.Distinct<Point3d>().ToList();
-            List<Point3d> result = new List<Point3d>();
-            if (shp.IsProjected)
-            {
-                SpatialReference srf = new SpatialReference(shp.GetSridWkt());
-                SpatialReference srt = new SpatialReference(Const.WGS84);
-                CoordinateTransformation ctf = new CoordinateTransformation(srf, srt);
-                double[] transPoint = new double[3];
-                for (int i = 0; i < to.Count; i++)
-                {
-                    ctf.TransformPoint(transPoint, to[i].X, to[i].Y, to[i].Z);
-                    double endElevation = _globeView.GetElevation(transPoint[0], transPoint[1]);
-                    Point3d p = new Point3d(transPoint[0], transPoint[1], endElevation);
-                    result.Add(p);
-                }
-            }
-            shp.Dispose();
-            return result;
+            return linePoint.OrderBy(t => t.Y).ToList();
         }
 
+        private double GetElevationByPointInDEM(Point2d sourcePoint, RasterReader raster)
+        {
+            try
+            {
+                double[] adfGeoTransform = new double[6];
+                raster.DataSet.GetGeoTransform(adfGeoTransform);
+                double dTemp = adfGeoTransform[1] * adfGeoTransform[5] - adfGeoTransform[2] * adfGeoTransform[4];
+                double dRow = 0;
+                double dCol = 0;
+                dCol = (adfGeoTransform[5] * (sourcePoint.X - adfGeoTransform[0]) - adfGeoTransform[2] * (sourcePoint.Y - adfGeoTransform[3])) / dTemp + 0.5;
+                dRow = (adfGeoTransform[1] * (sourcePoint.Y - adfGeoTransform[3]) - adfGeoTransform[4] * (sourcePoint.X - adfGeoTransform[0])) / dTemp + 0.5;
+                int c = Convert.ToInt32(dCol);
+                int r = Convert.ToInt32(dRow);
+                return ReadBand(raster, c, r);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+
+        private double ReadBand(RasterReader reader, int col, int row)
+        {
+            double[] d = null;
+            reader.ReadBand(col, row, 1, 1, out d);
+            return d[0];
+        }
 
         #endregion
 
