@@ -114,9 +114,9 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox1.Location = new System.Drawing.Point(0, 51);
+            this.groupBox1.Location = new System.Drawing.Point(0, 63);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(240, 189);
+            this.groupBox1.Size = new System.Drawing.Size(240, 177);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输出";
@@ -131,6 +131,7 @@
             this.btnSave.TabIndex = 31;
             this.btnSave.Text = "保存结果";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCaculate
             // 
@@ -143,6 +144,7 @@
             this.btnCaculate.TabIndex = 30;
             this.btnCaculate.Text = "点击计算";
             this.btnCaculate.UseVisualStyleBackColor = true;
+            this.btnCaculate.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtd
             // 

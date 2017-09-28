@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>globe.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevComponents.DotNetBar2, Version=8.7.0.3, Culture=neutral, PublicKeyToken=7f2b5af6db258e2f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -191,12 +194,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UI\DataExport.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\DataExport.Designer.cs">
-      <DependentUpon>DataExport.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\GlobeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -222,9 +219,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UI\DataExport.resx">
-      <DependentUpon>DataExport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\GlobeControl.resx">
       <DependentUpon>GlobeControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -268,9 +262,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="globe.ico" />
     <Content Include="readme.txt" />
     <Content Include="Resources\chart_curve.png" />
     <Content Include="Resources\document_layout.png" />
+    <None Include="Resources\duigou.png" />
     <Content Include="Resources\layer.png" />
     <Content Include="Resources\layer_grid.png" />
     <Content Include="Resources\layer_wms.png" />

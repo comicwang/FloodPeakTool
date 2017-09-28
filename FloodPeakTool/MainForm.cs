@@ -341,5 +341,13 @@ namespace FloodPeakTool
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             IMemo = Memos.Where(t => t.CaculateName == item.Text).FirstOrDefault();
         }
+
+        private void iTelluro工具ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _globeControl.BarGlobeTools.Visible = !_globeControl.BarGlobeTools.Visible;
+            btnTools.Image = null;
+            if (_globeControl.BarGlobeTools.Visible)
+                btnTools.Image = global::FloodPeakTool.Properties.Resources.duigou;
+        }
     }
 }

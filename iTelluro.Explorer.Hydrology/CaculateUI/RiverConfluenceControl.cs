@@ -71,7 +71,6 @@ namespace FloodPeakToolUI.UI
             MsgBox.ShowInfo("保存成功！");
         }
 
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (!backgroundWorker1.IsBusy)
@@ -128,6 +127,29 @@ namespace FloodPeakToolUI.UI
         {
             button1.Enabled = File.Exists(fileChooseControl1.FilePath) || File.Exists(fileChooseControl2.FilePath) || File.Exists(fileChooseControl3.FilePath);
         }
+
+        /// <summary>
+        /// 导出主河槽
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (_mainRiver == null)
+            {
+                MsgBox.ShowInfo("暂时未计算主河槽");
+                return;
+            }
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "矢量文件|*.shp";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                ShpReader shp = new ShpReader(fileChooseControl3.FilePath);
+                CreateShp(dialog.FileName, _mainRiver, shp.SpatialRef);
+                System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(dialog.FileName));
+            }
+        }
+
 
         #endregion
 
@@ -541,23 +563,6 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if(_mainRiver==null)
-            {
-                MsgBox.ShowInfo("暂时未计算主河槽");
-                return;
-            }
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "矢量文件|*.shp";
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                ShpReader shp=new ShpReader(fileChooseControl3.FilePath);
-                CreateShp(dialog.FileName, _mainRiver, shp.SpatialRef);
-                System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(dialog.FileName));
-            }
-        }
 
     }
 }

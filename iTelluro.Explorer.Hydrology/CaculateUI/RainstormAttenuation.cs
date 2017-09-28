@@ -95,16 +95,22 @@ namespace FloodPeakToolUI.UI
                 if (during <= 1)
                 {
                     minHour += during;
-                    minHour += ",";
                     minHourValue += value;
-                    minHourValue += ",";
+                    if (i < ds.Tables[0].Rows.Count - 1)
+                    {
+                        minHour += ",";
+                        minHourValue += ",";
+                    }
                 }
                 else
                 {
                     maxHour += during;
-                    maxHour += ",";
                     maxHourValue += value;
-                    maxHourValue += ",";
+                    if (i < ds.Tables[0].Rows.Count - 1)
+                    {
+                        maxHourValue += ",";
+                        maxHour += ",";
+                    }
                 }
             }
             FormOutput.AppendLog(string.Format("计算参数：小于1小时时间段-【{0}】,值【{1}】,大于1小时时间段【{2}】,值【{3}】", minHour, minHourValue, maxHour, maxHourValue));
@@ -134,7 +140,6 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             if (e.Result != null)
                 RunExeHelper.FindFigureAndTodo(ShowResult);
         }

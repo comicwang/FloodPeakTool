@@ -11,14 +11,14 @@
         /// 清理所有正在使用的资源。
         /// </summary>
         /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
-        //protected override void Dispose( )
-        //{
-        //    if (components != null)
-        //    {
-        //        components.Dispose();
-        //    }
-        //    //base.Dispose(disposing);
-        //}
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         #region 组件设计器生成的代码
 
@@ -30,30 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GlobeControl));
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.指北针ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.比例尺ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.鼠标指针ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.大气层ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.经纬度网格ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.位置信息ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.位置信息格式ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.度分秒ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.度ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.控制面板ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.高程缩放ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.高程缩放0ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.高程缩放1ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.高程缩放2ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.高程缩放3ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.鼠标惯性ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.全屏ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.标注加边ButtonItem = new DevComponents.DotNetBar.ButtonItem();
-            this.printDialog1 = new System.Windows.Forms.PrintDialog();
-            this.btnItemView = new DevComponents.DotNetBar.ButtonItem();
-            this.panelGlobe = new System.Windows.Forms.Panel();
             this.panelAll = new System.Windows.Forms.Panel();
+            this.panelGlobe = new System.Windows.Forms.Panel();
             this.expandableSplitter1 = new DevComponents.DotNetBar.ExpandableSplitter();
             this.itemPanel1 = new DevComponents.DotNetBar.ItemPanel();
             this.tabControlGlobeBottom = new DevComponents.DotNetBar.TabControl();
@@ -73,164 +51,33 @@
             this.打印视图ButtonItem = new DevComponents.DotNetBar.ButtonItem();
             this.保存截图ButtonItem = new DevComponents.DotNetBar.ButtonItem();
             this.清除缓存ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.btnItemView = new DevComponents.DotNetBar.ButtonItem();
+            this.控制面板ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.指北针ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.比例尺ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.鼠标指针ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.大气层ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.经纬度网格ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.位置信息ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.位置信息格式ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.度分秒ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.度ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.标注加边ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.高程缩放ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.高程缩放0ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.高程缩放1ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.高程缩放2ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.高程缩放3ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.鼠标惯性ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.全屏ButtonItem = new DevComponents.DotNetBar.ButtonItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.printDialog1 = new System.Windows.Forms.PrintDialog();
             this.panelAll.SuspendLayout();
             this.itemPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabControlGlobeBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barGlobeTools)).BeginInit();
             this.SuspendLayout();
-            // 
-            // 指北针ButtonItem
-            // 
-            this.指北针ButtonItem.Name = "指北针ButtonItem";
-            this.指北针ButtonItem.Text = "指北针";
-            // 
-            // 比例尺ButtonItem
-            // 
-            this.比例尺ButtonItem.Checked = true;
-            this.比例尺ButtonItem.Name = "比例尺ButtonItem";
-            this.比例尺ButtonItem.Text = "比例尺";
-            // 
-            // 鼠标指针ButtonItem
-            // 
-            this.鼠标指针ButtonItem.Checked = true;
-            this.鼠标指针ButtonItem.Name = "鼠标指针ButtonItem";
-            this.鼠标指针ButtonItem.Text = "鼠标指针";
-            // 
-            // 大气层ButtonItem
-            // 
-            this.大气层ButtonItem.Checked = true;
-            this.大气层ButtonItem.Name = "大气层ButtonItem";
-            this.大气层ButtonItem.Text = "大气层";
-            // 
-            // 经纬度网格ButtonItem
-            // 
-            this.经纬度网格ButtonItem.Name = "经纬度网格ButtonItem";
-            this.经纬度网格ButtonItem.Text = "经纬度网格";
-            // 
-            // 位置信息ButtonItem
-            // 
-            this.位置信息ButtonItem.BeginGroup = true;
-            this.位置信息ButtonItem.Checked = true;
-            this.位置信息ButtonItem.Name = "位置信息ButtonItem";
-            this.位置信息ButtonItem.Text = "位置信息";
-            // 
-            // 位置信息格式ButtonItem
-            // 
-            this.位置信息格式ButtonItem.Name = "位置信息格式ButtonItem";
-            this.位置信息格式ButtonItem.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.度分秒ButtonItem,
-            this.度ButtonItem});
-            this.位置信息格式ButtonItem.Text = "位置信息格式";
-            // 
-            // 度分秒ButtonItem
-            // 
-            this.度分秒ButtonItem.Name = "度分秒ButtonItem";
-            this.度分秒ButtonItem.Text = "度分秒";
-            // 
-            // 度ButtonItem
-            // 
-            this.度ButtonItem.Name = "度ButtonItem";
-            this.度ButtonItem.Text = "度";
-            // 
-            // 控制面板ButtonItem
-            // 
-            this.控制面板ButtonItem.Checked = true;
-            this.控制面板ButtonItem.Name = "控制面板ButtonItem";
-            this.控制面板ButtonItem.Text = "控制面板";
-            // 
-            // 高程缩放ButtonItem
-            // 
-            this.高程缩放ButtonItem.BeginGroup = true;
-            this.高程缩放ButtonItem.Name = "高程缩放ButtonItem";
-            this.高程缩放ButtonItem.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.高程缩放0ButtonItem,
-            this.高程缩放1ButtonItem,
-            this.高程缩放2ButtonItem,
-            this.高程缩放3ButtonItem});
-            this.高程缩放ButtonItem.Text = "高程缩放";
-            // 
-            // 高程缩放0ButtonItem
-            // 
-            this.高程缩放0ButtonItem.Name = "高程缩放0ButtonItem";
-            this.高程缩放0ButtonItem.Text = "0";
-            // 
-            // 高程缩放1ButtonItem
-            // 
-            this.高程缩放1ButtonItem.Name = "高程缩放1ButtonItem";
-            this.高程缩放1ButtonItem.Text = "1";
-            // 
-            // 高程缩放2ButtonItem
-            // 
-            this.高程缩放2ButtonItem.Name = "高程缩放2ButtonItem";
-            this.高程缩放2ButtonItem.Text = "2";
-            // 
-            // 高程缩放3ButtonItem
-            // 
-            this.高程缩放3ButtonItem.Name = "高程缩放3ButtonItem";
-            this.高程缩放3ButtonItem.Text = "3";
-            // 
-            // 鼠标惯性ButtonItem
-            // 
-            this.鼠标惯性ButtonItem.Name = "鼠标惯性ButtonItem";
-            this.鼠标惯性ButtonItem.Text = "鼠标惯性";
-            // 
-            // 全屏ButtonItem
-            // 
-            this.全屏ButtonItem.BeginGroup = true;
-            this.全屏ButtonItem.Image = ((System.Drawing.Image)(resources.GetObject("全屏ButtonItem.Image")));
-            this.全屏ButtonItem.Name = "全屏ButtonItem";
-            this.全屏ButtonItem.Text = "全屏";
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "layers.png");
-            this.imageList1.Images.SetKeyName(1, "arrow_branch.png");
-            this.imageList1.Images.SetKeyName(2, "arrow_merge.png");
-            this.imageList1.Images.SetKeyName(3, "map_edit.png");
-            this.imageList1.Images.SetKeyName(4, "toolTerrainProfile.Image.png");
-            this.imageList1.Images.SetKeyName(5, "toolVolumeAnalysis.Image.png");
-            this.imageList1.Images.SetKeyName(6, "toolTerrainInfo.Image.png");
-            // 
-            // 标注加边ButtonItem
-            // 
-            this.标注加边ButtonItem.Name = "标注加边ButtonItem";
-            this.标注加边ButtonItem.Text = "标注加边";
-            // 
-            // printDialog1
-            // 
-            this.printDialog1.UseEXDialog = true;
-            // 
-            // btnItemView
-            // 
-            this.btnItemView.Image = ((System.Drawing.Image)(resources.GetObject("btnItemView.Image")));
-            this.btnItemView.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
-            this.btnItemView.Name = "btnItemView";
-            this.btnItemView.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
-            this.控制面板ButtonItem,
-            this.指北针ButtonItem,
-            this.比例尺ButtonItem,
-            this.鼠标指针ButtonItem,
-            this.大气层ButtonItem,
-            this.经纬度网格ButtonItem,
-            this.位置信息ButtonItem,
-            this.位置信息格式ButtonItem,
-            this.标注加边ButtonItem,
-            this.高程缩放ButtonItem,
-            this.鼠标惯性ButtonItem,
-            this.全屏ButtonItem});
-            this.btnItemView.Text = "视图";
-            // 
-            // panelGlobe
-            // 
-            this.panelGlobe.BackColor = System.Drawing.Color.Black;
-            this.panelGlobe.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGlobe.Location = new System.Drawing.Point(0, 0);
-            this.panelGlobe.Margin = new System.Windows.Forms.Padding(4);
-            this.panelGlobe.Name = "panelGlobe";
-            this.panelGlobe.Size = new System.Drawing.Size(986, 526);
-            this.panelGlobe.TabIndex = 0;
             // 
             // panelAll
             // 
@@ -241,10 +88,18 @@
             this.panelAll.Controls.Add(this.barGlobeTools);
             this.panelAll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelAll.Location = new System.Drawing.Point(0, 0);
-            this.panelAll.Margin = new System.Windows.Forms.Padding(4);
             this.panelAll.Name = "panelAll";
-            this.panelAll.Size = new System.Drawing.Size(986, 710);
-            this.panelAll.TabIndex = 3;
+            this.panelAll.Size = new System.Drawing.Size(658, 685);
+            this.panelAll.TabIndex = 2;
+            // 
+            // panelGlobe
+            // 
+            this.panelGlobe.BackColor = System.Drawing.Color.Black;
+            this.panelGlobe.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelGlobe.Location = new System.Drawing.Point(0, 25);
+            this.panelGlobe.Name = "panelGlobe";
+            this.panelGlobe.Size = new System.Drawing.Size(658, 513);
+            this.panelGlobe.TabIndex = 0;
             // 
             // expandableSplitter1
             // 
@@ -275,13 +130,13 @@
             this.expandableSplitter1.HotGripDarkColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
             this.expandableSplitter1.HotGripLightColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(239)))), ((int)(((byte)(255)))));
             this.expandableSplitter1.HotGripLightColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.BarBackground;
-            this.expandableSplitter1.Location = new System.Drawing.Point(0, 526);
-            this.expandableSplitter1.Margin = new System.Windows.Forms.Padding(4);
+            this.expandableSplitter1.Location = new System.Drawing.Point(0, 538);
             this.expandableSplitter1.Name = "expandableSplitter1";
-            this.expandableSplitter1.Size = new System.Drawing.Size(986, 8);
+            this.expandableSplitter1.Size = new System.Drawing.Size(658, 6);
             this.expandableSplitter1.Style = DevComponents.DotNetBar.eSplitterStyle.Office2007;
             this.expandableSplitter1.TabIndex = 8;
             this.expandableSplitter1.TabStop = false;
+            this.expandableSplitter1.ExpandedChanging += new DevComponents.DotNetBar.ExpandChangeEventHandler(this.expandableSplitter1_ExpandedChanging);
             // 
             // itemPanel1
             // 
@@ -308,10 +163,9 @@
             this.itemPanel1.Controls.Add(this.tabControlGlobeBottom);
             this.itemPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.itemPanel1.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
-            this.itemPanel1.Location = new System.Drawing.Point(0, 534);
-            this.itemPanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.itemPanel1.Location = new System.Drawing.Point(0, 544);
             this.itemPanel1.Name = "itemPanel1";
-            this.itemPanel1.Size = new System.Drawing.Size(986, 176);
+            this.itemPanel1.Size = new System.Drawing.Size(658, 141);
             this.itemPanel1.TabIndex = 7;
             this.itemPanel1.Text = "itemPanel1";
             // 
@@ -325,15 +179,15 @@
             this.tabControlGlobeBottom.CloseButtonVisible = true;
             this.tabControlGlobeBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlGlobeBottom.Location = new System.Drawing.Point(0, 0);
-            this.tabControlGlobeBottom.Margin = new System.Windows.Forms.Padding(4);
             this.tabControlGlobeBottom.Name = "tabControlGlobeBottom";
             this.tabControlGlobeBottom.SelectedTabFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold);
-            this.tabControlGlobeBottom.SelectedTabIndex = -1;
-            this.tabControlGlobeBottom.Size = new System.Drawing.Size(986, 176);
+            this.tabControlGlobeBottom.SelectedTabIndex = 0;
+            this.tabControlGlobeBottom.Size = new System.Drawing.Size(658, 141);
             this.tabControlGlobeBottom.Style = DevComponents.DotNetBar.eTabStripStyle.Office2007Document;
             this.tabControlGlobeBottom.TabIndex = 0;
             this.tabControlGlobeBottom.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.FixedWithNavigationBox;
             this.tabControlGlobeBottom.Text = "tabControl1";
+            this.tabControlGlobeBottom.TabItemClose += new DevComponents.DotNetBar.TabStrip.UserActionEventHandler(this.tabControlGlobeBottom_TabItemClose);
             // 
             // barGlobeTools
             // 
@@ -358,16 +212,16 @@
             this.btnItemTools,
             this.btnItemView});
             this.barGlobeTools.Location = new System.Drawing.Point(0, 0);
-            this.barGlobeTools.Margin = new System.Windows.Forms.Padding(4);
             this.barGlobeTools.Name = "barGlobeTools";
             this.barGlobeTools.RoundCorners = false;
-            this.barGlobeTools.Size = new System.Drawing.Size(877, 28);
+            this.barGlobeTools.Size = new System.Drawing.Size(658, 25);
             this.barGlobeTools.Stretch = true;
             this.barGlobeTools.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.barGlobeTools.TabIndex = 0;
             this.barGlobeTools.TabStop = false;
             this.barGlobeTools.Text = "三维工具条";
             this.barGlobeTools.Visible = false;
+            this.barGlobeTools.ItemClick += new System.EventHandler(this.barGlobeTools_ItemClick);
             // 
             // buttonZoomIn
             // 
@@ -466,26 +320,188 @@
             this.打印视图ButtonItem.Image = ((System.Drawing.Image)(resources.GetObject("打印视图ButtonItem.Image")));
             this.打印视图ButtonItem.Name = "打印视图ButtonItem";
             this.打印视图ButtonItem.Text = "打印视图";
+            this.打印视图ButtonItem.Click += new System.EventHandler(this.打印视图ButtonItem_Click);
             // 
             // 保存截图ButtonItem
             // 
             this.保存截图ButtonItem.Image = ((System.Drawing.Image)(resources.GetObject("保存截图ButtonItem.Image")));
             this.保存截图ButtonItem.Name = "保存截图ButtonItem";
             this.保存截图ButtonItem.Text = "保存截图";
+            this.保存截图ButtonItem.Click += new System.EventHandler(this.保存截图ButtonItem_Click);
             // 
             // 清除缓存ButtonItem
             // 
             this.清除缓存ButtonItem.BeginGroup = true;
             this.清除缓存ButtonItem.Name = "清除缓存ButtonItem";
             this.清除缓存ButtonItem.Text = "清除缓存";
+            this.清除缓存ButtonItem.Click += new System.EventHandler(this.清除缓存ButtonItem_Click);
+            // 
+            // btnItemView
+            // 
+            this.btnItemView.Image = ((System.Drawing.Image)(resources.GetObject("btnItemView.Image")));
+            this.btnItemView.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
+            this.btnItemView.Name = "btnItemView";
+            this.btnItemView.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.控制面板ButtonItem,
+            this.指北针ButtonItem,
+            this.比例尺ButtonItem,
+            this.鼠标指针ButtonItem,
+            this.大气层ButtonItem,
+            this.经纬度网格ButtonItem,
+            this.位置信息ButtonItem,
+            this.位置信息格式ButtonItem,
+            this.标注加边ButtonItem,
+            this.高程缩放ButtonItem,
+            this.鼠标惯性ButtonItem,
+            this.全屏ButtonItem});
+            this.btnItemView.Text = "视图";
+            // 
+            // 控制面板ButtonItem
+            // 
+            this.控制面板ButtonItem.Checked = true;
+            this.控制面板ButtonItem.Name = "控制面板ButtonItem";
+            this.控制面板ButtonItem.Text = "控制面板";
+            this.控制面板ButtonItem.Click += new System.EventHandler(this.控制面板ButtonItem_Click);
+            // 
+            // 指北针ButtonItem
+            // 
+            this.指北针ButtonItem.Name = "指北针ButtonItem";
+            this.指北针ButtonItem.Text = "指北针";
+            this.指北针ButtonItem.Click += new System.EventHandler(this.指北针ButtonItem_Click);
+            // 
+            // 比例尺ButtonItem
+            // 
+            this.比例尺ButtonItem.Checked = true;
+            this.比例尺ButtonItem.Name = "比例尺ButtonItem";
+            this.比例尺ButtonItem.Text = "比例尺";
+            this.比例尺ButtonItem.Click += new System.EventHandler(this.比例尺ButtonItem_Click);
+            // 
+            // 鼠标指针ButtonItem
+            // 
+            this.鼠标指针ButtonItem.Checked = true;
+            this.鼠标指针ButtonItem.Name = "鼠标指针ButtonItem";
+            this.鼠标指针ButtonItem.Text = "鼠标指针";
+            this.鼠标指针ButtonItem.Click += new System.EventHandler(this.鼠标指针ButtonItem_Click);
+            // 
+            // 大气层ButtonItem
+            // 
+            this.大气层ButtonItem.Checked = true;
+            this.大气层ButtonItem.Name = "大气层ButtonItem";
+            this.大气层ButtonItem.Text = "大气层";
+            this.大气层ButtonItem.Click += new System.EventHandler(this.大气层ButtonItem_Click);
+            // 
+            // 经纬度网格ButtonItem
+            // 
+            this.经纬度网格ButtonItem.Name = "经纬度网格ButtonItem";
+            this.经纬度网格ButtonItem.Text = "经纬度网格";
+            this.经纬度网格ButtonItem.Click += new System.EventHandler(this.经纬度网格ButtonItem_Click);
+            // 
+            // 位置信息ButtonItem
+            // 
+            this.位置信息ButtonItem.BeginGroup = true;
+            this.位置信息ButtonItem.Checked = true;
+            this.位置信息ButtonItem.Name = "位置信息ButtonItem";
+            this.位置信息ButtonItem.Text = "位置信息";
+            this.位置信息ButtonItem.Click += new System.EventHandler(this.位置信息ButtonItem_Click);
+            // 
+            // 位置信息格式ButtonItem
+            // 
+            this.位置信息格式ButtonItem.Name = "位置信息格式ButtonItem";
+            this.位置信息格式ButtonItem.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.度分秒ButtonItem,
+            this.度ButtonItem});
+            this.位置信息格式ButtonItem.Text = "位置信息格式";
+            // 
+            // 度分秒ButtonItem
+            // 
+            this.度分秒ButtonItem.Name = "度分秒ButtonItem";
+            this.度分秒ButtonItem.Text = "度分秒";
+            this.度分秒ButtonItem.Click += new System.EventHandler(this.度分秒ButtonItem_Click);
+            // 
+            // 度ButtonItem
+            // 
+            this.度ButtonItem.Name = "度ButtonItem";
+            this.度ButtonItem.Text = "度";
+            this.度ButtonItem.Click += new System.EventHandler(this.度ButtonItem_Click);
+            // 
+            // 标注加边ButtonItem
+            // 
+            this.标注加边ButtonItem.Name = "标注加边ButtonItem";
+            this.标注加边ButtonItem.Text = "标注加边";
+            this.标注加边ButtonItem.Click += new System.EventHandler(this.标注加边ButtonItem_Click);
+            // 
+            // 高程缩放ButtonItem
+            // 
+            this.高程缩放ButtonItem.BeginGroup = true;
+            this.高程缩放ButtonItem.Name = "高程缩放ButtonItem";
+            this.高程缩放ButtonItem.SubItems.AddRange(new DevComponents.DotNetBar.BaseItem[] {
+            this.高程缩放0ButtonItem,
+            this.高程缩放1ButtonItem,
+            this.高程缩放2ButtonItem,
+            this.高程缩放3ButtonItem});
+            this.高程缩放ButtonItem.Text = "高程缩放";
+            // 
+            // 高程缩放0ButtonItem
+            // 
+            this.高程缩放0ButtonItem.Name = "高程缩放0ButtonItem";
+            this.高程缩放0ButtonItem.Text = "0";
+            this.高程缩放0ButtonItem.Click += new System.EventHandler(this.高程缩放0ButtonItem_Click);
+            // 
+            // 高程缩放1ButtonItem
+            // 
+            this.高程缩放1ButtonItem.Name = "高程缩放1ButtonItem";
+            this.高程缩放1ButtonItem.Text = "1";
+            this.高程缩放1ButtonItem.Click += new System.EventHandler(this.高程缩放1ButtonItem_Click);
+            // 
+            // 高程缩放2ButtonItem
+            // 
+            this.高程缩放2ButtonItem.Name = "高程缩放2ButtonItem";
+            this.高程缩放2ButtonItem.Text = "2";
+            this.高程缩放2ButtonItem.Click += new System.EventHandler(this.高程缩放2ButtonItem_Click);
+            // 
+            // 高程缩放3ButtonItem
+            // 
+            this.高程缩放3ButtonItem.Name = "高程缩放3ButtonItem";
+            this.高程缩放3ButtonItem.Text = "3";
+            this.高程缩放3ButtonItem.Click += new System.EventHandler(this.高程缩放3ButtonItem_Click);
+            // 
+            // 鼠标惯性ButtonItem
+            // 
+            this.鼠标惯性ButtonItem.Name = "鼠标惯性ButtonItem";
+            this.鼠标惯性ButtonItem.Text = "鼠标惯性";
+            this.鼠标惯性ButtonItem.Click += new System.EventHandler(this.鼠标惯性ButtonItem_Click);
+            // 
+            // 全屏ButtonItem
+            // 
+            this.全屏ButtonItem.BeginGroup = true;
+            this.全屏ButtonItem.Image = ((System.Drawing.Image)(resources.GetObject("全屏ButtonItem.Image")));
+            this.全屏ButtonItem.Name = "全屏ButtonItem";
+            this.全屏ButtonItem.Text = "全屏";
+            this.全屏ButtonItem.Click += new System.EventHandler(this.全屏ButtonItem_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "layers.png");
+            this.imageList1.Images.SetKeyName(1, "arrow_branch.png");
+            this.imageList1.Images.SetKeyName(2, "arrow_merge.png");
+            this.imageList1.Images.SetKeyName(3, "map_edit.png");
+            this.imageList1.Images.SetKeyName(4, "toolTerrainProfile.Image.png");
+            this.imageList1.Images.SetKeyName(5, "toolVolumeAnalysis.Image.png");
+            this.imageList1.Images.SetKeyName(6, "toolTerrainInfo.Image.png");
+            // 
+            // printDialog1
+            // 
+            this.printDialog1.UseEXDialog = true;
             // 
             // GlobeControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelAll);
             this.Name = "GlobeControl";
-            this.Size = new System.Drawing.Size(986, 710);
+            this.Size = new System.Drawing.Size(658, 685);
             this.panelAll.ResumeLayout(false);
             this.itemPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabControlGlobeBottom)).EndInit();
@@ -496,30 +512,8 @@
 
         #endregion
 
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private DevComponents.DotNetBar.ButtonItem 指北针ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 比例尺ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 鼠标指针ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 大气层ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 经纬度网格ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 位置信息ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 位置信息格式ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 度分秒ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 度ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 控制面板ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 高程缩放ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 高程缩放0ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 高程缩放1ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 高程缩放2ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 高程缩放3ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 鼠标惯性ButtonItem;
-        private DevComponents.DotNetBar.ButtonItem 全屏ButtonItem;
-        private System.Windows.Forms.ImageList imageList1;
-        private DevComponents.DotNetBar.ButtonItem 标注加边ButtonItem;
-        private System.Windows.Forms.PrintDialog printDialog1;
-        private DevComponents.DotNetBar.ButtonItem btnItemView;
-        private System.Windows.Forms.Panel panelGlobe;
         private System.Windows.Forms.Panel panelAll;
+        private System.Windows.Forms.Panel panelGlobe;
         private DevComponents.DotNetBar.ExpandableSplitter expandableSplitter1;
         private DevComponents.DotNetBar.ItemPanel itemPanel1;
         private DevComponents.DotNetBar.TabControl tabControlGlobeBottom;
@@ -535,9 +529,31 @@
         private DevComponents.DotNetBar.ButtonItem buttonTerrainInfo;
         private DevComponents.DotNetBar.ButtonItem buttonTerrainProfile;
         private DevComponents.DotNetBar.ButtonItem buttonVolumeAnalysis;
+        private System.Windows.Forms.ImageList imageList1;
+        private DevComponents.DotNetBar.ButtonItem btnItemView;
+        private DevComponents.DotNetBar.ButtonItem 控制面板ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 指北针ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 比例尺ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 鼠标指针ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 大气层ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 经纬度网格ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 位置信息ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 位置信息格式ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 度分秒ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 度ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 标注加边ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 高程缩放ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 高程缩放0ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 高程缩放1ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 高程缩放2ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 高程缩放3ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 鼠标惯性ButtonItem;
+        private DevComponents.DotNetBar.ButtonItem 全屏ButtonItem;
         private DevComponents.DotNetBar.ButtonItem btnItemTools;
         private DevComponents.DotNetBar.ButtonItem 打印视图ButtonItem;
         private DevComponents.DotNetBar.ButtonItem 保存截图ButtonItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.PrintDialog printDialog1;
         private DevComponents.DotNetBar.ButtonItem 清除缓存ButtonItem;
     }
 }

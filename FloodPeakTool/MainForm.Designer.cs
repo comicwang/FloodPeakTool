@@ -64,6 +64,10 @@
             this.清水流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.泥石流洪峰流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.快速入门ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.帮助手册ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.dotNetBarManager = new DevComponents.DotNetBar.DotNetBarManager(this.components);
             this.dockSite4 = new DevComponents.DotNetBar.DockSite();
@@ -395,11 +399,41 @@
             // 
             // 帮助ToolStripMenuItem
             // 
+            this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnTools,
+            this.快速入门ToolStripMenuItem,
+            this.帮助手册ToolStripMenuItem,
+            this.关于ToolStripMenuItem});
             this.帮助ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.帮助ToolStripMenuItem.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
             this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(78, 38);
             this.帮助ToolStripMenuItem.Text = "帮  助(&H)";
+            // 
+            // btnTools
+            // 
+            this.btnTools.Name = "btnTools";
+            this.btnTools.Size = new System.Drawing.Size(161, 26);
+            this.btnTools.Text = "iTelluro工具";
+            this.btnTools.Click += new System.EventHandler(this.iTelluro工具ToolStripMenuItem_Click);
+            // 
+            // 快速入门ToolStripMenuItem
+            // 
+            this.快速入门ToolStripMenuItem.Name = "快速入门ToolStripMenuItem";
+            this.快速入门ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.快速入门ToolStripMenuItem.Text = "快速入门";
+            // 
+            // 帮助手册ToolStripMenuItem
+            // 
+            this.帮助手册ToolStripMenuItem.Name = "帮助手册ToolStripMenuItem";
+            this.帮助手册ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.帮助手册ToolStripMenuItem.Text = "帮助手册";
+            // 
+            // 关于ToolStripMenuItem
+            // 
+            this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.关于ToolStripMenuItem.Text = "关于";
             // 
             // dotNetBarManager
             // 
@@ -546,6 +580,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem btnTools;
+        private System.Windows.Forms.ToolStripMenuItem 快速入门ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 帮助手册ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
     }
 }
 

@@ -9,14 +9,11 @@ using System.Windows.Forms;
 using iTelluro.GlobeEngine.MapControl3D;
 using iTelluro.GlobeEngine.MapControl3D.UI;
 using DevComponents.DotNetBar;
-using DevComponents.DotNetBar.Controls;
 using iTelluro.Explorer.PluginEngine;
-using iTelluro.Explorer.Controls;
-using iTelluro.Explorer.Location;
 using System.IO;
 using System.Drawing.Printing;
 
-namespace   FloodPeakTool
+namespace FloodPeakTool
 {
     public partial class GlobeControl : UserControl
     {
@@ -203,24 +200,31 @@ namespace   FloodPeakTool
 
         private void tabControlGlobeBottom_TabItemClose(object sender, TabStripActionEventArgs e)
         {
-            e.Cancel = true;
-
-            DevComponents.DotNetBar.TabControl tabcontrol = sender as DevComponents.DotNetBar.TabControl;
-            if (tabcontrol != null)
+            try
             {
-                tabcontrol.SelectedTab.Visible = false;
+                e.Cancel = true;
 
-                bool hasvisible = false;
-
-                for (int i = 0; i < tabcontrol.Tabs.Count; i++)
+                DevComponents.DotNetBar.TabControl tabcontrol = sender as DevComponents.DotNetBar.TabControl;
+                if (tabcontrol != null)
                 {
-                    if (tabcontrol.Tabs[i].Visible)
+                    tabcontrol.SelectedTab.Visible = false;
+
+                    bool hasvisible = false;
+
+                    for (int i = 0; i < tabcontrol.Tabs.Count; i++)
                     {
-                        hasvisible = true;
-                        break;
+                        if (tabcontrol.Tabs[i].Visible)
+                        {
+                            hasvisible = true;
+                            break;
+                        }
                     }
+                    expandableSplitter1.Expanded = hasvisible;
                 }
-                expandableSplitter1.Expanded = hasvisible;
+            }
+            catch (Exception ex)
+            { 
+            
             }
         }
 

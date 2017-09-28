@@ -253,17 +253,17 @@
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(62, 63);
+            this.label59.Location = new System.Drawing.Point(19, 63);
             this.label59.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(65, 12);
+            this.label59.Size = new System.Drawing.Size(107, 12);
             this.label59.TabIndex = 55;
-            this.label59.Text = "理论流量值";
+            this.label59.Text = "理论流量值(0.1mm)";
             // 
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(59, 28);
+            this.label58.Location = new System.Drawing.Point(67, 28);
             this.label58.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(59, 12);
