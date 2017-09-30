@@ -153,7 +153,6 @@
             this.itemPanel1.BackgroundStyle.BorderRightWidth = 1;
             this.itemPanel1.BackgroundStyle.BorderTop = DevComponents.DotNetBar.eStyleBorderType.Solid;
             this.itemPanel1.BackgroundStyle.BorderTopWidth = 1;
-            this.itemPanel1.BackgroundStyle.Class = "";
             this.itemPanel1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.itemPanel1.BackgroundStyle.PaddingBottom = 1;
             this.itemPanel1.BackgroundStyle.PaddingLeft = 1;
@@ -162,7 +161,9 @@
             this.itemPanel1.ContainerControlProcessDialogKey = true;
             this.itemPanel1.Controls.Add(this.tabControlGlobeBottom);
             this.itemPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            //this.itemPanel1.DragDropSupport = true;
             this.itemPanel1.LayoutOrientation = DevComponents.DotNetBar.eOrientation.Vertical;
+            //this.itemPanel1.LicenseKey = "F962CEC7-CD8F-4911-A9E9-CAB39962FC1F";
             this.itemPanel1.Location = new System.Drawing.Point(0, 544);
             this.itemPanel1.Name = "itemPanel1";
             this.itemPanel1.Size = new System.Drawing.Size(658, 141);
@@ -197,6 +198,7 @@
             this.barGlobeTools.Dock = System.Windows.Forms.DockStyle.Top;
             this.barGlobeTools.DockSide = DevComponents.DotNetBar.eDockSide.Document;
             this.barGlobeTools.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            //this.barGlobeTools.IsMaximized = false;
             this.barGlobeTools.Items.AddRange(new DevComponents.DotNetBar.BaseItem[] {
             this.buttonZoomIn,
             this.buttonZoomOut,

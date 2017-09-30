@@ -463,24 +463,30 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
-
-            //绑定数据源
-            NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.PMHL).ToArray();
-            fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
-            fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[1].NodeName : string.Empty);
-            fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[2].NodeName : string.Empty);
-
-            //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.SlopeConfluence);
-            if (File.Exists(_xmlPath))
+            try
             {
-                PMHLResult result = XmlHelper.Deserialize<PMHLResult>(_xmlPath);
-                if (result != null)
+                //绑定数据源
+                NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.PMHL).ToArray();
+                fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
+                fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[1].NodeName : string.Empty);
+                fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[2].NodeName : string.Empty);
+
+                //显示之前的结果
+                _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.SlopeConfluence);
+                if (File.Exists(_xmlPath))
                 {
-                    textBox1.Text = result.L2 == 0 ? "" : result.L2.ToString();
-                    textBox2.Text = result.l2 == 0 ? "" : result.l2.ToString();
-                    textBox3.Text = result.A2 == 0 ? "" : result.A2.ToString();
+                    PMHLResult result = XmlHelper.Deserialize<PMHLResult>(_xmlPath);
+                    if (result != null)
+                    {
+                        textBox1.Text = result.L2 == 0 ? "" : result.L2.ToString();
+                        textBox2.Text = result.l2 == 0 ? "" : result.l2.ToString();
+                        textBox3.Text = result.A2 == 0 ? "" : result.A2.ToString();
+                    }
                 }
+            }
+            catch
+            {
+
             }
             Parent.UIParent.Controls.Add(this);
         }

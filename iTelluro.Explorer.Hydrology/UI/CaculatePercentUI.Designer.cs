@@ -30,6 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.expandablePanel1 = new DevComponents.DotNetBar.ExpandablePanel();
             this.grpSS = new System.Windows.Forms.GroupBox();
             this.btnCaculate = new System.Windows.Forms.Button();
             this.nihedu = new System.Windows.Forms.Label();
@@ -49,6 +50,7 @@
             this.numQm = new System.Windows.Forms.NumericUpDown();
             this.bgwCaculate = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
+            this.expandablePanel1.SuspendLayout();
             this.grpSS.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCs)).BeginInit();
@@ -63,8 +65,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.grpSS);
-            this.panel1.Controls.Add(this.grpResult);
+            this.panel1.Controls.Add(this.expandablePanel1);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(703, 501);
@@ -79,8 +80,38 @@
             this.panel2.Size = new System.Drawing.Size(701, 306);
             this.panel2.TabIndex = 2;
             // 
+            // expandablePanel1
+            // 
+            this.expandablePanel1.CanvasColor = System.Drawing.SystemColors.Control;
+            this.expandablePanel1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.expandablePanel1.Controls.Add(this.grpSS);
+            this.expandablePanel1.Controls.Add(this.grpResult);
+            this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
+            this.expandablePanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.expandablePanel1.HideControlsWhenCollapsed = true;
+            this.expandablePanel1.Location = new System.Drawing.Point(0, 306);
+            this.expandablePanel1.Name = "expandablePanel1";
+            this.expandablePanel1.Size = new System.Drawing.Size(701, 193);
+            this.expandablePanel1.Style.Alignment = System.Drawing.StringAlignment.Center;
+            this.expandablePanel1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.expandablePanel1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.expandablePanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.expandablePanel1.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.BarDockedBorder;
+            this.expandablePanel1.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText;
+            this.expandablePanel1.Style.GradientAngle = 90;
+            this.expandablePanel1.TabIndex = 0;
+            this.expandablePanel1.TitleStyle.Alignment = System.Drawing.StringAlignment.Center;
+            this.expandablePanel1.TitleStyle.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.expandablePanel1.TitleStyle.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.expandablePanel1.TitleStyle.Border = DevComponents.DotNetBar.eBorderType.RaisedInner;
+            this.expandablePanel1.TitleStyle.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandablePanel1.TitleStyle.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+            this.expandablePanel1.TitleStyle.GradientAngle = 90;
+            this.expandablePanel1.TitleText = "水文曲线计算结果";
+            // 
             // grpSS
             // 
+            this.grpSS.BackColor = System.Drawing.Color.White;
             this.grpSS.Controls.Add(this.btnCaculate);
             this.grpSS.Controls.Add(this.nihedu);
             this.grpSS.Controls.Add(this.txtNihe);
@@ -90,17 +121,17 @@
             this.grpSS.Controls.Add(this.numX);
             this.grpSS.Controls.Add(this.label61);
             this.grpSS.Controls.Add(this.label62);
-            this.grpSS.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grpSS.Location = new System.Drawing.Point(0, 306);
+            this.grpSS.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpSS.Location = new System.Drawing.Point(0, 26);
             this.grpSS.Name = "grpSS";
-            this.grpSS.Size = new System.Drawing.Size(701, 93);
-            this.grpSS.TabIndex = 1;
+            this.grpSS.Size = new System.Drawing.Size(701, 84);
+            this.grpSS.TabIndex = 4;
             this.grpSS.TabStop = false;
             this.grpSS.Text = "适线调整计算";
             // 
             // btnCaculate
             // 
-            this.btnCaculate.Location = new System.Drawing.Point(273, 61);
+            this.btnCaculate.Location = new System.Drawing.Point(273, 53);
             this.btnCaculate.Name = "btnCaculate";
             this.btnCaculate.Size = new System.Drawing.Size(75, 23);
             this.btnCaculate.TabIndex = 61;
@@ -111,7 +142,7 @@
             // nihedu
             // 
             this.nihedu.AutoSize = true;
-            this.nihedu.Location = new System.Drawing.Point(84, 66);
+            this.nihedu.Location = new System.Drawing.Point(84, 58);
             this.nihedu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.nihedu.Name = "nihedu";
             this.nihedu.Size = new System.Drawing.Size(41, 12);
@@ -120,7 +151,7 @@
             // 
             // txtNihe
             // 
-            this.txtNihe.Location = new System.Drawing.Point(133, 62);
+            this.txtNihe.Location = new System.Drawing.Point(133, 54);
             this.txtNihe.Margin = new System.Windows.Forms.Padding(2);
             this.txtNihe.Name = "txtNihe";
             this.txtNihe.Size = new System.Drawing.Size(92, 21);
@@ -129,7 +160,7 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(271, 30);
+            this.label60.Location = new System.Drawing.Point(271, 22);
             this.label60.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(65, 12);
@@ -144,7 +175,7 @@
             0,
             0,
             131072});
-            this.numCv.Location = new System.Drawing.Point(342, 26);
+            this.numCv.Location = new System.Drawing.Point(342, 18);
             this.numCv.Margin = new System.Windows.Forms.Padding(2);
             this.numCv.Maximum = new decimal(new int[] {
             2000,
@@ -163,7 +194,7 @@
             0,
             0,
             131072});
-            this.numCs.Location = new System.Drawing.Point(562, 26);
+            this.numCs.Location = new System.Drawing.Point(562, 18);
             this.numCs.Margin = new System.Windows.Forms.Padding(2);
             this.numCs.Maximum = new decimal(new int[] {
             2000,
@@ -182,7 +213,7 @@
             0,
             0,
             131072});
-            this.numX.Location = new System.Drawing.Point(133, 26);
+            this.numX.Location = new System.Drawing.Point(133, 18);
             this.numX.Margin = new System.Windows.Forms.Padding(2);
             this.numX.Maximum = new decimal(new int[] {
             2000,
@@ -196,7 +227,7 @@
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(492, 30);
+            this.label61.Location = new System.Drawing.Point(492, 22);
             this.label61.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(65, 12);
@@ -206,7 +237,7 @@
             // label62
             // 
             this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(38, 30);
+            this.label62.Location = new System.Drawing.Point(38, 22);
             this.label62.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label62.Name = "label62";
             this.label62.Size = new System.Drawing.Size(89, 12);
@@ -215,6 +246,7 @@
             // 
             // grpResult
             // 
+            this.grpResult.BackColor = System.Drawing.Color.White;
             this.grpResult.Controls.Add(this.btnInsert);
             this.grpResult.Controls.Add(this.btnSearch);
             this.grpResult.Controls.Add(this.label59);
@@ -222,17 +254,17 @@
             this.grpResult.Controls.Add(this.numkik);
             this.grpResult.Controls.Add(this.numQm);
             this.grpResult.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grpResult.Location = new System.Drawing.Point(0, 399);
+            this.grpResult.Location = new System.Drawing.Point(0, 110);
             this.grpResult.Name = "grpResult";
-            this.grpResult.Size = new System.Drawing.Size(701, 100);
-            this.grpResult.TabIndex = 62;
+            this.grpResult.Size = new System.Drawing.Size(701, 83);
+            this.grpResult.TabIndex = 63;
             this.grpResult.TabStop = false;
             this.grpResult.Text = "频率计算";
             // 
             // btnInsert
             // 
             this.btnInsert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInsert.Location = new System.Drawing.Point(572, 39);
+            this.btnInsert.Location = new System.Drawing.Point(572, 30);
             this.btnInsert.Name = "btnInsert";
             this.btnInsert.Size = new System.Drawing.Size(82, 41);
             this.btnInsert.TabIndex = 62;
@@ -242,7 +274,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(245, 57);
+            this.btnSearch.Location = new System.Drawing.Point(245, 49);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 61;
@@ -253,7 +285,7 @@
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(19, 63);
+            this.label59.Location = new System.Drawing.Point(19, 55);
             this.label59.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label59.Name = "label59";
             this.label59.Size = new System.Drawing.Size(107, 12);
@@ -263,7 +295,7 @@
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(67, 28);
+            this.label58.Location = new System.Drawing.Point(67, 20);
             this.label58.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(59, 12);
@@ -278,7 +310,7 @@
             0,
             0,
             131072});
-            this.numkik.Location = new System.Drawing.Point(133, 24);
+            this.numkik.Location = new System.Drawing.Point(133, 16);
             this.numkik.Margin = new System.Windows.Forms.Padding(2);
             this.numkik.Name = "numkik";
             this.numkik.Size = new System.Drawing.Size(92, 21);
@@ -292,7 +324,7 @@
             0,
             0,
             262144});
-            this.numQm.Location = new System.Drawing.Point(133, 59);
+            this.numQm.Location = new System.Drawing.Point(133, 51);
             this.numQm.Margin = new System.Windows.Forms.Padding(2);
             this.numQm.Maximum = new decimal(new int[] {
             10000,
@@ -317,6 +349,7 @@
             this.Name = "CaculatePercentUI";
             this.Size = new System.Drawing.Size(709, 507);
             this.panel1.ResumeLayout(false);
+            this.expandablePanel1.ResumeLayout(false);
             this.grpSS.ResumeLayout(false);
             this.grpSS.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numCv)).EndInit();
@@ -334,7 +367,10 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.ComponentModel.BackgroundWorker bgwCaculate;
+        private DevComponents.DotNetBar.ExpandablePanel expandablePanel1;
         private System.Windows.Forms.GroupBox grpSS;
+        private System.Windows.Forms.Button btnCaculate;
         private System.Windows.Forms.Label nihedu;
         private System.Windows.Forms.TextBox txtNihe;
         private System.Windows.Forms.Label label60;
@@ -343,15 +379,13 @@
         private System.Windows.Forms.NumericUpDown numX;
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.Label label62;
-        private System.Windows.Forms.Button btnCaculate;
         private System.Windows.Forms.GroupBox grpResult;
+        private System.Windows.Forms.Button btnInsert;
+        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Label label59;
         private System.Windows.Forms.Label label58;
         private System.Windows.Forms.NumericUpDown numkik;
         private System.Windows.Forms.NumericUpDown numQm;
-        private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.Button btnInsert;
-        private System.ComponentModel.BackgroundWorker bgwCaculate;
 
     }
 }

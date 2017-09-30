@@ -41,6 +41,11 @@ namespace FloodPeakUtility
         public static readonly string SubCure = "SubCure.xml";
 
         /// <summary>
+        /// 暴雨衰减参数文件名称(d=0)
+        /// </summary>
+        public static readonly string SubCure0 = "SubCure0.xml";
+
+        /// <summary>
         /// 洪峰流量文件名称
         /// </summary>
         public static readonly string FloodPeak = "FloodPeak.xml";
@@ -76,6 +81,11 @@ namespace FloodPeakUtility
         /// 暴雨衰减
         /// </summary>
         public static readonly string RainStormSub = "RainStormSub";
+
+        /// <summary>
+        /// 暴雨衰减(d=0)
+        /// </summary>
+        public static readonly string RainStormSub0 = "RainStormSub0";
 
         /// <summary>
         /// 洪峰流量

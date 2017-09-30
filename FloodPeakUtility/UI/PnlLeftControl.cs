@@ -204,15 +204,19 @@ namespace FloodPeakUtility.UI
         /// 显示到与三维球同级的UI
         /// </summary>
         /// <param name="dockControl"></param>
-        public void ShowDock(string title,Control dockControl)
+        public void ShowDock(string title, Control dockControl)
         {
             if (_tabControl == null)
                 return;
-            TabPage tabPage = new TabPage(title);
-            dockControl.Dock = DockStyle.Fill;
-            tabPage.Controls.Add(dockControl);
-            _tabControl.TabPages.Add(tabPage);
-            _tabControl.SelectedTab = tabPage;
+            if (!_tabControl.TabPages.ContainsKey(title))
+            {
+                TabPage tabPage = new TabPage(title);
+                tabPage.Name = title;
+                dockControl.Dock = DockStyle.Fill;
+                tabPage.Controls.Add(dockControl);
+                _tabControl.TabPages.Add(tabPage);
+            }
+            _tabControl.SelectedTab = _tabControl.TabPages[title];
         }
 
         #endregion
@@ -861,7 +865,7 @@ namespace FloodPeakUtility.UI
         private void advTreeMain_NodeDoubleClick(object sender, TreeNodeMouseEventArgs e)
         {
             Node node = e.Node;
-            if (node != null && node.Parent.Name == Guids.JSGL && OnCaculate != null)
+            if (node != null && node.Parent != null && node.Parent.Name == Guids.JSGL && OnCaculate != null)
             {
                 OnCaculate(this, new CaculateEventArgs() { CaculateId = node.Name });
             }

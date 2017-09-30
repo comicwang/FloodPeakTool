@@ -413,7 +413,7 @@
             // btnTools
             // 
             this.btnTools.Name = "btnTools";
-            this.btnTools.Size = new System.Drawing.Size(161, 26);
+            this.btnTools.Size = new System.Drawing.Size(157, 24);
             this.btnTools.Text = "iTelluro工具";
             this.btnTools.Click += new System.EventHandler(this.iTelluro工具ToolStripMenuItem_Click);
             // 
@@ -449,6 +449,7 @@
             this.dotNetBarManager.BottomDockSite = null;
             this.dotNetBarManager.EnableFullSizeDock = false;
             this.dotNetBarManager.LeftDockSite = null;
+            //this.dotNetBarManager.LicenseKey = "F962CEC7-CD8F-4911-A9E9-CAB39962FC1F";
             this.dotNetBarManager.ParentForm = this;
             this.dotNetBarManager.RightDockSite = null;
             this.dotNetBarManager.ShowCustomizeContextMenu = false;

@@ -30,7 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.expandablePanel1 = new DevComponents.DotNetBar.ExpandablePanel();
             this.txtQm = new System.Windows.Forms.TextBox();
             this.txtt = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,7 +45,7 @@
             this.txttQ = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.expandablePanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -53,7 +53,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this.expandablePanel1);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(703, 501);
@@ -65,133 +65,157 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(701, 297);
+            this.panel2.Size = new System.Drawing.Size(701, 337);
             this.panel2.TabIndex = 2;
             // 
-            // groupBox1
+            // expandablePanel1
             // 
-            this.groupBox1.Controls.Add(this.txtQm);
-            this.groupBox1.Controls.Add(this.txtt);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtP1);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtd2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtd1);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txta1tc);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.txttQ);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox1.Location = new System.Drawing.Point(0, 297);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(701, 202);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "洪峰流量统计结果";
+            this.expandablePanel1.CanvasColor = System.Drawing.SystemColors.Control;
+            this.expandablePanel1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.expandablePanel1.Controls.Add(this.txtQm);
+            this.expandablePanel1.Controls.Add(this.txtt);
+            this.expandablePanel1.Controls.Add(this.label2);
+            this.expandablePanel1.Controls.Add(this.txtP1);
+            this.expandablePanel1.Controls.Add(this.label3);
+            this.expandablePanel1.Controls.Add(this.txtd2);
+            this.expandablePanel1.Controls.Add(this.label1);
+            this.expandablePanel1.Controls.Add(this.txtd1);
+            this.expandablePanel1.Controls.Add(this.label5);
+            this.expandablePanel1.Controls.Add(this.txta1tc);
+            this.expandablePanel1.Controls.Add(this.label4);
+            this.expandablePanel1.Controls.Add(this.txttQ);
+            this.expandablePanel1.Controls.Add(this.label6);
+            this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
+            this.expandablePanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.expandablePanel1.HideControlsWhenCollapsed = true;
+            this.expandablePanel1.Location = new System.Drawing.Point(0, 337);
+            this.expandablePanel1.Name = "expandablePanel1";
+            this.expandablePanel1.Size = new System.Drawing.Size(701, 162);
+            this.expandablePanel1.Style.Alignment = System.Drawing.StringAlignment.Center;
+            this.expandablePanel1.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.expandablePanel1.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.expandablePanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.expandablePanel1.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.BarDockedBorder;
+            this.expandablePanel1.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText;
+            this.expandablePanel1.Style.GradientAngle = 90;
+            this.expandablePanel1.TabIndex = 0;
+            this.expandablePanel1.ThemeAware = true;
+            this.expandablePanel1.TitleStyle.Alignment = System.Drawing.StringAlignment.Center;
+            this.expandablePanel1.TitleStyle.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.expandablePanel1.TitleStyle.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.expandablePanel1.TitleStyle.Border = DevComponents.DotNetBar.eBorderType.RaisedInner;
+            this.expandablePanel1.TitleStyle.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandablePanel1.TitleStyle.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+            this.expandablePanel1.TitleStyle.GradientAngle = 90;
+            this.expandablePanel1.TitleText = "洪峰流量计算结果";
             // 
             // txtQm
             // 
-            this.txtQm.Location = new System.Drawing.Point(186, 33);
+            this.txtQm.Location = new System.Drawing.Point(218, 42);
             this.txtQm.Name = "txtQm";
             this.txtQm.Size = new System.Drawing.Size(126, 21);
-            this.txtQm.TabIndex = 27;
+            this.txtQm.TabIndex = 40;
             // 
             // txtt
             // 
-            this.txtt.Location = new System.Drawing.Point(444, 68);
+            this.txtt.Location = new System.Drawing.Point(476, 77);
             this.txtt.Name = "txtt";
             this.txtt.Size = new System.Drawing.Size(126, 21);
-            this.txtt.TabIndex = 28;
+            this.txtt.TabIndex = 41;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(113, 38);
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Location = new System.Drawing.Point(145, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
-            this.label2.TabIndex = 21;
+            this.label2.TabIndex = 34;
             this.label2.Text = "洪峰流量Qm";
             // 
             // txtP1
             // 
-            this.txtP1.Location = new System.Drawing.Point(444, 33);
+            this.txtP1.Location = new System.Drawing.Point(476, 42);
             this.txtP1.Name = "txtP1";
             this.txtP1.Size = new System.Drawing.Size(126, 21);
-            this.txtP1.TabIndex = 29;
+            this.txtP1.TabIndex = 42;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(113, 73);
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Location = new System.Drawing.Point(145, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 22;
+            this.label3.TabIndex = 35;
             this.label3.Text = "造峰历时tQ";
             // 
             // txtd2
             // 
-            this.txtd2.Location = new System.Drawing.Point(513, 108);
+            this.txtd2.Location = new System.Drawing.Point(545, 117);
             this.txtd2.Name = "txtd2";
             this.txtd2.Size = new System.Drawing.Size(57, 21);
-            this.txtd2.TabIndex = 30;
+            this.txtd2.TabIndex = 43;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(345, 38);
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Location = new System.Drawing.Point(377, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 12);
-            this.label1.TabIndex = 23;
+            this.label1.TabIndex = 36;
             this.label1.Text = "洪峰历时系数P1";
             // 
             // txtd1
             // 
-            this.txtd1.Location = new System.Drawing.Point(444, 107);
+            this.txtd1.Location = new System.Drawing.Point(476, 116);
             this.txtd1.Name = "txtd1";
             this.txtd1.Size = new System.Drawing.Size(57, 21);
-            this.txtd1.TabIndex = 31;
+            this.txtd1.TabIndex = 44;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(65, 110);
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Location = new System.Drawing.Point(97, 119);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(113, 12);
-            this.label5.TabIndex = 24;
+            this.label5.TabIndex = 37;
             this.label5.Text = "产流期净雨强度a1tc";
             // 
             // txta1tc
             // 
-            this.txta1tc.Location = new System.Drawing.Point(186, 105);
+            this.txta1tc.Location = new System.Drawing.Point(218, 114);
             this.txta1tc.Name = "txta1tc";
             this.txta1tc.Size = new System.Drawing.Size(126, 21);
-            this.txta1tc.TabIndex = 32;
+            this.txta1tc.TabIndex = 45;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(351, 73);
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Location = new System.Drawing.Point(383, 82);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(83, 12);
-            this.label4.TabIndex = 25;
+            this.label4.TabIndex = 38;
             this.label4.Text = "洪水上涨历时t";
             // 
             // txttQ
             // 
-            this.txttQ.Location = new System.Drawing.Point(186, 68);
+            this.txttQ.Location = new System.Drawing.Point(218, 77);
             this.txttQ.Name = "txttQ";
             this.txttQ.Size = new System.Drawing.Size(126, 21);
-            this.txttQ.TabIndex = 33;
+            this.txttQ.TabIndex = 46;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(381, 112);
+            this.label6.BackColor = System.Drawing.Color.Transparent;
+            this.label6.Location = new System.Drawing.Point(413, 121);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(53, 12);
-            this.label6.TabIndex = 26;
+            this.label6.TabIndex = 39;
             this.label6.Text = "迭代次数";
             // 
             // CaculateResultUI
@@ -203,8 +227,8 @@
             this.Name = "CaculateResultUI";
             this.Size = new System.Drawing.Size(709, 507);
             this.panel1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.expandablePanel1.ResumeLayout(false);
+            this.expandablePanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -213,7 +237,7 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private DevComponents.DotNetBar.ExpandablePanel expandablePanel1;
         private System.Windows.Forms.TextBox txtQm;
         private System.Windows.Forms.TextBox txtt;
         private System.Windows.Forms.Label label2;

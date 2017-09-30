@@ -187,15 +187,19 @@ namespace FloodPeakToolUI.UI
             {
                 // 外接矩阵，边界取经纬度范围的反值
                 GeoRect _analysisRect = new GeoRect(-90, 90, 180, -180);
+                List<double> xPoint = new List<double>();
+                List<double> yPoint = new List<double>();
                 for (int i = 0; i < pointlist.Count; i++)
                 {
                     Point2d p = pointlist[i];
                     // 外接矩阵计算
-                    if (p.X > _analysisRect.East) _analysisRect.East = p.X;
-                    if (p.X < _analysisRect.West) _analysisRect.West = p.X;
-                    if (p.Y > _analysisRect.North) _analysisRect.North = p.Y;
-                    if (p.Y < _analysisRect.South) _analysisRect.South = p.Y;
+                    xPoint.Add(p.X);
+                    yPoint.Add(p.Y);
                 }
+                _analysisRect.North = yPoint.Max();
+                _analysisRect.South = yPoint.Min();
+                _analysisRect.East = xPoint.Max();
+                _analysisRect.West = xPoint.Min();
 
                 // NTS多边形
                 iTelluroLib.GeoTools.Geometries.Coordinate[] coords = new iTelluroLib.GeoTools.Geometries.Coordinate[pointlist.Count + 1];
@@ -206,7 +210,7 @@ namespace FloodPeakToolUI.UI
                 }
                 coords[pointlist.Count] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[0].X, pointlist[0].Y);
 
-                // 创建多边形
+                //创建多边形
                 iTelluroLib.GeoTools.Geometries.LinearRing ring = new iTelluroLib.GeoTools.Geometries.LinearRing(coords);
                 iTelluroLib.GeoTools.Geometries.Polygon _analysisPolygon = new iTelluroLib.GeoTools.Geometries.Polygon(ring);
 
@@ -231,12 +235,10 @@ namespace FloodPeakToolUI.UI
                     {
                         x[pos] = _analysisRect.West + i * _widthStep;
                         y[pos] = _analysisRect.South + j * _heightStep;
-                        z[pos] = RasterCoefficientReader.ReadBand(raster, i, j);
+                        z[pos] = ReadBand(raster, i, j);
                         pos++;
                     }
                 }
-                //释放资源
-                raster.Dispose();
                 pos = 0;
                 for (int i = 0; i < _widthNum; i++)
                 {
@@ -252,8 +254,7 @@ namespace FloodPeakToolUI.UI
                         _terrainTile[i, j] = tp;
                     }
                 }
-
-                double _cellArea = CaculateCellAera(_widthNum, _heightNum);
+                double _cellArea = CaculateCellAera(raster, _widthNum, _heightNum);
                 //坡度计算
                 for (int i = 0; i < _widthNum; i++)
                 {
@@ -265,50 +266,75 @@ namespace FloodPeakToolUI.UI
                         {
                             _resultProjectArea += _cellArea;
                             //计算坡度
-                            double slope = GetSlope(tp);
+                            double slope = GetSlope(raster, tp);
                             double currentCellArea = _cellArea / Math.Cos(slope);
                             _resultSurfaceArea += currentCellArea;
                         }
+                        Application.DoEvents();
                     }
+                    Application.DoEvents();
                 }
             }/* end if point.count>3 */
         }
 
-        /// <summary>
-        /// 单个网格的投影面积（m为单位）计算, 取计算范围的中心位置
-        /// </summary>
-        private double CaculateCellAera(int _widthNum, int _heightNum)
+        private double CaculateCellAera(RasterReader reader, int _widthNum, int _heightNum)
         {
-            int ti, tj;
-            ti = _widthNum / 2;
-            tj = _heightNum / 2;
+            try
+            {
+                int ti, tj;
+                ti = _widthNum / 2;
+                tj = _heightNum / 2;
 
-            iTelluro.GlobeEngine.DataSource.Geometry.Point3d p00, p01, p10;
-            double r = _globeView.GlobeViewSetting.EquatorialRadius + _terrainTile[ti, tj].Altitude;
-            p00 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti, tj].Latitude), Angle.FromDegrees(_terrainTile[ti, tj].Longitude), r);
-            p01 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti, tj + 1].Latitude), Angle.FromDegrees(_terrainTile[ti, tj + 1].Longitude), r);
-            p10 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti + 1, tj].Latitude), Angle.FromDegrees(_terrainTile[ti + 1, tj].Longitude), r);
-            double area = (p00 - p01).Length * (p00 - p10).Length;
-            return area;
+                iTelluro.GlobeEngine.DataSource.Geometry.Point3d p00, p01, p10;
+                if (reader.IsProjected)
+                {
+                    p00 = new Point3d(_terrainTile[ti, tj].Longitude, _terrainTile[ti, tj].Latitude, _terrainTile[ti, tj].Altitude);
+                    p01 = new Point3d(_terrainTile[ti, tj + 1].Longitude, _terrainTile[ti, tj + 1].Latitude, _terrainTile[ti, tj + 1].Altitude);
+                    p10 = new Point3d(_terrainTile[ti + 1, tj].Longitude, _terrainTile[ti + 1, tj].Latitude, _terrainTile[ti + 1, tj].Altitude);
+                }
+                else
+                {
+                    double r = _globeView.GlobeViewSetting.EquatorialRadius + _terrainTile[ti, tj].Altitude;
+                    p00 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti, tj].Latitude), Angle.FromDegrees(_terrainTile[ti, tj].Longitude), r);
+                    p01 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti, tj + 1].Latitude), Angle.FromDegrees(_terrainTile[ti, tj + 1].Longitude), r);
+                    p10 = MathEngine.SphericalToCartesianD(Angle.FromDegrees(_terrainTile[ti + 1, tj].Latitude), Angle.FromDegrees(_terrainTile[ti + 1, tj].Longitude), r);
+                }
+                double area = (p00 - p01).Length * (p00 - p10).Length;
+                return area;
+            }
+            catch(Exception ex)
+            {
+                FormOutput.AppendLog(ex.Message);
+                return 0;
+            }
+         
         }
 
-        private double GetSlope(TerrainPoint tp)
+        private double GetSlope(RasterReader reader, TerrainPoint tp)
         {
             double zx = 0, zy = 0, ex = 0;
             if (tp.col - 1 > 0 && tp.row - 1 > 0 && tp.row + 1 < _terrainTile.GetLength(1) && tp.col + 1 < _terrainTile.GetLength(0))
             {
-                iTelluro.GlobeEngine.DataSource.Geometry.Point3d d1 = MathEngine.SphericalToCartesianD(
-                                       Angle.FromDegrees(tp.Latitude),
-                                       Angle.FromDegrees(_terrainTile[tp.col - 1, tp.row].Longitude),//lon - demSpan
-                                       GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
-                                       );
+                iTelluro.GlobeEngine.DataSource.Geometry.Point3d d1 = null, d2 = null;
+                if (reader.IsProjected)
+                {
+                    d1 = new Point3d(_terrainTile[tp.col - 1, tp.row].Longitude, tp.Latitude, tp.Altitude);
+                    d2 = new Point3d(_terrainTile[tp.col + 1, tp.row].Longitude, tp.Latitude, tp.Altitude);
+                }
+                else
+                {
+                    d1 = MathEngine.SphericalToCartesianD(
+                                      Angle.FromDegrees(tp.Latitude),
+                                      Angle.FromDegrees(_terrainTile[tp.col - 1, tp.row].Longitude),//lon - demSpan
+                                      GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
+                                      );
 
-                iTelluro.GlobeEngine.DataSource.Geometry.Point3d d2 = MathEngine.SphericalToCartesianD(
-                                            Angle.FromDegrees(tp.Latitude),
-                                            Angle.FromDegrees(_terrainTile[tp.col + 1, tp.row].Longitude),//lon + demSpan),
-                                            GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
-                                            );
-
+                    d2 = MathEngine.SphericalToCartesianD(
+                                     Angle.FromDegrees(tp.Latitude),
+                                     Angle.FromDegrees(_terrainTile[tp.col + 1, tp.row].Longitude),//lon + demSpan),
+                                     GlobeTools.CurrentWorld.EquatorialRadius + tp.Altitude
+                                     );
+                }
                 iTelluro.GlobeEngine.DataSource.Geometry.Point3d segment = d2 - d1;
                 ex = segment.Length;
                 //zx = (elv[1, 2] - elv[1, 0]) / ex;
@@ -317,6 +343,13 @@ namespace FloodPeakToolUI.UI
                 zy = (_terrainTile[tp.col + 0, tp.row + 1].Altitude - _terrainTile[tp.col + 0, tp.row - 1].Altitude) / ex;
             }
             return Math.Atan(Math.Sqrt(zx * zx + zy * zy));
+        }	
+
+        public double ReadBand(RasterReader reader, int col, int row)
+        {
+            double[] d = null;
+            reader.ReadBand(col, row, 1, 1, out d);
+            return d[0];
         }
 
         #endregion
@@ -359,22 +392,29 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
-            //绑定数据源，显示查询条件
-            NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
-            fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
-            fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
-
-            //显示之前的结果
-            _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss);
-            if (File.Exists(_xmlPath))
+            try
             {
-                BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
-                if (result != null)
+                //绑定数据源，显示查询条件
+                NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
+                fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
+                fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
+
+                //显示之前的结果
+                _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss);
+                if (File.Exists(_xmlPath))
                 {
-                    textBox1.Text = result.F == 0 ? "" : result.F.ToString();
-                    textBox2.Text = result.R == 0 ? "" : result.R.ToString();
-                    textBox3.Text = result.N == 0 ? "" : result.N.ToString();
+                    BYSSResult result = XmlHelper.Deserialize<BYSSResult>(_xmlPath);
+                    if (result != null)
+                    {
+                        textBox1.Text = result.F == 0 ? "" : result.F.ToString();
+                        textBox2.Text = result.R == 0 ? "" : result.R.ToString();
+                        textBox3.Text = result.N == 0 ? "" : result.N.ToString();
+                    }
                 }
+            }
+            catch
+            {
+
             }
 
             Parent.UIParent.Controls.Add(this);

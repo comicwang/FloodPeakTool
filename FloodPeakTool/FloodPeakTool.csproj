@@ -37,7 +37,7 @@
     <ApplicationIcon>globe.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevComponents.DotNetBar2, Version=8.7.0.3, Culture=neutral, PublicKeyToken=7f2b5af6db258e2f, processorArchitecture=MSIL">
+    <Reference Include="DevComponents.DotNetBar2, Version=12.8.0.6, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
