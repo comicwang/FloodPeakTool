@@ -85,9 +85,9 @@
             this.expandablePanel1.Controls.Add(this.label4);
             this.expandablePanel1.Controls.Add(this.txttQ);
             this.expandablePanel1.Controls.Add(this.label6);
-            this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
+            //this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
             this.expandablePanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.expandablePanel1.HideControlsWhenCollapsed = true;
+            //this.expandablePanel1.HideControlsWhenCollapsed = true;
             this.expandablePanel1.Location = new System.Drawing.Point(0, 337);
             this.expandablePanel1.Name = "expandablePanel1";
             this.expandablePanel1.Size = new System.Drawing.Size(701, 162);

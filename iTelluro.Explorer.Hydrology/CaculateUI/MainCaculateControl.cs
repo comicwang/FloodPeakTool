@@ -20,6 +20,7 @@ using iTelluro.DataTools.Utility.Img;
 using OSGeo.GDAL;
 using iTelluro.GlobeEngine.Mathematics;
 using iTelluro.GlobeEngine.Graphics3D;
+using System.Threading;
 
 namespace FloodPeakToolUI.UI
 {
@@ -47,7 +48,19 @@ namespace FloodPeakToolUI.UI
                 MsgBox.ShowInfo("请确定参数完整！");
                 return;
             }
-            _projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+              _projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+            //保存基础参数
+              XmlHelper.Serialize<DefaultArgModel>(new DefaultArgModel()
+                  {
+                      Qm = txtQm.Text,
+                      p1 = txtp1.Text,
+                      esp1 = txteps1.Text,
+                      esp2 = txteps2.Text,
+                      tc = txttc.Text
+
+                  }, Path.Combine(_projectForlder, ConfigNames.DefaultArgModel));
+
+          
             //根据文件夹来获取里面的参数文件
             string xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormSub);
             //暴雨衰减赋值
@@ -188,7 +201,7 @@ namespace FloodPeakToolUI.UI
             builder.Append(args[7]);
              logBuilder.AppendLine("eps2："+args[7]);
             builder.Append(" ");
-            builder.Append(_projectForlder);
+            builder.Append(Path.Combine(_projectForlder, ConfigNames.FloodPeak));
             FormOutput.AppendLog(logBuilder.ToString());
             FormOutput.AppendLog("***********************************");
             RunExeHelper.RunMethod(builder.ToString());
@@ -208,24 +221,18 @@ namespace FloodPeakToolUI.UI
 
         private void ShowResult(IntPtr windowPtr)
         {
-            MainResult cv = XmlHelper.Deserialize<MainResult>(Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), ConfigNames.FloodPeak));
-            FormOutput.AppendLog(string.Format("计算结果：洪峰流量Qm【{0}】,洪峰历时系数p1_0【{1}】,造峰历时tQ【{2}】,洪峰上涨历时t【{3}】,产流期净雨强a1tc【{4}】,迭代次数【{5}-{6}】", cv.Qm, cv.p1, cv.tQ, cv.t, cv.a1tc, cv.d1, cv.d2));
-            if (cv != null)
+            if (_parent.InvokeRequired)
             {
-                if (_parent.InvokeRequired)
+                _parent.Invoke(new Action(() =>
                 {
-                    _parent.Invoke(new Action(() =>
+                    if (_resutUI == null)
                     {
-                        if (_resutUI == null)
-                        {
-                            _resutUI = new CaculateResultUI();
-                            _resutUI.Dock = DockStyle.Fill;
-                            _parent.ShowDock("洪峰流量结果与曲线图", _resutUI);
-                        }
-                        _resutUI.BindResult(cv, windowPtr);
-                    }));
-                }
-
+                        _resutUI = new CaculateResultUI();
+                        _resutUI.Dock = DockStyle.Fill;
+                        _parent.ShowDock("洪峰流量结果与曲线图", _resutUI);
+                    }
+                    _resutUI.BindResult(Path.Combine(Path.GetDirectoryName(_parent.ProjectModel.ProjectPath), ConfigNames.FloodPeak), windowPtr);
+                }));
             }
         }
 
@@ -269,6 +276,17 @@ namespace FloodPeakToolUI.UI
             this.Dock = DockStyle.Fill;
             //绑定控制台输出
             //textBox4.BindConsole();
+            //初始化基础参数
+            DefaultArgModel model = XmlHelper.Deserialize<DefaultArgModel>(Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath),
+                ConfigNames.DefaultArgModel));
+            if (model != null)
+            {
+                txteps1.Text = model.esp1;
+                txteps2.Text = model.esp2;
+                txtp1.Text = model.p1;
+                txtQm.Text = model.Qm;
+                txttc.Text = model.tc;
+            }
             Parent.UIParent.Controls.Add(this);
         }
 

@@ -87,7 +87,7 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             string[] args = e.Argument as string[];  //state-percent
-            FormOutput.AppendLog(string.Format("读取数据库站点【{0}】时间段为【{1}】的年统计最大值...", args[1], args[0]));
+            FormOutput.AppendLog(string.Format("读取数据库站点【{0}】时间段为【{1}】的年统计最大值...", args[0], args[1]));
             //读取数据库某个站点某个统计频率的年统计最大值
             string commandText = string.Format("select {0} from RAINFALL_YEAR_MAX where MONITORNUM='{1}' order by {0} desc", args[1], args[0]);
             DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnSting(), CommandType.Text, commandText);

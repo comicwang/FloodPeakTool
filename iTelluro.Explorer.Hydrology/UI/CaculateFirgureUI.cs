@@ -334,10 +334,10 @@ namespace FloodPeakToolUI.UI
                         build.AppendLine("截距s2 = " + cv.j2);
                         build.AppendLine("n2与n1的比为n2/n1 = " + cv.n2 / cv.n1);
                         if (cv.n2 / cv.n1 > 1.5)
-                            build.AppendLine("斜率比小于1.5,结果无效！");
+                            build.AppendLine("斜率比大于1.5,结果无效！");
 
                         else
-                            build.AppendLine("斜率比大于1.5,结果有效！");
+                            build.AppendLine("斜率比小于1.5,结果有效！");
 
                         FormOutput.AppendLog(build.ToString());
                         dData.Text = cv.d.ToString();

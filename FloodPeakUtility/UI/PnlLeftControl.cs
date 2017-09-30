@@ -21,6 +21,7 @@ using iTelluro.Explorer.VectorLoader.Utility;
 using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
 using iTelluro.Explorer.VectorLoader.ShpSymbolConfig;
 using iTelluro.Explorer.Vector;
+using DevComponents.DotNetBar;
 
 namespace FloodPeakUtility.UI
 {
@@ -44,7 +45,7 @@ namespace FloodPeakUtility.UI
         //三维球
         private GlobeView _globeView = null;
         //DockUI
-        private TabControl _tabControl = null;
+        private DevComponents.DotNetBar.TabControl _tabControl = null;
         //项目参数
         private ProjectModel _projectModel = null;
         //切片
@@ -128,7 +129,7 @@ namespace FloodPeakUtility.UI
             _shpLoader.LoadConfigShpLayers();
         }
 
-        public PnlLeftControl(GlobeView globeView, TabControl tabControl)
+        public PnlLeftControl(GlobeView globeView, DevComponents.DotNetBar.TabControl tabControl)
             : this(globeView)
         {
             this._tabControl = tabControl;
@@ -208,15 +209,27 @@ namespace FloodPeakUtility.UI
         {
             if (_tabControl == null)
                 return;
-            if (!_tabControl.TabPages.ContainsKey(title))
+            if (!this.ContainsTab(title))
             {
-                TabPage tabPage = new TabPage(title);
+                TabItem tabPage = new TabItem();
+                tabPage.Text = title;
                 tabPage.Name = title;
+                tabPage.CloseButtonVisible = false;
                 dockControl.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(dockControl);
-                _tabControl.TabPages.Add(tabPage);
+                tabPage.AttachedControl = dockControl;
+                _tabControl.Tabs.Add(tabPage);
             }
-            _tabControl.SelectedTab = _tabControl.TabPages[title];
+            _tabControl.SelectedTab = _tabControl.Tabs[title];
+        }
+
+        private bool ContainsTab(string tabName)
+        {
+            foreach (TabItem item in _tabControl.Tabs)
+            {
+                if (item.Name == tabName)
+                    return true;
+            }
+            return false;
         }
 
         #endregion

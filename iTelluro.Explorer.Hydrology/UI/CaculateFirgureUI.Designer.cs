@@ -182,7 +182,7 @@
             // tabControlPanel2
             // 
             this.tabControlPanel2.Controls.Add(this.panel2);
-            this.tabControlPanel2.DisabledBackColor = System.Drawing.Color.Empty;
+           // this.tabControlPanel2.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabControlPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlPanel2.Location = new System.Drawing.Point(0, 25);
             this.tabControlPanel2.Name = "tabControlPanel2";
@@ -410,7 +410,7 @@
             // tabPnlArg
             // 
             this.tabPnlArg.Controls.Add(this.pnlArg);
-            this.tabPnlArg.DisabledBackColor = System.Drawing.Color.Empty;
+            //this.tabPnlArg.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabPnlArg.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabPnlArg.Location = new System.Drawing.Point(0, 25);
             this.tabPnlArg.Name = "tabPnlArg";
@@ -900,7 +900,7 @@
             // tabControlPanel3
             // 
             this.tabControlPanel3.Controls.Add(this.panel3);
-            this.tabControlPanel3.DisabledBackColor = System.Drawing.Color.Empty;
+            //this.tabControlPanel3.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlPanel3.Location = new System.Drawing.Point(0, 25);
             this.tabControlPanel3.Name = "tabControlPanel3";

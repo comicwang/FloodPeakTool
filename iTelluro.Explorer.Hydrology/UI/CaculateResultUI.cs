@@ -8,6 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using FloodPeakUtility;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.IO;
+using FloodPeakUtility.UI;
 
 namespace FloodPeakToolUI.UI
 {
@@ -89,19 +92,46 @@ namespace FloodPeakToolUI.UI
             panel1.Location = new Point((this.Width - panel1.Width) / 2, 0);
         }
 
-        public void BindResult(MainResult args, IntPtr windowPtr)
+        public void BindResult(string filePath, IntPtr windowPtr)
         {
-            //初始化参数
-            if (args != null)
-            {
-                txtQm.Text = args.Qm.ToString();
-                txtP1.Text = args.p1.ToString();
-                txttQ.Text = args.tQ.ToString();
-                txtt.Text = args.t.ToString();
-                txta1tc.Text = args.a1tc.ToString();
-                txtd1.Text = args.d1.ToString();
-                txtd2.Text = args.d2.ToString();
-            }
+            //开启一个线程来读取xml文件，因为数据是在图形绘制完之后才出来
+            Thread thread = new Thread(new ThreadStart(delegate {            
+                while(true)
+                {
+                    if(File.Exists(filePath))
+                    {
+                        this.Invoke(new Action(() =>
+                            {
+                                MainResult cv = XmlHelper.Deserialize<MainResult>(filePath);
+                                //初始化参数
+                                if (cv != null)
+                                {
+                                    StringBuilder builder = new StringBuilder();
+                                    builder.AppendLine("计算结果：");
+                                    builder.AppendLine("洪峰流量Qm = " + cv.Qm);
+                                    builder.AppendLine("洪峰历时系数p1_0 = " + cv.p1);
+                                    builder.AppendLine("造峰历时tQ = " + cv.tQ);
+                                    builder.AppendLine("洪峰上涨历时t = " + cv.t);
+                                    builder.AppendLine("产流期净雨强a1tc = " + cv.a1tc);
+                                    builder.AppendLine("迭代次数:" + cv.d1 + "-" + cv.d2);
+                                    FormOutput.AppendLog(builder.ToString());
+                                    txtQm.Text = cv.Qm.ToString();
+                                    txtP1.Text = cv.p1.ToString();
+                                    txttQ.Text = cv.tQ.ToString();
+                                    txtt.Text = cv.t.ToString();
+                                    txta1tc.Text = cv.a1tc.ToString();
+                                    txtd1.Text = cv.d1.ToString();
+                                    txtd2.Text = cv.d2.ToString();
+                                }
+                            }));
+                        break;
+                    }
+                }
+
+            }));
+            thread.IsBackground = true;
+            thread.Start();
+         
             //初始化曲线
             this.DockFigure(windowPtr);
         }

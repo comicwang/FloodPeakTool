@@ -86,9 +86,9 @@
             this.expandablePanel1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.expandablePanel1.Controls.Add(this.grpSS);
             this.expandablePanel1.Controls.Add(this.grpResult);
-            this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
+            //this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
             this.expandablePanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.expandablePanel1.HideControlsWhenCollapsed = true;
+            //this.expandablePanel1.HideControlsWhenCollapsed = true;
             this.expandablePanel1.Location = new System.Drawing.Point(0, 306);
             this.expandablePanel1.Name = "expandablePanel1";
             this.expandablePanel1.Size = new System.Drawing.Size(701, 193);

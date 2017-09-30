@@ -46,6 +46,11 @@ namespace FloodPeakUtility
         public static readonly string SubCure0 = "SubCure0.xml";
 
         /// <summary>
+        /// 洪峰流量基础参数文件名称
+        /// </summary>
+        public static readonly string DefaultArgModel = "DefaultArgModel.xml";
+
+        /// <summary>
         /// 洪峰流量文件名称
         /// </summary>
         public static readonly string FloodPeak = "FloodPeak.xml";

@@ -101,6 +101,7 @@
     <Compile Include="Model\BYSSResult.cs" />
     <Compile Include="Model\CaculateEventArgs.cs" />
     <Compile Include="Model\CvCure.cs" />
+    <Compile Include="Model\DefaultArgModel.cs" />
     <Compile Include="Model\HCHLResult.cs" />
     <Compile Include="Model\ImportType.cs" />
     <Compile Include="Model\MainResult.cs" />

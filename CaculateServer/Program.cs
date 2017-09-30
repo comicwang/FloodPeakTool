@@ -30,6 +30,10 @@ namespace CaculateServer
                     try
                     {
                         C = new Class1();
+                        //删除文件
+                        string filePath = Path.Combine(Application.StartupPath, ConfigNames.SvCure);
+                        if (File.Exists(filePath))
+                            File.Delete(filePath);
                         double[,] CC = (double[,])C.miaodian().ToArray();
                         Console.WriteLine("Cv:" + CC[0, 0]);
                         Console.WriteLine("Cs:" + CC[0, 1]);
@@ -42,7 +46,7 @@ namespace CaculateServer
                             X = CC[0, 2],
                             Nihe = CC[0, 3].ToString()
 
-                        }, Path.Combine(Application.StartupPath, ConfigNames.SvCure));
+                        }, filePath);
                         Console.ReadKey();  //不直接关闭
                     }
                     catch (Exception ex)
@@ -85,7 +89,7 @@ namespace CaculateServer
                     }
                 }
 
-                #endregion  
+                #endregion
 
                 #region 曲线反查
 
@@ -144,7 +148,7 @@ namespace CaculateServer
                                 if (obj == null)
                                     commandText = string.Format("insert into RAINFALL_PERCENT values(NEWID(),'{0}',{1},{2},{3},{4},{5},{6},{7},'{8}',{9})", state, "null", "null", "null", X, Cv, Cs, item, during, value);
                                 else
-                                    commandText = string.Format("update RAINFALL_PERCENT set [VALUE] = {0} where [PERCENT]={1} and During={2} and MONITORNUM='{3}'",value,item,during, state);
+                                    commandText = string.Format("update RAINFALL_PERCENT set [VALUE] = {0} where [PERCENT]={1} and During={2} and MONITORNUM='{3}'", value, item, during, state);
                                 SqlHelper.ExecuteNonQuery(SqlHelper.GetConnSting(), System.Data.CommandType.Text, commandText);
                             }
                             catch (Exception ex)
@@ -197,6 +201,10 @@ namespace CaculateServer
                     {
                         C = new Class1();
                         SubCure sub = new SubCure();
+                        //删除文件
+                        string filePath = Path.Combine(Application.StartupPath, ConfigNames.SubCure);
+                        if (File.Exists(filePath))
+                            File.Delete(filePath);
                         MWArray polyData3 = C.polyfit_line(MatX1, MatY1);
                         MWArray polyData1 = C.polyfit_line(MatX1, MatY1);
                         MWArray polyData2 = C.polyfit_line(MatX2, MatY2);
@@ -214,7 +222,7 @@ namespace CaculateServer
                         sub.j1 = DataBox1[0, 1];
                         sub.n2 = DataBox2[0, 0];
                         sub.j2 = DataBox2[0, 1];
-                        XmlHelper.Serialize<SubCure>(sub, Path.Combine(Application.StartupPath, ConfigNames.SubCure));
+                        XmlHelper.Serialize<SubCure>(sub, filePath);
                         Console.ReadKey();
                     }
                     catch (Exception ex)
@@ -251,6 +259,10 @@ namespace CaculateServer
                     try
                     {
                         C = new Class1();
+                        //删除文件
+                        string filePath = Path.Combine(Application.StartupPath, ConfigNames.SubCure0);
+                        if (File.Exists(filePath))
+                            File.Delete(filePath);
                         MWArray polyData3 = C.polyfit_line(MatX1, MatY1);
                         MWArray polyData1 = C.polyfit_line(MatX1, MatY1);
                         double[,] DataBox1 = (double[,])polyData1.ToArray();
@@ -261,7 +273,7 @@ namespace CaculateServer
                         sub.Sd = Sd;
                         sub.n1 = DataBox1[0, 0];
                         sub.j1 = DataBox1[0, 1];
-                        XmlHelper.Serialize<SubCure>(sub, Path.Combine(Application.StartupPath, ConfigNames.SubCure0));
+                        XmlHelper.Serialize<SubCure>(sub, filePath);
                         Console.ReadKey();
                     }
                     catch (Exception ex)
@@ -316,6 +328,9 @@ namespace CaculateServer
                     {
                         C = new Class1();
                         MainResult result = new MainResult();
+                        //删除文件
+                        if (File.Exists(args[18]))
+                            File.Delete(args[18]);
                         MWArray A = C.fun_main(p1_0, Qm_0, eps, sd, R, d, nd, r1, F, L1, L2, I1, I2, A1, A2);
                         double[,] AA = (double[,])A.ToArray();
                         result.Qm = AA[0, 0];

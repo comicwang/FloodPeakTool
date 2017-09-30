@@ -110,7 +110,8 @@ namespace FloodPeakUtility
                         //找到之后延时100ms，以防后台和前台资源占用.
                         Thread.Sleep(100);
                         todo(hwndControl);
-                        _dicProcPtr.Add(hwndControl, _currentProcess);
+                        if (!_dicProcPtr.ContainsKey(hwndControl))
+                            _dicProcPtr.Add(hwndControl, _currentProcess);
                         break;
                     }
                 }

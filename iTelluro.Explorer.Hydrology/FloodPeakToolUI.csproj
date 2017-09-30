@@ -32,7 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevComponents.DotNetBar2, Version=12.8.0.6, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04, processorArchitecture=MSIL" />
+    <Reference Include="DevComponents.DotNetBar2, Version=12.8.0.6, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.DotNetBar2.dll</HintPath>
+    </Reference>
     <Reference Include="DevComponents.TreeGX">
       <HintPath>..\..\..\iTelluro.Explorer.Demo\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.TreeGX.dll</HintPath>
     </Reference>

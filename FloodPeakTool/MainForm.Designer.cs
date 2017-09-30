@@ -36,9 +36,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelMain = new System.Windows.Forms.Panel();
             this.PlnMainPlug = new System.Windows.Forms.Panel();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.ShowPLG = new System.Windows.Forms.Panel();
             this.Pnl_Main_Left = new System.Windows.Forms.Panel();
             this.panelMenu = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -74,15 +71,20 @@
             this.dockSite1 = new DevComponents.DotNetBar.DockSite();
             this.dockSite2 = new DevComponents.DotNetBar.DockSite();
             this.dockSite3 = new DevComponents.DotNetBar.DockSite();
+            this.tabControl1 = new DevComponents.DotNetBar.TabControl();
+            this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
+            this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
+            this.ShowPLG = new System.Windows.Forms.Panel();
             this.panelTop.SuspendLayout();
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelMain.SuspendLayout();
             this.PlnMainPlug.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.panelMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabControlPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -147,37 +149,6 @@
             this.PlnMainPlug.Name = "PlnMainPlug";
             this.PlnMainPlug.Size = new System.Drawing.Size(944, 631);
             this.PlnMainPlug.TabIndex = 2;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(944, 631);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.ShowPLG);
-            this.tabPage1.ForeColor = System.Drawing.Color.Black;
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(936, 605);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "三维视图";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // ShowPLG
-            // 
-            this.ShowPLG.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowPLG.Location = new System.Drawing.Point(3, 3);
-            this.ShowPLG.Margin = new System.Windows.Forms.Padding(0);
-            this.ShowPLG.Name = "ShowPLG";
-            this.ShowPLG.Size = new System.Drawing.Size(930, 599);
-            this.ShowPLG.TabIndex = 0;
             // 
             // Pnl_Main_Left
             // 
@@ -449,7 +420,6 @@
             this.dotNetBarManager.BottomDockSite = null;
             this.dotNetBarManager.EnableFullSizeDock = false;
             this.dotNetBarManager.LeftDockSite = null;
-            //this.dotNetBarManager.LicenseKey = "F962CEC7-CD8F-4911-A9E9-CAB39962FC1F";
             this.dotNetBarManager.ParentForm = this;
             this.dotNetBarManager.RightDockSite = null;
             this.dotNetBarManager.ShowCustomizeContextMenu = false;
@@ -500,6 +470,60 @@
             this.dockSite3.TabIndex = 11;
             this.dockSite3.TabStop = false;
             // 
+            // tabControl1
+            // 
+            this.tabControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.tabControl1.CanReorderTabs = true;
+            this.tabControl1.CloseButtonOnTabsVisible = true;
+            this.tabControl1.Controls.Add(this.tabControlPanel1);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedTabFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold);
+            this.tabControl1.SelectedTabIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(944, 631);
+            this.tabControl1.Style = DevComponents.DotNetBar.eTabStripStyle.Office2007Document;
+            this.tabControl1.TabIndex = 0;
+            this.tabControl1.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.FixedWithNavigationBox;
+            this.tabControl1.Tabs.Add(this.tabItem1);
+            this.tabControl1.Text = "tabControl1";
+            // 
+            // tabItem1
+            // 
+            this.tabItem1.AttachedControl = this.tabControlPanel1;
+            this.tabItem1.CloseButtonVisible = false;
+            this.tabItem1.Name = "tabItem1";
+            this.tabItem1.Text = "三维视图";
+            // 
+            // tabControlPanel1
+            // 
+            this.tabControlPanel1.Controls.Add(this.ShowPLG);
+            //this.tabControlPanel1.DisabledBackColor = System.Drawing.Color.Empty;
+            this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel1.Location = new System.Drawing.Point(0, 25);
+            this.tabControlPanel1.Name = "tabControlPanel1";
+            this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel1.Size = new System.Drawing.Size(944, 606);
+            this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
+            this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
+            this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel1.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
+            this.tabControlPanel1.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Bottom)));
+            this.tabControlPanel1.Style.GradientAngle = 90;
+            this.tabControlPanel1.TabIndex = 1;
+            this.tabControlPanel1.TabItem = this.tabItem1;
+            // 
+            // ShowPLG
+            // 
+            this.ShowPLG.BackColor = System.Drawing.Color.White;
+            this.ShowPLG.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowPLG.Location = new System.Drawing.Point(1, 1);
+            this.ShowPLG.Margin = new System.Windows.Forms.Padding(0);
+            this.ShowPLG.Name = "ShowPLG";
+            this.ShowPLG.Size = new System.Drawing.Size(942, 604);
+            this.ShowPLG.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -529,12 +553,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelMain.ResumeLayout(false);
             this.PlnMainPlug.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.panelMenu.ResumeLayout(false);
             this.panelMenu.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabControlPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -563,9 +588,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel Pnl_Main_Left;
         private System.Windows.Forms.Panel PlnMainPlug;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Panel ShowPLG;
         private DevComponents.DotNetBar.DotNetBarManager dotNetBarManager;
         private System.Windows.Forms.ToolStripMenuItem 暴雨频率计算ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 暴雨衰减参数计算ToolStripMenuItem;
@@ -585,6 +607,10 @@
         private System.Windows.Forms.ToolStripMenuItem 快速入门ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 帮助手册ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
+        private DevComponents.DotNetBar.TabControl tabControl1;
+        private DevComponents.DotNetBar.TabControlPanel tabControlPanel1;
+        private System.Windows.Forms.Panel ShowPLG;
+        private DevComponents.DotNetBar.TabItem tabItem1;
     }
 }
 
