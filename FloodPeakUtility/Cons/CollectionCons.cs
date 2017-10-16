@@ -12,7 +12,7 @@ namespace FloodPeakUtility
     {
         static CollectionCons()
         {
-            DicStrToHour.Add("MAX_10_MIN", 0.17);
+            DicStrToHour.Add("MAX_10_MIN", 0.167);
             DicStrToHour.Add("MAX_30_MIN", 0.5);
             DicStrToHour.Add("[MAX_1_HOUR]", 1);
             DicStrToHour.Add("[MAX_3_HOUR]", 3);

@@ -60,6 +60,11 @@ namespace FloodPeakUtility
         /// </summary>
         public static readonly string TempName = "TempName.xml";
 
+        /// <summary>
+        ///输出窗口位置文件
+        /// </summary>
+        public static readonly string OutputLocation = "OutputLocation.xml";
+
     }
 
     /// <summary>

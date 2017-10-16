@@ -33,6 +33,18 @@
             this.pnlFirgue = new System.Windows.Forms.Panel();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.tabControl1 = new DevComponents.DotNetBar.TabControl();
+            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.label55 = new System.Windows.Forms.Label();
+            this.Jieju = new System.Windows.Forms.TextBox();
+            this.Xielv = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.ndData2 = new System.Windows.Forms.TextBox();
+            this.SdData2 = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
             this.tabControlPanel2 = new DevComponents.DotNetBar.TabControlPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
@@ -100,33 +112,21 @@
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.tabItem1 = new DevComponents.DotNetBar.TabItem(this.components);
-            this.tabControlPanel3 = new DevComponents.DotNetBar.TabControlPanel();
-            this.tabItem3 = new DevComponents.DotNetBar.TabItem(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.label56 = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.Jieju = new System.Windows.Forms.TextBox();
-            this.Xielv = new System.Windows.Forms.TextBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.ndData2 = new System.Windows.Forms.TextBox();
-            this.SdData2 = new System.Windows.Forms.TextBox();
-            this.label54 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).BeginInit();
             this.tabControl1.SuspendLayout();
+            this.tabControlPanel3.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.tabControlPanel2.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPnlArg.SuspendLayout();
             this.pnlArg.SuspendLayout();
-            this.tabControlPanel3.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -157,14 +157,15 @@
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(701, 195);
             this.pnlBottom.TabIndex = 7;
+            this.pnlBottom.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlBottom_Paint);
             // 
             // tabControl1
             // 
             this.tabControl1.BackColor = System.Drawing.Color.White;
             this.tabControl1.CanReorderTabs = true;
+            this.tabControl1.Controls.Add(this.tabPnlArg);
             this.tabControl1.Controls.Add(this.tabControlPanel3);
             this.tabControl1.Controls.Add(this.tabControlPanel2);
-            this.tabControl1.Controls.Add(this.tabPnlArg);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -179,10 +180,140 @@
             this.tabControl1.Tabs.Add(this.tabItem3);
             this.tabControl1.Text = "tabControl1";
             // 
+            // tabControlPanel3
+            // 
+            this.tabControlPanel3.Controls.Add(this.panel3);
+            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlPanel3.Location = new System.Drawing.Point(0, 25);
+            this.tabControlPanel3.Name = "tabControlPanel3";
+            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
+            this.tabControlPanel3.Size = new System.Drawing.Size(701, 170);
+            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
+            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
+            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
+            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
+            | DevComponents.DotNetBar.eBorderSide.Bottom)));
+            this.tabControlPanel3.Style.GradientAngle = 90;
+            this.tabControlPanel3.TabIndex = 9;
+            this.tabControlPanel3.TabItem = this.tabItem3;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.White;
+            this.panel3.Controls.Add(this.groupBox8);
+            this.panel3.Controls.Add(this.label53);
+            this.panel3.Controls.Add(this.ndData2);
+            this.panel3.Controls.Add(this.SdData2);
+            this.panel3.Controls.Add(this.label54);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(1, 1);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(699, 168);
+            this.panel3.TabIndex = 0;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox8.Controls.Add(this.label56);
+            this.groupBox8.Controls.Add(this.label55);
+            this.groupBox8.Controls.Add(this.Jieju);
+            this.groupBox8.Controls.Add(this.Xielv);
+            this.groupBox8.Location = new System.Drawing.Point(387, 31);
+            this.groupBox8.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox8.Size = new System.Drawing.Size(233, 77);
+            this.groupBox8.TabIndex = 32;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "拟合曲线特性";
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(72, 49);
+            this.label56.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(35, 12);
+            this.label56.TabIndex = 3;
+            this.label56.Text = "截距S";
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(72, 20);
+            this.label55.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(35, 12);
+            this.label55.TabIndex = 2;
+            this.label55.Text = "斜率n";
+            // 
+            // Jieju
+            // 
+            this.Jieju.Location = new System.Drawing.Point(131, 45);
+            this.Jieju.Margin = new System.Windows.Forms.Padding(2);
+            this.Jieju.Name = "Jieju";
+            this.Jieju.Size = new System.Drawing.Size(76, 21);
+            this.Jieju.TabIndex = 1;
+            // 
+            // Xielv
+            // 
+            this.Xielv.Location = new System.Drawing.Point(131, 16);
+            this.Xielv.Margin = new System.Windows.Forms.Padding(2);
+            this.Xielv.Name = "Xielv";
+            this.Xielv.Size = new System.Drawing.Size(76, 21);
+            this.Xielv.TabIndex = 0;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.BackColor = System.Drawing.Color.Transparent;
+            this.label53.Location = new System.Drawing.Point(74, 45);
+            this.label53.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(137, 12);
+            this.label53.TabIndex = 28;
+            this.label53.Text = "小时平均雨强（雨力）Sd";
+            // 
+            // ndData2
+            // 
+            this.ndData2.AcceptsReturn = true;
+            this.ndData2.AcceptsTab = true;
+            this.ndData2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ndData2.Location = new System.Drawing.Point(227, 72);
+            this.ndData2.Margin = new System.Windows.Forms.Padding(2);
+            this.ndData2.Name = "ndData2";
+            this.ndData2.Size = new System.Drawing.Size(76, 21);
+            this.ndData2.TabIndex = 31;
+            // 
+            // SdData2
+            // 
+            this.SdData2.Location = new System.Drawing.Point(227, 41);
+            this.SdData2.Margin = new System.Windows.Forms.Padding(2);
+            this.SdData2.Name = "SdData2";
+            this.SdData2.Size = new System.Drawing.Size(76, 21);
+            this.SdData2.TabIndex = 30;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.BackColor = System.Drawing.Color.Transparent;
+            this.label54.Location = new System.Drawing.Point(122, 76);
+            this.label54.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(89, 12);
+            this.label54.TabIndex = 29;
+            this.label54.Text = "暴雨衰减指数nd";
+            // 
+            // tabItem3
+            // 
+            this.tabItem3.AttachedControl = this.tabControlPanel3;
+            this.tabItem3.Name = "tabItem3";
+            this.tabItem3.Text = "d = 0时计算结果";
+            // 
             // tabControlPanel2
             // 
             this.tabControlPanel2.Controls.Add(this.panel2);
-           // this.tabControlPanel2.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabControlPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlPanel2.Location = new System.Drawing.Point(0, 25);
             this.tabControlPanel2.Name = "tabControlPanel2";
@@ -410,7 +541,6 @@
             // tabPnlArg
             // 
             this.tabPnlArg.Controls.Add(this.pnlArg);
-            //this.tabPnlArg.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabPnlArg.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabPnlArg.Location = new System.Drawing.Point(0, 25);
             this.tabPnlArg.Name = "tabPnlArg";
@@ -897,31 +1027,6 @@
             this.tabItem1.Name = "tabItem1";
             this.tabItem1.Text = "计算参数";
             // 
-            // tabControlPanel3
-            // 
-            this.tabControlPanel3.Controls.Add(this.panel3);
-            //this.tabControlPanel3.DisabledBackColor = System.Drawing.Color.Empty;
-            this.tabControlPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel3.Location = new System.Drawing.Point(0, 25);
-            this.tabControlPanel3.Name = "tabControlPanel3";
-            this.tabControlPanel3.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel3.Size = new System.Drawing.Size(701, 170);
-            this.tabControlPanel3.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
-            this.tabControlPanel3.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
-            this.tabControlPanel3.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.tabControlPanel3.Style.BorderColor.Color = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(165)))), ((int)(((byte)(199)))));
-            this.tabControlPanel3.Style.BorderSide = ((DevComponents.DotNetBar.eBorderSide)(((DevComponents.DotNetBar.eBorderSide.Left | DevComponents.DotNetBar.eBorderSide.Right) 
-            | DevComponents.DotNetBar.eBorderSide.Bottom)));
-            this.tabControlPanel3.Style.GradientAngle = 90;
-            this.tabControlPanel3.TabIndex = 9;
-            this.tabControlPanel3.TabItem = this.tabItem3;
-            // 
-            // tabItem3
-            // 
-            this.tabItem3.AttachedControl = this.tabControlPanel3;
-            this.tabItem3.Name = "tabItem3";
-            this.tabItem3.Text = "d = 0时计算结果";
-            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
@@ -931,113 +1036,6 @@
             // 
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
             this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.Controls.Add(this.groupBox8);
-            this.panel3.Controls.Add(this.label53);
-            this.panel3.Controls.Add(this.ndData2);
-            this.panel3.Controls.Add(this.SdData2);
-            this.panel3.Controls.Add(this.label54);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(1, 1);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(699, 168);
-            this.panel3.TabIndex = 0;
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox8.Controls.Add(this.label56);
-            this.groupBox8.Controls.Add(this.label55);
-            this.groupBox8.Controls.Add(this.Jieju);
-            this.groupBox8.Controls.Add(this.Xielv);
-            this.groupBox8.Location = new System.Drawing.Point(387, 31);
-            this.groupBox8.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox8.Size = new System.Drawing.Size(233, 77);
-            this.groupBox8.TabIndex = 32;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "拟合曲线特性";
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(72, 49);
-            this.label56.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(35, 12);
-            this.label56.TabIndex = 3;
-            this.label56.Text = "截距S";
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(72, 20);
-            this.label55.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(35, 12);
-            this.label55.TabIndex = 2;
-            this.label55.Text = "斜率n";
-            // 
-            // Jieju
-            // 
-            this.Jieju.Location = new System.Drawing.Point(131, 45);
-            this.Jieju.Margin = new System.Windows.Forms.Padding(2);
-            this.Jieju.Name = "Jieju";
-            this.Jieju.Size = new System.Drawing.Size(76, 21);
-            this.Jieju.TabIndex = 1;
-            // 
-            // Xielv
-            // 
-            this.Xielv.Location = new System.Drawing.Point(131, 16);
-            this.Xielv.Margin = new System.Windows.Forms.Padding(2);
-            this.Xielv.Name = "Xielv";
-            this.Xielv.Size = new System.Drawing.Size(76, 21);
-            this.Xielv.TabIndex = 0;
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.BackColor = System.Drawing.Color.Transparent;
-            this.label53.Location = new System.Drawing.Point(74, 45);
-            this.label53.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(137, 12);
-            this.label53.TabIndex = 28;
-            this.label53.Text = "小时平均雨强（雨力）Sd";
-            // 
-            // ndData2
-            // 
-            this.ndData2.AcceptsReturn = true;
-            this.ndData2.AcceptsTab = true;
-            this.ndData2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.ndData2.Location = new System.Drawing.Point(227, 72);
-            this.ndData2.Margin = new System.Windows.Forms.Padding(2);
-            this.ndData2.Name = "ndData2";
-            this.ndData2.Size = new System.Drawing.Size(76, 21);
-            this.ndData2.TabIndex = 31;
-            // 
-            // SdData2
-            // 
-            this.SdData2.Location = new System.Drawing.Point(227, 41);
-            this.SdData2.Margin = new System.Windows.Forms.Padding(2);
-            this.SdData2.Name = "SdData2";
-            this.SdData2.Size = new System.Drawing.Size(76, 21);
-            this.SdData2.TabIndex = 30;
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.BackColor = System.Drawing.Color.Transparent;
-            this.label54.Location = new System.Drawing.Point(122, 76);
-            this.label54.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(89, 12);
-            this.label54.TabIndex = 29;
-            this.label54.Text = "暴雨衰减指数nd";
             // 
             // CaculateFirgureUI
             // 
@@ -1051,6 +1049,11 @@
             this.pnlBottom.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            this.tabControlPanel3.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.tabControlPanel2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -1061,11 +1064,6 @@
             this.tabPnlArg.ResumeLayout(false);
             this.pnlArg.ResumeLayout(false);
             this.pnlArg.PerformLayout();
-            this.tabControlPanel3.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -248,6 +248,12 @@
     <Compile Include="CaculateUI\SlopeConfluenceControl.Designer.cs">
       <DependentUpon>SlopeConfluenceControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\FormPercentExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormPercentExport.Designer.cs">
+      <DependentUpon>FormPercentExport.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -286,6 +292,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CaculateUI\SlopeConfluenceControl.resx">
       <DependentUpon>SlopeConfluenceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormPercentExport.resx">
+      <DependentUpon>FormPercentExport.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

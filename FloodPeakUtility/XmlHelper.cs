@@ -127,5 +127,41 @@ namespace FloodPeakUtility
             { }
 
         }
+
+        /// <summary>
+        /// 保存DataTable到Excel中
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="filePath"></param>
+        public static void SaveDataToExcelFile(System.Data.DataTable table, string filePath)
+        {
+            object misValue = System.Reflection.Missing.Value;
+            Application xlApp = new Application();
+            Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+            Worksheet xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            if (table.Columns.Count > 0)
+                //添加表头
+                for (int col = 0; col < table.Columns.Count; col++)
+                {
+                    xlWorkSheet.Cells[1, col + 1] = table.Columns[col].ColumnName;
+                }
+            if (table.Rows.Count > 0)
+                //添加内容
+                for (int row = 0; row < table.Rows.Count; row++)
+                {
+                    for (int col = 0; col < table.Columns.Count; col++)
+                    {
+                        xlWorkSheet.Cells[row + 2, col + 1] = table.Rows[row][col];
+                    }
+                }
+            try
+            {
+                xlWorkBook.SaveAs(filePath, XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+            }
+            catch (Exception ex)
+            { }
+        }
     }
 }

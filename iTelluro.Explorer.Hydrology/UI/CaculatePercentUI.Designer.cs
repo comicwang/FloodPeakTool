@@ -86,9 +86,7 @@
             this.expandablePanel1.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.expandablePanel1.Controls.Add(this.grpSS);
             this.expandablePanel1.Controls.Add(this.grpResult);
-            //this.expandablePanel1.DisabledBackColor = System.Drawing.Color.Empty;
             this.expandablePanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            //this.expandablePanel1.HideControlsWhenCollapsed = true;
             this.expandablePanel1.Location = new System.Drawing.Point(0, 306);
             this.expandablePanel1.Name = "expandablePanel1";
             this.expandablePanel1.Size = new System.Drawing.Size(701, 193);
@@ -263,10 +261,9 @@
             // 
             // btnInsert
             // 
-            this.btnInsert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInsert.Location = new System.Drawing.Point(572, 30);
+            this.btnInsert.Location = new System.Drawing.Point(359, 49);
             this.btnInsert.Name = "btnInsert";
-            this.btnInsert.Size = new System.Drawing.Size(82, 41);
+            this.btnInsert.Size = new System.Drawing.Size(75, 23);
             this.btnInsert.TabIndex = 62;
             this.btnInsert.Text = "统一入库";
             this.btnInsert.UseVisualStyleBackColor = true;

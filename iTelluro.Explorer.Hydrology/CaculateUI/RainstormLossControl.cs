@@ -53,14 +53,28 @@ namespace FloodPeakToolUI.UI
                 {
                     CopyAddNodeModel(result, model1);
                 }
+
+                NodeModel model2 = fileChooseControl3.SelectedValue;
+                if (model2 != null)
+                {
+                    CopyAddNodeModel(result, model2);
+                }
+
+                NodeModel model3 = fileChooseControl4.SelectedValue;
+                if (model3 != null)
+                {
+                    CopyAddNodeModel(result, model3);
+                }
                 _parent.OporateCaculateNode(Guids.BYSS, result.ToArray());
 
 
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
-                string argShp = fileChooseControl2.FilePath;//流速系数
+                string areaShp = fileChooseControl2.FilePath;//流域面积shp
+                string RShp = fileChooseControl3.FilePath;//系数R
+                string rShp = fileChooseControl4.FilePath;//指数r
                 //progressBar1.Visible = true;
-                backgroundWorker1.RunWorkerAsync(new string[] { tifPath, argShp });
+                backgroundWorker1.RunWorkerAsync(new string[] { tifPath, areaShp, RShp, rShp });
             }
             else
             {
@@ -82,7 +96,26 @@ namespace FloodPeakToolUI.UI
 
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
-            button1.Enabled = File.Exists(fileChooseControl1.FilePath) && File.Exists(fileChooseControl2.FilePath);
+            button1.Enabled = File.Exists(fileChooseControl1.FilePath);
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //获取结果值
+            BYSSResult result = new BYSSResult()
+            {
+                F = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
+                N = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
+                R = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text),
+                r1 = string.IsNullOrEmpty(txtr1.Text) ? 0 : Convert.ToDouble(txtr1.Text)
+            };
+            XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
         #region 计算暴雨损失系数
@@ -93,10 +126,97 @@ namespace FloodPeakToolUI.UI
             string[] args = e.Argument as string[];
             string inputDemPath = args[0];
             string shppath = args[1];
+            string Rshppath = args[2];
+            string rshppath = args[3];
+        
+            RainLoss(Rshppath,rshppath, inputDemPath, shppath, ref e);
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //progressBar1.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //F,N,R,r
+            double?[] result = e.Result as double?[];
+            if (result != null && result.Length >= 4)
+            {
+                if (result[0].HasValue)
+                {
+                    textBox1.Text = result[0].GetValueOrDefault(0).ToString("f3");
+                    textBox2.Text = result[1].GetValueOrDefault(0).ToString("f3");
+                }
+                if (result[2].HasValue)
+                    textBox3.Text = result[2].GetValueOrDefault(0).ToString("f3");
+                if (result[3].HasValue)
+                    txtr1.Text = result[3].GetValueOrDefault(0).ToString("f3");
+            }
+        }
+
+        /// <summary>
+        /// 暴雨损失参数计算
+        /// </summary>
+        /// <param name="shppath"></param>
+        /// <param name="inputDemPath"></param>
+        /// <param name="outDemPath"></param>
+        public void RainLoss(string Rshppath, string rshppath, string inputDemPath, string areaShp, ref DoWorkEventArgs e)
+        {
+            //计算流域面积
+            double F = 0;
+            double? sf = null;
+            double? N = null;
+            if (File.Exists(areaShp))
+            {
+                FormOutput.AppendLog("开始计算流域面积和折减系数");
+                WatershedArea(areaShp, inputDemPath, ref F, ref sf);
+                sf = sf / 1000000;
+                FormOutput.AppendLog(string.Format("流域面积F = {0}km²", sf.Value.ToString("f3")));
+                N = 1 / (1 + 0.016 * sf * 0.6);//折减系数
+                FormOutput.AppendLog("折减系数N = " + N.Value.ToString("f3"));
+            }
+
+            //计算折减系数
+            double? R = null;
+            if (File.Exists(Rshppath))
+            {
+                FormOutput.AppendLog("开始计算损失系数");
+                R = RasterCoefficientReader.ReadCoeficient(Rshppath, inputDemPath);
+                if (R.HasValue)
+                    FormOutput.AppendLog("损失系数R = " + R.Value.ToString("f3"));
+            }
+            double? r = null;
+            if (File.Exists(rshppath))
+            {
+                FormOutput.AppendLog("开始计算损失指数");
+                r = RasterCoefficientReader.ReadCoeficient(rshppath, inputDemPath);
+                if (r.HasValue)
+                    FormOutput.AppendLog("损失指数r = " + r.Value.ToString("f3"));
+            }
+            e.Result = new double?[] { sf, N, R, r };
+        }
+
+        private class TerrainPoint
+        {
+            public double Longitude;
+            public double Latitude;
+            public double Altitude;
+            public int row;
+            public int col;
+        }
+
+        /// <summary>
+        /// 流域面积计算
+        /// 流域面积F，单位平方千米
+        /// </summary>
+        private TerrainPoint[,] _terrainTile;
+        private void WatershedArea(string shppath, string rasterpath, ref double _resultProjectArea, ref double? _resultSurfaceArea)
+        {
             ShpReader shp = new ShpReader(shppath);
 
             OSGeo.OGR.Feature ofea;
-            List<Point2d> ptlist = new List<Point2d>();
+            List<Point2d> pointlist = new List<Point2d>();
             while (((ofea = shp.layer.GetNextFeature()) != null))
             {
                 int count = ofea.GetGeometryRef().GetPointCount();
@@ -115,74 +235,12 @@ namespace FloodPeakToolUI.UI
                     double x = double.Parse(point[0]);
                     double y = double.Parse(point[1]);
                     Point2d p = new Point2d(x, y);
-                    ptlist.Add(p);
+                    pointlist.Add(p);
                 }
             }
             //释放资源
             shp.Dispose();
-            RainLoss(shppath, inputDemPath, ptlist, ref e);
-        }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //progressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            double?[] result = e.Result as double?[];
-            if (result != null && result.Length >= 3)
-            {
-                textBox1.Text = result[0].GetValueOrDefault(0).ToString("f3");
-                textBox2.Text = result[1].GetValueOrDefault(0).ToString("f3");
-                textBox3.Text = result[2].GetValueOrDefault(0).ToString("f3");
-            }
-        }
-
-        /// <summary>
-        /// 暴雨损失参数计算
-        /// </summary>
-        /// <param name="shppath"></param>
-        /// <param name="inputDemPath"></param>
-        /// <param name="outDemPath"></param>
-        public void RainLoss(string shppath, string inputDemPath, List<Point2d> pointlist, ref DoWorkEventArgs e)
-        {
-            //计算流域面积
-            double F = 0;
-            double sf = 0;
-            FormOutput.AppendLog("开始计算流域面积..");
-            WatershedArea(pointlist, inputDemPath, ref F, ref sf);
-            sf = sf / 1000000;
-            FormOutput.AppendLog(string.Format("流域面积为：{0}km²", sf.ToString("f3")));
-
-            //计算折减系数
-            FormOutput.AppendLog("开始计算损失指数,折减系数..");
-            double r = 0;//暴雨损失指数 数据无法提供，
-            double N = 1 / (1 + 0.016 * sf * 0.6);//折减系数
-            FormOutput.AppendLog("折减系数：" + N.ToString("f3"));
-
-            double? R = RasterCoefficientReader.ReadCoeficient(shppath, inputDemPath);
-            if (R.HasValue)
-                FormOutput.AppendLog("损失指数：" + R.Value.ToString("f3"));
-            e.Result = new double?[] { sf, R, N };
-        }
-
-        private class TerrainPoint
-        {
-            public double Longitude;
-            public double Latitude;
-            public double Altitude;
-            public int row;
-            public int col;
-        }
-
-        /// <summary>
-        /// 流域面积计算
-        /// 流域面积F，单位平方千米
-        /// </summary>
-        private TerrainPoint[,] _terrainTile;
-        private void WatershedArea(List<Point2d> pointlist, string rasterpath, ref double _resultProjectArea, ref double _resultSurfaceArea)
-        {
             if (pointlist.Count >= 3)
             {
                 // 外接矩阵，边界取经纬度范围的反值
@@ -398,6 +456,8 @@ namespace FloodPeakToolUI.UI
                 NodeModel[] nodes = Parent.ProjectModel.Nodes.Where(t => t.PNode == Guids.BYSS).ToArray();
                 fileChooseControl1.BindSource(Parent, (nodes != null && nodes.Count() > 0) ? nodes[0].NodeName : string.Empty);
                 fileChooseControl2.BindSource(Parent, (nodes != null && nodes.Count() > 1) ? nodes[1].NodeName : string.Empty);
+                fileChooseControl3.BindSource(Parent, (nodes != null && nodes.Count() > 2) ? nodes[2].NodeName : string.Empty);
+                fileChooseControl4.BindSource(Parent, (nodes != null && nodes.Count() > 3) ? nodes[3].NodeName : string.Empty);
 
                 //显示之前的结果
                 _xmlPath = Path.Combine(Path.GetDirectoryName(Parent.ProjectModel.ProjectPath), ConfigNames.RainStormLoss);
@@ -407,8 +467,9 @@ namespace FloodPeakToolUI.UI
                     if (result != null)
                     {
                         textBox1.Text = result.F == 0 ? "" : result.F.ToString();
-                        textBox2.Text = result.R == 0 ? "" : result.R.ToString();
-                        textBox3.Text = result.N == 0 ? "" : result.N.ToString();
+                        textBox2.Text = result.N == 0 ? "" : result.N.ToString();
+                        textBox3.Text = result.R == 0 ? "" : result.R.ToString();
+                        txtr1.Text = result.r1 == 0 ? "" : result.r1.ToString();
                     }
                 }
             }
@@ -422,18 +483,5 @@ namespace FloodPeakToolUI.UI
 
         #endregion
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //获取结果值
-            BYSSResult result = new BYSSResult()
-            {
-                F = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-                R = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-                N = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text),
-                r1 = string.IsNullOrEmpty(txtr1.Text) ? 0 : Convert.ToDouble(txtr1.Text)
-            };
-            XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
-            MsgBox.ShowInfo("保存成功！");
-        }
     }
 }

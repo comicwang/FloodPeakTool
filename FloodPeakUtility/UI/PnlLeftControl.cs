@@ -148,6 +148,7 @@ namespace FloodPeakUtility.UI
         {
             //绑定日志
             LogHelper.BindLog(projectPath);
+            LogHelper.LogInfo("项目开始计算...", true);
             _isIni = true;
             _projectPath = projectPath;
             InitializeConfig();
@@ -214,7 +215,7 @@ namespace FloodPeakUtility.UI
                 TabItem tabPage = new TabItem();
                 tabPage.Text = title;
                 tabPage.Name = title;
-                tabPage.CloseButtonVisible = false;
+                tabPage.CloseButtonVisible = true;
                 dockControl.Dock = DockStyle.Fill;
                 tabPage.AttachedControl = dockControl;
                 _tabControl.Tabs.Add(tabPage);

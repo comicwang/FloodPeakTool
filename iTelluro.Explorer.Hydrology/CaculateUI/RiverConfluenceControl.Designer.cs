@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -41,7 +42,6 @@
             this.fileChooseControl2 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl1 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl3 = new FloodPeakToolUI.UI.FileChooseControl();
-            this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,6 +65,18 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输出";
+            // 
+            // button3
+            // 
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.Location = new System.Drawing.Point(149, 106);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(77, 26);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "输出主河槽";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -93,23 +105,29 @@
             // 
             // textBox3
             // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.Location = new System.Drawing.Point(111, 75);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(114, 21);
+            this.textBox3.Size = new System.Drawing.Size(123, 21);
             this.textBox3.TabIndex = 1;
             // 
             // textBox2
             // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(111, 50);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(114, 21);
+            this.textBox2.Size = new System.Drawing.Size(123, 21);
             this.textBox2.TabIndex = 1;
             // 
             // textBox1
             // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(111, 25);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(114, 21);
+            this.textBox1.Size = new System.Drawing.Size(123, 21);
             this.textBox1.TabIndex = 1;
             // 
             // label3
@@ -126,11 +144,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(19, 54);
+            this.label2.Location = new System.Drawing.Point(7, 54);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 12);
+            this.label2.Size = new System.Drawing.Size(101, 12);
             this.label2.TabIndex = 0;
-            this.label2.Text = "主河槽纵降比l1";
+            this.label2.Text = "纵降比l1(千分比)";
             // 
             // label1
             // 
@@ -181,18 +199,6 @@
             this.fileChooseControl3.Size = new System.Drawing.Size(240, 24);
             this.fileChooseControl3.TabIndex = 3;
             this.fileChooseControl3.OnSelectIndexChanged += new System.EventHandler(this.fileChooseControl3_OnSelectIndexChanged);
-            // 
-            // button3
-            // 
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button3.Location = new System.Drawing.Point(149, 106);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(77, 26);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "输出主河槽";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // RiverConfluenceControl
             // 

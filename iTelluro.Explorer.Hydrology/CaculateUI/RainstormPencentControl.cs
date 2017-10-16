@@ -143,7 +143,13 @@ namespace FloodPeakToolUI.UI
         private void ShowResult(IntPtr windowPtr)
         {
             CvCure cv = XmlHelper.Deserialize<CvCure>(Path.Combine(Application.StartupPath, ConfigNames.SvCure));
-            FormOutput.AppendLog(string.Format("计算结果：统计样本平均值X【{0}】,变差系数Cv【{1}】,偏态系数Cs【{2}】,拟合度【{3}】", cv.X, cv.Cv, cv.Cs, cv.Nihe));
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("计算结果：");
+            builder.AppendLine("统计样本平均值X = " + cv.X);
+            builder.AppendLine("变差系数Cv = " + cv.Cv);
+            builder.AppendLine("偏态系数Cs = " + cv.Cs);
+            builder.AppendLine("拟合度N = " + cv.Nihe);
+            FormOutput.AppendLog(builder.ToString());
             if (cv != null)
             {
                 if (_parent.InvokeRequired)

@@ -86,7 +86,6 @@ namespace FloodPeakTool
             InitializeComponent();         
             CreatUIControls();
             CreateGlobe();
-
         }
 
         private void CreatUIControls()

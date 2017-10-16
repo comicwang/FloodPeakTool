@@ -186,7 +186,7 @@ namespace FloodPeakToolUI.UI
         private void ShowNiHe(IntPtr windowPtr)
         {
             string cv = XmlHelper.Deserialize<string>(Path.Combine(Application.StartupPath, ConfigNames.TempName));
-            FormOutput.AppendLog(string.Format("计算结果：拟合度【{0}】", cv));
+            FormOutput.AppendLog(string.Format("计算结果：拟合度{0}", cv));
             if (cv != null)
             {
                 if (panel2.InvokeRequired)

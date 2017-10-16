@@ -110,25 +110,45 @@ namespace FloodPeakToolUI.UI
             {
                 double value = 0;
                 double during = 0;
+              
                 try
                 {
                     during = Convert.ToDouble(row[0]);
                     value = Convert.ToDouble(row[1]);
+
+                    // a=p/t(单位时间雨强大小)
+                    value = value / during;
                 }
                 catch
                 {
                     continue;
                 }
-                if (during <= 1)
+                //判断时间间隔大于10小时的不需要加入
+                if (during > 10)
+                    continue;
+                if (during < 1)
                 {
                     bool success = this.SetArgControl("a" + a, value.ToString());
                     success = this.SetArgControl("t" + a, during.ToString());
                     if (success)
                         a++;
                 }
-                else
+                else if (during > 1)
                 {
                     bool success = this.SetArgControl("a" + A, value.ToString());
+                    success = this.SetArgControl("t" + A, during.ToString());
+                    if (success)
+                        A++;
+                }
+                    //为1的小时段，都需要加入，为交点
+                else
+                {
+                    bool success = this.SetArgControl("a" + a, value.ToString());
+                    success = this.SetArgControl("t" + a, during.ToString());
+                    if (success)
+                        a++;
+
+                    success = this.SetArgControl("a" + A, value.ToString());
                     success = this.SetArgControl("t" + A, during.ToString());
                     if (success)
                         A++;
@@ -456,5 +476,10 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
+
+        private void pnlBottom_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -330,7 +330,7 @@ namespace FloodPeakToolUI.UI
 
         }
 
-        private double GetLonGradient(Dictionary<Point2d, Geometry> mainRiver,string tifPath)
+        private double GetLonGradient(Dictionary<Point2d, Geometry> mainRiver, string tifPath)
         {
 
             RasterReader reader = new RasterReader(tifPath);
@@ -359,7 +359,7 @@ namespace FloodPeakToolUI.UI
                 length += Length(point1, point2);
                 z += Length(point1, point2) * (point1.Z + point2.Z);
             }
-            return z / (length * length);
+            return z * 1000 / (length * length);
         }
 
         /// <summary>

@@ -34,6 +34,7 @@
             this.txtState = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.lblExport = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -90,10 +91,21 @@
             this.label1.TabIndex = 10;
             this.label1.Text = "频率统计项目";
             // 
+            // lblExport
+            // 
+            this.lblExport.AutoSize = true;
+            this.lblExport.Location = new System.Drawing.Point(19, 66);
+            this.lblExport.Name = "lblExport";
+            this.lblExport.Size = new System.Drawing.Size(53, 12);
+            this.lblExport.TabIndex = 32;
+            this.lblExport.TabStop = true;
+            this.lblExport.Text = "频率导出";
+            // 
             // RainstormAttenuationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblExport);
             this.Controls.Add(this.cmbPercent);
             this.Controls.Add(this.btnCaculate);
             this.Controls.Add(this.txtState);
@@ -114,5 +126,6 @@
         private System.Windows.Forms.TextBox txtState;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel lblExport;
     }
 }

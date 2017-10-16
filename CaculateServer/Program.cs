@@ -212,8 +212,8 @@ namespace CaculateServer
                         double[,] DataBox2 = (double[,])polyData2.ToArray();
                         double d = (Math.Abs(DataBox2[0, 0]) / Math.Abs(DataBox1[0, 0]) - 1) * 0.3;
                         sub.d = d;
-                        double k1 = Math.Log(10 + d);
-                        double k2 = Math.Log(0.1 + d);
+                        double k1 = Math.Log10(10 + d);
+                        double k2 = Math.Log10(0.1 + d);
                         double nd = Math.Abs((DataBox1[0, 0] + DataBox2[0, 0]) / (k1 - k2));
                         double Sd = (Math.Pow((10 + d), nd) / Math.Pow(10, Math.Abs(DataBox2[0, 0]))) * Math.Pow(10, DataBox2[0, 1]);
                         sub.nd = nd;
@@ -237,6 +237,7 @@ namespace CaculateServer
 
                 #endregion
 
+                #region d=0
 
                 else if (methodName == MethodName.RainStormSub0)
                 {
@@ -285,6 +286,8 @@ namespace CaculateServer
                         C.Dispose();
                     }
                 }
+
+                #endregion
 
                 #region 洪峰流量
 

@@ -169,7 +169,7 @@ namespace FloodPeakToolUI.UI
                     count = points.Count * resultPt.Count;
                 }
                 avglength = totalLength / count;
-                avgslope = totalSlope / points.Count;
+                avgslope = totalSlope * 1000 / points.Count;
             }
         }
 

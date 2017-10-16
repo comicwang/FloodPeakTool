@@ -45,7 +45,7 @@ namespace FloodPeakUtility
                 }
                 if (log != null)
                 {
-                    streamWriter.WriteLine("记录信息：\r\n" + log);
+                    streamWriter.WriteLine(log);
                 }
             }
             finally

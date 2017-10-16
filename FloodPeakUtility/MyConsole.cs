@@ -42,7 +42,7 @@ namespace FloodPeakUtility
                 _textBox.AppendText(content + Environment.NewLine + Environment.NewLine);
 
             //记录日志到文件中
-            LogHelper.LogInfo(content, true);
+            LogHelper.LogInfo(content);
         }
     }
 }
