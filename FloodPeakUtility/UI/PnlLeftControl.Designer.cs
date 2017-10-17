@@ -1,4 +1,9 @@
-﻿namespace FloodPeakUtility.UI
+﻿using DevComponents.AdvTree;
+using FloodPeakUtility.Model;
+using iTelluro.Explorer.Vector;
+using iTelluro.Explorer.VectorLoader.ShpSymbolConfig;
+using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
+namespace FloodPeakUtility.UI
 {
     partial class PnlLeftControl
     {
@@ -17,6 +22,73 @@
             {
                 components.Dispose();
             }
+
+            //保存矢量图层信息
+            foreach (Node node in advTreeMain.Nodes[0].Nodes)
+            {
+                NodeModel model = node.Tag as NodeModel;
+                if (model != null)
+                {
+                    //矢量文件
+                    if (model.ImageIndex == 2)
+                    {
+                        switch (model.BigType)
+                        {
+                            case GeometryBigType.Line:
+                                if (_shpLoader.LineLyrList != null)
+                                {
+                                    for (int i = 0; i < _shpLoader.LineLyrList.Count; i++)
+                                    {
+                                        ShpLineLayer lyr = _shpLoader.LineLyrList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpLineConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            case GeometryBigType.None:
+                                break;
+                            case GeometryBigType.Point:
+                                if (_shpLoader.PntLyrList != null)
+                                {
+                                    for (int i = 0; i < _shpLoader.PntLyrList.Count; i++)
+                                    {
+                                        ShpPointLayer lyr = _shpLoader.PntLyrList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpPointConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            case GeometryBigType.Polygon:
+                                if (_shpLoader.PolyLyrList != null)
+                                {
+                                    for (int i = 0; i < _shpLoader.PolyLyrList.Count; i++)
+                                    {
+                                        ShpPolygonLayer lyr = _shpLoader.PolyLyrList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpPolygonConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+
+
             base.Dispose(disposing);
         }
 

@@ -48,19 +48,19 @@ namespace FloodPeakToolUI.UI
                 MsgBox.ShowInfo("请确定参数完整！");
                 return;
             }
-              _projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
+            _projectForlder = Path.GetDirectoryName(_parent.ProjectModel.ProjectPath);
             //保存基础参数
-              XmlHelper.Serialize<DefaultArgModel>(new DefaultArgModel()
-                  {
-                      Qm = txtQm.Text,
-                      p1 = txtp1.Text,
-                      esp1 = txteps1.Text,
-                      esp2 = txteps2.Text,
-                      tc = txttc.Text
+            XmlHelper.Serialize<DefaultArgModel>(new DefaultArgModel()
+                {
+                    Qm = txtQm.Text,
+                    p1 = txtp1.Text,
+                    esp1 = txteps1.Text,
+                    esp2 = txteps2.Text,
+                    tc = txttc.Text
 
-                  }, Path.Combine(_projectForlder, ConfigNames.DefaultArgModel));
+                }, Path.Combine(_projectForlder, ConfigNames.DefaultArgModel));
 
-          
+
             //根据文件夹来获取里面的参数文件
             string xmlPath = Path.Combine(_projectForlder, ConfigNames.RainStormSub);
             //暴雨衰减赋值

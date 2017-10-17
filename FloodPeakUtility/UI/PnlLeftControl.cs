@@ -133,7 +133,6 @@ namespace FloodPeakUtility.UI
             : this(globeView)
         {
             this._tabControl = tabControl;
-            InitializeTabEvent();
         }
 
         #endregion
@@ -380,16 +379,6 @@ namespace FloodPeakUtility.UI
         }
 
         /// <summary>
-        /// 初始化Tab的事件
-        /// </summary>
-        private void InitializeTabEvent()
-        {
-            //if (_tabControl == null)
-            //    return;
-           // _tabControl
-        }
-
-        /// <summary>
         /// 添加父节点下的所有子节点
         /// </summary>
         /// <param name="node">父节点</param>
@@ -417,6 +406,12 @@ namespace FloodPeakUtility.UI
             Node temp = new Node(model.NodeName);
             temp.Name = model.NodeId;
             temp.CheckBoxVisible = model.ShowCheck;
+            if (temp.CheckBoxVisible)
+            {
+                bool visiable = this.GetLayerVisiable(model.NodeName);
+                if (visiable)
+                    temp.Checked = true;
+            }
             temp.Tag = model;
             temp.ImageIndex = model.ImageIndex;
             return temp;
@@ -487,6 +482,30 @@ namespace FloodPeakUtility.UI
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获取图层是否可见
+        /// </summary>
+        /// <param name="lyrName"></param>
+        /// <returns></returns>
+        private bool GetLayerVisiable(string lyrName)
+        {
+            foreach (AbstractLayer lyr in _globeView.GlobeLayers.DataLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    return lyr.Visible;
+                }
+            }
+            foreach (AbstractLayer lyr in _globeView.GlobeLayers.FloatLayers)
+            {
+                if (lyr.Name == lyrName)
+                {
+                    return lyr.Visible;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -861,7 +880,6 @@ namespace FloodPeakUtility.UI
                     return;
                 lyr = LayerLoader.CreateDomLyr(lyrInfo, _globeView);
             }
-
             if (lyr != null)
                 lyr.Visible = e.Cell.Checked;
             //飞行

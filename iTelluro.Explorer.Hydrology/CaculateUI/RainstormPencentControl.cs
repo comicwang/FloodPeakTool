@@ -81,6 +81,19 @@ namespace FloodPeakToolUI.UI
             }
         }
 
+
+        private void txtState_TextChanged(object sender, EventArgs e)
+        {
+            btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            FormPercentExport export = new FormPercentExport();
+            export.ShowDialog();
+        }
+
+
         #region 计算暴雨频率
 
 
@@ -215,11 +228,6 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
-        private void txtState_TextChanged(object sender, EventArgs e)
-        {
-            btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);
-        }
 
     }
 }

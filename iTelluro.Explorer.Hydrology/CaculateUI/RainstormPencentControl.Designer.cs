@@ -34,7 +34,7 @@
             this.txtState = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.lblExport = new System.Windows.Forms.LinkLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -91,22 +91,24 @@
             this.label1.TabIndex = 10;
             this.label1.Text = "频率统计项目";
             // 
-            // lblExport
+            // button1
             // 
-            this.lblExport.AutoSize = true;
-            this.lblExport.Location = new System.Drawing.Point(19, 66);
-            this.lblExport.Name = "lblExport";
-            this.lblExport.Size = new System.Drawing.Size(53, 12);
-            this.lblExport.TabIndex = 32;
-            this.lblExport.TabStop = true;
-            this.lblExport.Text = "频率导出";
+            this.button1.Enabled = false;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(24, 59);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(67, 26);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "结果导出";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // RainstormAttenuationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblExport);
             this.Controls.Add(this.cmbPercent);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnCaculate);
             this.Controls.Add(this.txtState);
             this.Controls.Add(this.label2);
@@ -126,6 +128,6 @@
         private System.Windows.Forms.TextBox txtState;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.LinkLabel lblExport;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -72,12 +72,6 @@ namespace FloodPeakToolUI.UI
             btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);
         }
 
-        private void lblExport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            FormPercentExport export = new FormPercentExport();
-            export.ShowDialog();
-        }
-
         #region 计算暴雨衰减
 
 

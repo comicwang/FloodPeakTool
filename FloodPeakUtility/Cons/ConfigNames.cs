@@ -101,5 +101,10 @@ namespace FloodPeakUtility
         /// 洪峰流量
         /// </summary>
         public static readonly string FloodPeak = "FloodPeak";
+
+        /// <summary>
+        /// Sd-Qm查询表
+        /// </summary>
+        public static readonly string SdQmTable = "SdQmTable";
     }
 }

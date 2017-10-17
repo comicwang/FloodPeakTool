@@ -1,8 +1,10 @@
 ﻿using FloodPeakUtility;
+using FloodPeakUtility.Model;
 using FuncforHFLL;
 using MathWorks.MATLAB.NET.Arrays;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -55,7 +57,8 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        C.Dispose();
+                        if (C != null)
+                            C.Dispose();
                     }
                 }
                 #endregion
@@ -85,7 +88,8 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        C.Dispose();
+                        if (C != null)
+                            C.Dispose();
                     }
                 }
 
@@ -231,7 +235,8 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        C.Dispose();
+                        if (C != null)
+                            C.Dispose();
                     }
                 }
 
@@ -283,7 +288,8 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        C.Dispose();
+                        if (C != null)
+                            C.Dispose();
                     }
                 }
 
@@ -355,7 +361,108 @@ namespace CaculateServer
                     }
                     finally
                     {
-                        C.Dispose();
+                        if (C != null)
+                            C.Dispose();
+                    }
+                }
+
+                #endregion
+
+                #region 导出Sd-Qm查询表
+
+                else if (methodName == MethodName.SdQmTable)
+                {
+                    // 项目路径-保存表路径
+                    string projectForlder = args[1];
+                    string xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormSub);
+                    //暴雨衰减赋值
+                    BYSJResult bysj = null;
+                    if (File.Exists(xmlPath))
+                    {
+                        bysj = XmlHelper.Deserialize<BYSJResult>(xmlPath);
+                    }
+                    //暴雨损失赋值
+                    BYSSResult byss = null;
+                    xmlPath = Path.Combine(projectForlder, ConfigNames.RainStormLoss);
+                    if (File.Exists(xmlPath))
+                    {
+                        byss = XmlHelper.Deserialize<BYSSResult>(xmlPath);
+                    }
+                    //河槽汇流赋值
+                    HCHLResult hchl = null;
+                    xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence);
+                    if (File.Exists(xmlPath))
+                    {
+                        hchl = XmlHelper.Deserialize<HCHLResult>(xmlPath);
+                    }
+                    //坡面汇流赋值
+                    xmlPath = Path.Combine(projectForlder, ConfigNames.SlopeConfluence);
+                    PMHLResult pmhl = null;
+                    if (File.Exists(xmlPath))
+                    {
+                        pmhl = XmlHelper.Deserialize<PMHLResult>(xmlPath);
+                    }
+                    //默认参数
+                    xmlPath = Path.Combine(projectForlder, ConfigNames.DefaultArgModel);
+                    DefaultArgModel defaultArg = null;
+                    if (File.Exists(xmlPath))
+                    {
+                        defaultArg = XmlHelper.Deserialize<DefaultArgModel>(xmlPath);
+                    }
+                    if (bysj == null || byss == null || hchl == null || pmhl == null || defaultArg == null)
+                    {
+                        Console.WriteLine("参数不全！");
+                        return;
+                    }
+                    double p1 = Convert.ToDouble(defaultArg.p1);
+                    double Qm_v = Convert.ToDouble(defaultArg.Qm);
+                    double eps_0 = Convert.ToDouble(defaultArg.esp1);
+                    MWNumericArray p1_0 = new MWNumericArray(p1);
+                    MWNumericArray Qm_0 = new MWNumericArray(Qm_v); ;
+                    MWNumericArray eps = new MWNumericArray(eps_0);
+                    MWNumericArray R = new MWNumericArray(byss.R);
+                    MWNumericArray d = new MWNumericArray(bysj.d);
+                    MWNumericArray nd = new MWNumericArray(bysj.nd);
+                    MWNumericArray r1 = new MWNumericArray(byss.r1);
+                    MWNumericArray F = new MWNumericArray(byss.F);
+                    MWNumericArray L1 = new MWNumericArray(hchl.L1);
+                    MWNumericArray L2 = new MWNumericArray(pmhl.L2);
+                    MWNumericArray I1 = new MWNumericArray(hchl.l1);
+                    MWNumericArray I2 = new MWNumericArray(pmhl.l2);
+                    MWNumericArray A1 = new MWNumericArray(hchl.A1);
+                    MWNumericArray A2 = new MWNumericArray(pmhl.A2);
+
+                    DataTable aTable = new DataTable();
+                    DataColumn Sd = new DataColumn("Sd", typeof(double));
+                    DataColumn Qm = new DataColumn("Qm", typeof(double));
+                    aTable.Columns.Add(Sd);
+                    aTable.Columns.Add(Qm);
+                    try
+                    {
+                        C = new Class1();
+                        double sd_0 = 10;
+                        for (int i = 0; i < 1001; i++)
+                        {
+                            MWNumericArray sd = new MWNumericArray(sd_0);
+                            MWArray A = C.fun_main(p1_0, Qm_0, eps, sd, R, d, nd, r1, F, L1, L2, I1, I2, A1, A2);
+                            double[,] AA = (double[,])A.ToArray();
+                            DataRow row = aTable.NewRow();
+                            row["Sd"] = sd_0;
+                            row["Qm"] = AA[0, 0];
+                            aTable.Rows.Add(row);
+                            sd_0 = sd_0 + 0.1;
+                        }
+                        XmlHelper.SaveDataToExcelFile(aTable, args[2]);
+                        Console.WriteLine("导出完成！");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("导出异常：" + ex.Message);
+                    }
+                    finally
+                    {
+                        if (C != null)
+                            C.Dispose();
                     }
                 }
 

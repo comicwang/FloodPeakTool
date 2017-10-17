@@ -92,8 +92,10 @@ namespace FloodPeakToolUI.UI
             panel1.Location = new Point((this.Width - panel1.Width) / 2, 0);
         }
 
+        private string _filePath = string.Empty;
         public void BindResult(string filePath, IntPtr windowPtr)
         {
+            _filePath = filePath;
             //开启一个线程来读取xml文件，因为数据是在图形绘制完之后才出来
             Thread thread = new Thread(new ThreadStart(delegate {            
                 while(true)
@@ -160,6 +162,32 @@ namespace FloodPeakToolUI.UI
                 MoveWindow(windowPtr, 0, 0, pr.right - pr.left, pr.bottom - pr.top, true);
                 ShowWindow(windowPtr, _SW.SW_SHOW);
                 _currentPtr = windowPtr;
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Excel文件|*.xls";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.Append(MethodName.SdQmTable);
+                builder.Append(" ");
+                builder.Append(Path.GetDirectoryName(_filePath));
+                builder.Append(" ");
+                builder.Append(dialog.FileName);
+                string result = RunExeHelper.RunMethodExit(builder.ToString());
+                //输出字符串过多！
+                if (result.Contains("导出完成"))
+                {
+                    MsgBox.ShowInfo("导出完成！");
+                    System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(dialog.FileName));
+                }
+                else
+                {
+                    MsgBox.ShowInfo(result);
+                }
             }
         }
     }
