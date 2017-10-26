@@ -66,7 +66,6 @@ namespace FloodPeakToolUI.UI
             }
         }
 
-
         private void txtState_TextChanged(object sender, EventArgs e)
         {
             btnCaculate.Enabled = !string.IsNullOrEmpty(txtState.Text) && !string.IsNullOrWhiteSpace(txtState.Text);

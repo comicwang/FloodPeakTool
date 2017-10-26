@@ -219,14 +219,24 @@ namespace FloodPeakUtility.UI
             _tabControl.SelectedTab = _tabControl.Tabs[title];
         }
 
-        private bool ContainsTab(string tabName)
+        /// <summary>
+        /// 将制定路径的shp文件加载到图层管理
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void AddShpLineLayerByPath(string filePath)
         {
-            foreach (TabItem item in _tabControl.Tabs)
-            {
-                if (item.Name == tabName)
-                    return true;
-            }
-            return false;
+            ShpLineLayer layer = LayerLoader.LoadLineShpDefault(filePath);
+            this.AddShpLineLayer(layer);
+            NodeModel model = new NodeModel();
+            model.PNode = advTreeMain.Nodes[0].Name;
+            model.NodeName = layer.LayerName;
+            model.ShowCheck = true;
+            model.ImageIndex = 2;
+            model.NodeId = Guid.NewGuid().ToString();
+            model.CanRemove = true;
+            model.Path = filePath;
+            model.BigType = GeometryBigType.Line;
+            advTreeMain.Nodes[0].Nodes.Add(CreateNode(model));
         }
 
         #endregion
@@ -367,6 +377,78 @@ namespace FloodPeakUtility.UI
         }
 
         /// <summary>
+        /// 保存矢量数据（有BUG！）
+        /// </summary>
+        private void SaveLayerConfig()
+        {
+            //保存矢量图层信息
+            foreach (Node node in advTreeMain.Nodes[0].Nodes)
+            {
+                NodeModel model = node.Tag as NodeModel;
+                if (model != null)
+                {
+                    //矢量文件
+                    if (model.ImageIndex == 2)
+                    {
+                        switch (model.BigType)
+                        {
+                            case GeometryBigType.Line:
+                                ShpLineLayerList lineList = ShpLineConfig.ReadConfigFile();
+                                if (lineList != null)
+                                {
+                                    for (int i = 0; i < lineList.Count; i++)
+                                    {
+                                        ShpLineLayer lyr = lineList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpLineConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            case GeometryBigType.None:
+                                break;
+                            case GeometryBigType.Point:
+                                if (_shpLoader.PntLyrList != null)
+                                {
+                                    for (int i = 0; i < _shpLoader.PntLyrList.Count; i++)
+                                    {
+                                        ShpPointLayer lyr = _shpLoader.PntLyrList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpPointConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            case GeometryBigType.Polygon:
+                                if (_shpLoader.PolyLyrList != null)
+                                {
+                                    for (int i = 0; i < _shpLoader.PolyLyrList.Count; i++)
+                                    {
+                                        ShpPolygonLayer lyr = _shpLoader.PolyLyrList[i];
+                                        if (lyr.LayerName == model.NodeName)
+                                        {
+                                            lyr.Visible = node.Checked;
+                                            ShpPolygonConfig.UpdateLayer(model.NodeName, lyr);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 初始化化树控件
         /// </summary>
         private void InitializeTree()
@@ -415,7 +497,7 @@ namespace FloodPeakUtility.UI
             temp.CheckBoxVisible = model.ShowCheck;
             if (temp.CheckBoxVisible)
             {
-                bool visiable = this.GetLayerVisiable(model.NodeName);
+                bool visiable = this.GetLayerVisiableInConfig(model.NodeName);
                 if (visiable)
                     temp.Checked = true;
             }
@@ -512,6 +594,41 @@ namespace FloodPeakUtility.UI
                     return lyr.Visible;
                 }
             }
+            return false;
+        }
+
+        private bool GetLayerVisiableInConfig(string lyrName)
+        {
+            ShpLineLayerList lineList = ShpLineConfig.ReadConfigFile();
+            if (lineList != null)
+                foreach (ShpLineLayer lineLayer in lineList.LayerList)
+                {
+                    if (lineLayer.LayerName == lyrName)
+                    {
+                        return lineLayer.Visible;
+                    }
+                }
+
+            ShpPointLayerList PointList = ShpPointConfig.ReadConfigFile();
+            if (PointList != null)
+                foreach (ShpPointLayer PointLayer in PointList.LayerList)
+                {
+                    if (PointLayer.LayerName == lyrName)
+                    {
+                        return PointLayer.Visible;
+                    }
+                }
+
+            ShpPolygonLayerList PolygonList = ShpPolygonConfig.ReadConfigFile();
+            if (PolygonList != null)
+                foreach (ShpPolygonLayer PolygonLayer in PolygonList.LayerList)
+                {
+                    if (PolygonLayer.LayerName == lyrName)
+                    {
+                        return PolygonLayer.Visible;
+                    }
+                }
+
             return false;
         }
 
@@ -625,6 +742,38 @@ namespace FloodPeakUtility.UI
             }
         }
 
+        private bool ContainsTab(string tabName)
+        {
+            foreach (TabItem item in _tabControl.Tabs)
+            {
+                if (item.Name == tabName)
+                    return true;
+            }
+            return false;
+        }
+
+        private void AddShpLineLayer(ShpLineLayer lineLyr)
+        {
+            string name = lineLyr.LayerName;
+            //图层去重
+            NodeModel checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
+            if (checkModel != null)
+            {
+                MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
+                return;
+            }
+            string path = lineLyr.ShpLayerPath;
+            if (this.ShpLineLyrExits(lineLyr))
+            {
+                ShpLineConfig.DeleteLayer(lineLyr.LayerName);
+                _shpLoader.LineLyrList.Remove(lineLyr.LayerName);
+                this.DeleteLayerByName(lineLyr.LayerName);
+            }
+            ShpLineConfig.AppendLayer(lineLyr);
+            _shpLoader.LoadShpLineLayer(lineLyr);
+        }
+
+
         #endregion
 
         #region events
@@ -732,24 +881,9 @@ namespace FloodPeakUtility.UI
                         _shpLoader.LoadShpPointLayer(pntLyr);
                         break;
                     case GeometryBigType.Line:
+                        this.AddShpLineLayer(frm.LineLayer);
                         name = frm.LineLayer.LayerName;
-                        //图层去重
-                        checkModel = _projectModel.Nodes.Where(t => t.PNode == Guids.TCGL && t.NodeName == name).FirstOrDefault();
-                        if (checkModel != null)
-                        {
-                            MsgBox.ShowInfo("当前名称的图层已经存在,请重命名或者导入其他数据");
-                            return;
-                        }
                         path = frm.LineLayer.ShpLayerPath;
-                        ShpLineLayer lineLyr = frm.LineLayer;
-                        if (this.ShpLineLyrExits(lineLyr))
-                        {
-                            ShpLineConfig.DeleteLayer(lineLyr.LayerName);
-                            _shpLoader.LineLyrList.Remove(lineLyr.LayerName);
-                            this.DeleteLayerByName(lineLyr.LayerName);
-                        }
-                        ShpLineConfig.AppendLayer(lineLyr);
-                        _shpLoader.LoadShpLineLayer(lineLyr);
                         break;
                     case GeometryBigType.Polygon:
                         name = frm.PolyLayer.LayerName;

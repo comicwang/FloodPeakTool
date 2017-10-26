@@ -135,11 +135,13 @@ namespace FloodPeakUtility.UI
                     _form.Invoke(new Action(() =>
                     {
                         _form.SetProgress(visiable);
+                        _form.SetProgress(0);
                     }));
                 }
                 else
                 {
                     _form.SetProgress(visiable);
+                    _form.SetProgress(0);
                 }
             }
             catch { }

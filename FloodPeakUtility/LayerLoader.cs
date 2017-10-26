@@ -1,8 +1,10 @@
 ﻿using iTelluro.Explorer.DOMImport.Model;
+using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
 using iTelluro.GlobeEngine.DataSource.Layer;
 using iTelluro.GlobeEngine.MapControl3D;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -99,5 +101,27 @@ namespace FloodPeakUtility
             return dataLyr;
         }
 
+        /// <summary>
+        /// 输入主河槽
+        /// </summary>
+        /// <param name="lineLayerPath"></param>
+        /// <returns></returns>
+        public static ShpLineLayer LoadLineShpDefault(string lineLayerPath)
+        {
+            ShpLineLayer layer = new ShpLineLayer();
+            layer.BeginLevelSize = 2.25f;
+            layer.LayerName = Path.GetFileNameWithoutExtension(lineLayerPath);
+            layer.LevelNum = 12;
+            layer.ShpLayerPath = lineLayerPath;
+            layer.Symbols.SymbolType = ShpSymbolType.DefaultSymbol;
+            layer.Symbols.DefaultSymbol = new LineSymbol
+            {
+                LineColor = Color.DeepSkyBlue,
+                LineWidth = 1.5f,
+                Opacity = 255
+            };
+            layer.Visible = true;
+            return layer;
+        }
     }
 }

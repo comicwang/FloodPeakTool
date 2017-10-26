@@ -105,6 +105,7 @@
             this.btnGetHeWang.TabIndex = 2;
             this.btnGetHeWang.Text = "河网提取";
             this.btnGetHeWang.UseVisualStyleBackColor = true;
+            this.btnGetHeWang.Visible = false;
             this.btnGetHeWang.Click += new System.EventHandler(this.btnGetHeWang_Click);
             // 
             // button1

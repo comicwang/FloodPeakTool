@@ -21,6 +21,10 @@ using OSGeo.GDAL;
 using iTelluro.DataTools.Utility.DEM;
 using OSGeo.OGR;
 using iTelluro.DataTools.Utility.GIS;
+using iTelluro.GlobeEngine.DataSource.Layer;
+using iTelluro.GeometrySymbol.SymbolModel;
+using iTelluro.Explorer.Vector;
+using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
 
 namespace FloodPeakToolUI.UI
 {
@@ -168,9 +172,11 @@ namespace FloodPeakToolUI.UI
                 FormOutput.AppendLog(string.Format("共得到{0}条支流...", results.Count));
 
                 FormOutput.AppendLog("开始获取主河槽，并计算其长度...");
-               // _mainRiver = null;
+              
                 riverlength = CaculateRiver(results, args[1], ref _mainRiver);
+
                 riverlength = riverlength / 1000;
+
                 FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
 
                 FormOutput.AppendLog("开始计算主河纵降比...");
@@ -205,6 +211,11 @@ namespace FloodPeakToolUI.UI
             if (Convert.ToDouble(result[2]) != 0)
                 textBox3.Text = result[2].ToString();
             FormOutput.AppendProress(false);
+            //输出主河槽到临时目录并且加载到三维球和节点
+            string tempPath = Path.Combine(Path.GetTempPath(), "主河槽" + DateTime.Now.ToString("HH_mm") + ".shp");
+            ShpReader shp = new ShpReader(fileChooseControl3.FilePath);
+            CreateShp(tempPath, _mainRiver, shp.SpatialRef);
+            _parent.AddShpLineLayerByPath(tempPath);
         }
 
         private Dictionary<Point2d, Geometry> CopyDicGeometry(Dictionary<Point2d, Geometry> source)
@@ -298,7 +309,6 @@ namespace FloodPeakToolUI.UI
                 }
             }
         }
-
 
         private double GetLength(Point3d startPoint, Point3d endPoint)
         {
@@ -481,7 +491,7 @@ namespace FloodPeakToolUI.UI
                 poLayer.CreateFeature(feature);
             }
             feature.Dispose();
-            poDs.Dispose();
+            poDs.Dispose();        
         }
 
         public double ReadBand(RasterReader reader, int col, int row)
@@ -502,7 +512,6 @@ namespace FloodPeakToolUI.UI
             double l = Math.Sqrt((to.X - from.X) * (to.X - from.X) + (to.Y - from.Y) * (to.Y - from.Y));
             return l;
         }
-
 
         #endregion
 
