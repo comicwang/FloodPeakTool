@@ -171,7 +171,7 @@ namespace FloodPeakToolUI.UI
                 FormOutput.AppendLog("开始获取主河槽，并计算其长度...");
                // _mainRiver = null;
                 riverlength = CaculateRiver(results, args[1], ref _mainRiver);
-
+                riverlength = riverlength / 1000;
                 FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
 
                 FormOutput.AppendLog("开始计算主河纵降比...");

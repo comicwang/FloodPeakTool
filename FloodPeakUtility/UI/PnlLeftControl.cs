@@ -123,10 +123,7 @@ namespace FloodPeakUtility.UI
             : this()
         {
             _globeView = app;
-            _domLoader = new DomLoader(app);
-            _shpLoader = new ShpLayerLoader(app);
-            //加载所有配置文件的shp图层信息
-            _shpLoader.LoadConfigShpLayers();
+            _domLoader = new DomLoader(app);          
         }
 
         public PnlLeftControl(GlobeView globeView, DevComponents.DotNetBar.TabControl tabControl)
@@ -357,6 +354,16 @@ namespace FloodPeakUtility.UI
 
                 _projectModel.Nodes = lstNodes.ToArray();
             }
+
+            //初始化三位球图层信息-初始化图层信息配置文件的路径
+            _globeView.GlobeLayers.DataLayers.Clear();
+            _globeView.GlobeLayers.FloatLayers.Clear();
+            ShpLineConfig.ConfigPath = Path.Combine(forlder, "ShpLineLayer.xml");
+            ShpPointConfig.ConfigPath = Path.Combine(forlder, "ShpPointLayer.xml");
+            ShpPolygonConfig.ConfigPath = Path.Combine(forlder, "ShpPolygonLayer.xml");
+            _shpLoader = new ShpLayerLoader(_globeView);
+            _shpLoader.LoadConfigShpLayers();
+
         }
 
         /// <summary>

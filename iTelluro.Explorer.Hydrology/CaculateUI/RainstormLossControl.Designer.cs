@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.btnGetHeWang = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.txtr1 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -43,7 +45,7 @@
             this.fileChooseControl1 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl3 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl4 = new FloodPeakToolUI.UI.FileChooseControl();
-            this.label3 = new System.Windows.Forms.Label();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +53,7 @@
             // 
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.btnGetHeWang);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.txtr1);
             this.groupBox1.Controls.Add(this.textBox3);
@@ -69,11 +72,21 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输出";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label3.Location = new System.Drawing.Point(17, 38);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(83, 12);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "暴雨折减系数N";
+            // 
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button2.Location = new System.Drawing.Point(158, 106);
+            this.button2.Location = new System.Drawing.Point(161, 106);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(67, 26);
             this.button2.TabIndex = 2;
@@ -81,12 +94,25 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // btnGetHeWang
+            // 
+            this.btnGetHeWang.Enabled = false;
+            this.btnGetHeWang.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGetHeWang.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnGetHeWang.Location = new System.Drawing.Point(88, 106);
+            this.btnGetHeWang.Name = "btnGetHeWang";
+            this.btnGetHeWang.Size = new System.Drawing.Size(67, 26);
+            this.btnGetHeWang.TabIndex = 2;
+            this.btnGetHeWang.Text = "河网提取";
+            this.btnGetHeWang.UseVisualStyleBackColor = true;
+            this.btnGetHeWang.Click += new System.EventHandler(this.btnGetHeWang_Click);
+            // 
             // button1
             // 
             this.button1.Enabled = false;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.button1.Location = new System.Drawing.Point(34, 106);
+            this.button1.Location = new System.Drawing.Point(16, 106);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(67, 26);
             this.button1.TabIndex = 2;
@@ -146,11 +172,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(41, 17);
+            this.label1.Location = new System.Drawing.Point(11, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.Size = new System.Drawing.Size(89, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "流域面积F";
+            this.label1.Text = "流域面积F(k㎡)";
             // 
             // backgroundWorker1
             // 
@@ -201,15 +227,10 @@
             this.fileChooseControl4.Size = new System.Drawing.Size(240, 24);
             this.fileChooseControl4.TabIndex = 4;
             // 
-            // label3
+            // backgroundWorker2
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label3.Location = new System.Drawing.Point(17, 38);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 12);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "暴雨折减系数N";
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
             // 
             // RainstormLossControl
             // 
@@ -246,5 +267,7 @@
         private FileChooseControl fileChooseControl3;
         private FileChooseControl fileChooseControl4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnGetHeWang;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
     }
 }

@@ -70,7 +70,7 @@
             // 
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button3.Location = new System.Drawing.Point(149, 106);
+            this.button3.Location = new System.Drawing.Point(157, 106);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(77, 26);
             this.button3.TabIndex = 5;
@@ -82,7 +82,7 @@
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button2.Location = new System.Drawing.Point(79, 106);
+            this.button2.Location = new System.Drawing.Point(84, 106);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(67, 26);
             this.button2.TabIndex = 4;
@@ -134,7 +134,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label3.Location = new System.Drawing.Point(7, 79);
+            this.label3.Location = new System.Drawing.Point(5, 79);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 12);
             this.label3.TabIndex = 0;
@@ -144,7 +144,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(7, 54);
+            this.label2.Location = new System.Drawing.Point(5, 54);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 12);
             this.label2.TabIndex = 0;
@@ -154,11 +154,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(31, 29);
+            this.label1.Location = new System.Drawing.Point(5, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.Size = new System.Drawing.Size(101, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "主河槽长度L1";
+            this.label1.Text = "主河槽长度L1(km)";
             // 
             // backgroundWorker1
             // 

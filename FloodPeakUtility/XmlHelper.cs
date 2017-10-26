@@ -163,5 +163,38 @@ namespace FloodPeakUtility
             catch (Exception ex)
             { }
         }
+
+        /// <summary>
+        /// 保存二位数组到Excel中
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="filePath"></param>
+        public static void SaveDataToExcelFile(double[,] matrix, string filePath)
+        {
+            object misValue = System.Reflection.Missing.Value;
+            Application xlApp = new Application();
+            Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+            Worksheet xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            if (matrix.Length > 0)
+                //添加内容
+                for (int row = 0; row < matrix.GetLength(0); row++)
+                {
+                    for (int col = 0; col < matrix.GetLength(1); col++)
+                    {
+                        xlWorkSheet.Cells[row + 1, col + 1] = matrix[row, col];
+                    }
+                }
+            try
+            {
+                xlWorkBook.SaveAs(filePath, XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+            }
+            catch (Exception ex)
+            { }
+        }
+
+
     }
 }

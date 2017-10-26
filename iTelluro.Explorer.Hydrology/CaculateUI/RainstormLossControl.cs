@@ -21,6 +21,7 @@ using OSGeo.GDAL;
 using iTelluro.GlobeEngine.Mathematics;
 using iTelluro.GlobeEngine.Graphics3D;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace FloodPeakToolUI.UI
 {
@@ -30,43 +31,25 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
+        private Hydrology _hydrology = null;
+        private DateTime _currentTime = DateTime.Now;
         public RainstormLossControl()
         {
             InitializeComponent();
+            _hydrology = new Hydrology();
         }
 
+        /// <summary>
+        /// 计算
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
-                //保存计算参数
-                List<NodeModel> result = new List<NodeModel>();
-                NodeModel model = fileChooseControl1.SelectedValue;
-                if (model != null)
-                {
-                    CopyAddNodeModel(result, model);
-                }
-
-                NodeModel model1 = fileChooseControl2.SelectedValue;
-                if (model1 != null)
-                {
-                    CopyAddNodeModel(result, model1);
-                }
-
-                NodeModel model2 = fileChooseControl3.SelectedValue;
-                if (model2 != null)
-                {
-                    CopyAddNodeModel(result, model2);
-                }
-
-                NodeModel model3 = fileChooseControl4.SelectedValue;
-                if (model3 != null)
-                {
-                    CopyAddNodeModel(result, model3);
-                }
-                _parent.OporateCaculateNode(Guids.BYSS, result.ToArray());
-
+                SaveCaculateArg();
 
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
@@ -80,6 +63,39 @@ namespace FloodPeakToolUI.UI
             {
                 FormOutput.AppendLog("当前后台正在计算...");
             }
+        }
+
+        /// <summary>
+        /// 保存计算的GIS文件参数
+        /// </summary>
+        private void SaveCaculateArg()
+        {
+            //保存计算参数
+            List<NodeModel> result = new List<NodeModel>();
+            NodeModel model = fileChooseControl1.SelectedValue;
+            if (model != null)
+            {
+                CopyAddNodeModel(result, model);
+            }
+
+            NodeModel model1 = fileChooseControl2.SelectedValue;
+            if (model1 != null)
+            {
+                CopyAddNodeModel(result, model1);
+            }
+
+            NodeModel model2 = fileChooseControl3.SelectedValue;
+            if (model2 != null)
+            {
+                CopyAddNodeModel(result, model2);
+            }
+
+            NodeModel model3 = fileChooseControl4.SelectedValue;
+            if (model3 != null)
+            {
+                CopyAddNodeModel(result, model3);
+            }
+            _parent.OporateCaculateNode(Guids.BYSS, result.ToArray());
         }
 
         private void CopyAddNodeModel(List<NodeModel> lstModels, NodeModel model)
@@ -97,6 +113,7 @@ namespace FloodPeakToolUI.UI
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = File.Exists(fileChooseControl1.FilePath);
+            btnGetHeWang.Enabled = File.Exists(fileChooseControl1.FilePath);
         }
 
         /// <summary>
@@ -117,6 +134,28 @@ namespace FloodPeakToolUI.UI
             XmlHelper.Serialize<BYSSResult>(result, _xmlPath);
             MsgBox.ShowInfo("保存成功！");
         }
+
+        /// <summary>
+        /// 河网提取
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGetHeWang_Click(object sender, EventArgs e)
+        {
+            if (!backgroundWorker1.IsBusy)
+            {
+                FormOutput.AppendLog("开始计算...");
+                _currentTime = DateTime.Now;
+                SaveCaculateArg();
+                string srcPath = fileChooseControl1.FilePath;
+                backgroundWorker2.RunWorkerAsync(srcPath);
+            }
+            else
+            {
+                FormOutput.AppendLog("当前后台正在计算...");
+            }
+        }
+
 
         #region 计算暴雨损失系数
 
@@ -314,6 +353,8 @@ namespace FloodPeakToolUI.UI
                 }
                 double _cellArea = CaculateCellAera(raster, _widthNum, _heightNum);
                 //坡度计算
+                if (_resultSurfaceArea == null)
+                    _resultSurfaceArea = 0;
                 for (int i = 0; i < _widthNum; i++)
                 {
                     for (int j = 0; j < _heightNum; j++)
@@ -483,5 +524,74 @@ namespace FloodPeakToolUI.UI
 
         #endregion
 
+        #region 河网提取
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string scrPath = e.Argument.ToString();
+            string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
+            //计算流向
+           // FormOutput.AppendLog("开始计算流向..");
+          //  bool result = _hydrology.FlowDirection(scrPath, tempPath);
+            //if(!result)
+            //{
+            //    FormOutput.AppendLog("计算流向失败..");
+            //    return;
+            //}
+            //输出矩阵
+           // RasterReader read = new RasterReader(tempPath);
+           // double[,] matrix = _hydrology.GetElevation(read);
+           // XmlHelper.SaveDataToExcelFile(matrix,@"D:\1.xls");
+            FormOutput.AppendLog("计算流向完成.");
+            //填充洼地 将流向为-1的设置为0
+            //scrPath = tempPath;
+            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
+            //FormOutput.AppendLog("开始填充洼地..");
+            //result = _hydrology.Fill(scrPath, tempPath);
+            //if (!result)
+            //{
+            //    FormOutput.AppendLog("填充洼地失败..");
+            //    return;
+            //}
+            //FormOutput.AppendLog("填充洼地完成.");
+
+            //计算汇流总数 --阈值默认为800
+            //scrPath = tempPath;
+            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp2.tif");
+            int FlowThreshold =int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
+            FormOutput.AppendLog("开始计算汇流总数..");
+            bool result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
+            if (!result)
+            {
+                FormOutput.AppendLog("计算汇流总数失败..");
+                return;
+            }
+            FormOutput.AppendLog("计算汇流总数完成.");
+
+            //提取河网
+            scrPath = tempPath;
+            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "hewang.tif");
+            FormOutput.AppendLog("开始提取河网..");
+            result = _hydrology.Raster2Polyline(scrPath, tempPath);
+            if (!result)
+            {
+                FormOutput.AppendLog("提取河网失败..");
+                return;
+            }
+            FormOutput.AppendLog("提取河网完成.");
+            e.Result = tempPath;
+
+        }
+
+        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if(e.Result!=null)
+            {
+                FormOutput.AppendLog(string.Format("提取结束,共耗时{0}秒..", (DateTime.Now - _currentTime).TotalSeconds));
+                System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(e.Result.ToString()));
+            }
+        }
+
+        #endregion
     }
 }

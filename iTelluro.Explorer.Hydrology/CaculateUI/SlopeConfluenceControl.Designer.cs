@@ -67,7 +67,7 @@
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button2.Location = new System.Drawing.Point(166, 105);
+            this.button2.Location = new System.Drawing.Point(168, 105);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(67, 26);
             this.button2.TabIndex = 5;
@@ -139,11 +139,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(28, 29);
+            this.label1.Location = new System.Drawing.Point(4, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 12);
+            this.label1.Size = new System.Drawing.Size(113, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "流域平均坡长L2";
+            this.label1.Text = "流域平均坡长L2(km)";
             // 
             // backgroundWorker1
             // 

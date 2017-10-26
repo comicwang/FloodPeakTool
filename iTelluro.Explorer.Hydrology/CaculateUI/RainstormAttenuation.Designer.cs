@@ -89,7 +89,7 @@
             this.btnCaculate.Enabled = false;
             this.btnCaculate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCaculate.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnCaculate.Location = new System.Drawing.Point(159, 50);
+            this.btnCaculate.Location = new System.Drawing.Point(161, 50);
             this.btnCaculate.Name = "btnCaculate";
             this.btnCaculate.Size = new System.Drawing.Size(67, 26);
             this.btnCaculate.TabIndex = 30;
