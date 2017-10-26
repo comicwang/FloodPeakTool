@@ -29,16 +29,37 @@ namespace FloodPeakToolUI.UI
         private GlobeView _globeView = null;
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
+
         public SlopeConfluenceControl()
         {
             InitializeComponent();
         }
 
+        private void CopyAddNodeModel(List<NodeModel> lstModels, NodeModel model)
+        {
+            NodeModel temp = new NodeModel();
+            temp.PNode = Guids.PMHL;
+            temp.ShowCheck = false;
+            temp.ImageIndex = model.ImageIndex;
+            temp.NodeId = Guid.NewGuid().ToString();
+            temp.NodeName = model.NodeName;
+            temp.CanRemove = true;
+            lstModels.Add(temp);
+        }
+
+        #region Events
+
+        /// <summary>
+        /// 开始计算
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
+                FormOutput.AppendProress(true);
                 //保存计算参数
                 List<NodeModel> result = new List<NodeModel>();
                 NodeModel model = fileChooseControl1.SelectedValue;
@@ -74,22 +95,31 @@ namespace FloodPeakToolUI.UI
             }
         }
 
-        private void CopyAddNodeModel(List<NodeModel> lstModels, NodeModel model)
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
         {
-            NodeModel temp = new NodeModel();
-            temp.PNode = Guids.PMHL;
-            temp.ShowCheck = false;
-            temp.ImageIndex = model.ImageIndex;
-            temp.NodeId = Guid.NewGuid().ToString();
-            temp.NodeName = model.NodeName;
-            temp.CanRemove = true;
-            lstModels.Add(temp);
+            //获取结果值
+            PMHLResult result = new PMHLResult()
+            {
+                L2 = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
+                l2 = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
+                A2 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
+            };
+            //保存结果
+            XmlHelper.Serialize<PMHLResult>(result, _xmlPath);
+            MsgBox.ShowInfo("保存成功！");
         }
 
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = File.Exists(fileChooseControl1.FilePath) || File.Exists(fileChooseControl2.FilePath) || File.Exists(fileChooseControl3.FilePath);
         }
+
+        #endregion
 
         #region 计算流域平均坡长和坡度,以及坡面流速系数
 
@@ -102,13 +132,14 @@ namespace FloodPeakToolUI.UI
             double avgSlope = 0;
             if (File.Exists(args[0]) && File.Exists(args[1]))
             {
-                FormOutput.AppendLog("开始计算线的交点...");
+                FormOutput.AppendLog("开始获取线的交点...");
                 RasterReader reader = new RasterReader(args[1]);
                 List<Point3d> pts = CalPoints(args[0],reader);
                 FormOutput.AppendLog("开始计算平均坡度和坡长...");
                 CalAvgSlopeLength(pts, reader, ref avgLength, ref avgSlope);
                 reader.Dispose();
-                FormOutput.AppendLog("结果---平均坡长：" + avgLength.ToString("f3") + "；平均坡度：" + avgSlope.ToString("f3"));
+                FormOutput.AppendLog("平均坡长：" + avgLength.ToString("f3"));
+                FormOutput.AppendLog("平均坡度：" + avgSlope.ToString("f3"));
             }
             double? r = null;
             if (File.Exists(args[1]) && File.Exists(args[2]))
@@ -121,11 +152,6 @@ namespace FloodPeakToolUI.UI
             e.Result = new double[] { avgLength, avgSlope, r.GetValueOrDefault(0) };
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //progressBar1.Value = e.ProgressPercentage;
-        }
-
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             double[] result = e.Result as double[];
@@ -135,6 +161,7 @@ namespace FloodPeakToolUI.UI
                 textBox2.Text = result[1].ToString();
             if (Convert.ToDouble(result[2]) != 0)
                 textBox3.Text = result[2].ToString();
+            FormOutput.AppendProress(false);
         }
 
         /// <summary>
@@ -167,6 +194,7 @@ namespace FloodPeakToolUI.UI
                     totalSlope += singleSlope;
                     totalLength += singleLength;
                     count = points.Count * resultPt.Count;
+                    FormOutput.AppendProress(((i + 1) * 100) / points.Count);
                 }
                 avglength = totalLength /(1000*count);
                 avgslope = totalSlope * 1000 / points.Count;
@@ -492,20 +520,6 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //获取结果值
-            PMHLResult result = new PMHLResult()
-            {
-                L2 = string.IsNullOrEmpty(textBox1.Text) ? 0 : Convert.ToDouble(textBox1.Text),
-                l2 = string.IsNullOrEmpty(textBox2.Text) ? 0 : Convert.ToDouble(textBox2.Text),
-                A2 = string.IsNullOrEmpty(textBox3.Text) ? 0 : Convert.ToDouble(textBox3.Text)
-            };
-            //保存结果
-            XmlHelper.Serialize<PMHLResult>(result, _xmlPath);
-            MsgBox.ShowInfo("保存成功！");
-        }
 
     }
 }

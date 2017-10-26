@@ -55,6 +55,7 @@
             // 
             // btnCaculate
             // 
+            this.btnCaculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCaculate.Enabled = false;
             this.btnCaculate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCaculate.Location = new System.Drawing.Point(161, 59);

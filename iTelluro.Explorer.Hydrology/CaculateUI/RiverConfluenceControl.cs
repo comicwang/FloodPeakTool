@@ -51,6 +51,18 @@ namespace FloodPeakToolUI.UI
 
         #endregion
 
+        private void CopyAddNodeModel(List<NodeModel> lstModels, NodeModel model)
+        {
+            NodeModel temp = new NodeModel();
+            temp.PNode = Guids.HCHL;
+            temp.ShowCheck = false;
+            temp.ImageIndex = model.ImageIndex;
+            temp.NodeId = Guid.NewGuid().ToString();
+            temp.NodeName = model.NodeName;
+            temp.CanRemove = true;
+            lstModels.Add(temp);
+        }
+
         #region 事件
 
         /// <summary>
@@ -76,6 +88,7 @@ namespace FloodPeakToolUI.UI
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
+                FormOutput.AppendProress(true);
                 //保存计算参数
                 List<NodeModel> result = new List<NodeModel>();
                 NodeModel model = fileChooseControl1.SelectedValue;
@@ -94,9 +107,7 @@ namespace FloodPeakToolUI.UI
                 {
                     CopyAddNodeModel(result, model2);
                 }
-
                 _parent.OporateCaculateNode(Guids.HCHL, result.ToArray());
-
 
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
@@ -109,18 +120,6 @@ namespace FloodPeakToolUI.UI
             {
                 FormOutput.AppendLog("当前后台正在计算...");
             }
-        }
-
-        private void CopyAddNodeModel(List<NodeModel> lstModels, NodeModel model)
-        {
-            NodeModel temp = new NodeModel();
-            temp.PNode = Guids.HCHL;
-            temp.ShowCheck = false;
-            temp.ImageIndex = model.ImageIndex;
-            temp.NodeId = Guid.NewGuid().ToString();
-            temp.NodeName = model.NodeName;
-            temp.CanRemove = true;
-            lstModels.Add(temp);
         }
 
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
@@ -205,6 +204,7 @@ namespace FloodPeakToolUI.UI
                 textBox2.Text = result[1].ToString();
             if (Convert.ToDouble(result[2]) != 0)
                 textBox3.Text = result[2].ToString();
+            FormOutput.AppendProress(false);
         }
 
         private Dictionary<Point2d, Geometry> CopyDicGeometry(Dictionary<Point2d, Geometry> source)
@@ -336,6 +336,7 @@ namespace FloodPeakToolUI.UI
             RasterReader reader = new RasterReader(tifPath);
             List<Point2d> pointList = new List<Point2d>();
             List<Point3d> gradientPoints = new List<Point3d>();
+            int percent=0;
             foreach (var item in mainRiver)
             {
                 for (int i = 0; i < item.Value.GetPointCount(); i++)
@@ -347,6 +348,8 @@ namespace FloodPeakToolUI.UI
                         gradientPoints.Add(new Point3d(item.Value.GetX(i), item.Value.GetY(i), GetElevationByPointInDEM(temp, reader)));
                     }
                 }
+                percent++;
+                FormOutput.AppendProress(50 + (percent * 50 / mainRiver.Count));
             }
             double length = 0;
             double z = 0;
@@ -395,15 +398,13 @@ namespace FloodPeakToolUI.UI
 
         private List<Dictionary<Point2d, Geometry>> GetAllRivers(string mainShp)
         {
-            //获取主河槽
-          
+            //获取主河槽          
             ShpReader shp = new ShpReader(mainShp);
             List<OSGeo.OGR.Feature> maxFeature = new List<OSGeo.OGR.Feature>();
             List<Geometry> geoList = null;
             List<Point2d> pts1 = GetRiverPoints(mainShp, out geoList);
             List<Dictionary<Point2d, Geometry>> dic = new List<Dictionary<Point2d, Geometry>>();
             GetLineByPoint(pts1[0], geoList, ref dic);
-
             return dic;
         }
 
@@ -414,6 +415,7 @@ namespace FloodPeakToolUI.UI
             double maxLength = 0;  //主河槽长度
             List<Point3d> gradientPoints = new List<Point3d>();
            // List<Point3d> gradientPoints1 = new List<Point3d>();
+            int percent = 0;
             foreach (var geoLength in dic)
             {
                 double tempLength = 0;
@@ -428,7 +430,7 @@ namespace FloodPeakToolUI.UI
                         if (!pointListLength.Contains(temp))
                         {
                             pointListLength.Add(temp);
-                            gradientPoints.Add(new Point3d(length.Value.GetX(i), length.Value.GetY(i),      GetElevationByPointInDEM(temp, reader)));
+                            gradientPoints.Add(new Point3d(length.Value.GetX(i), length.Value.GetY(i), GetElevationByPointInDEM(temp, reader)));
                         }
                     }
                 }
@@ -442,6 +444,8 @@ namespace FloodPeakToolUI.UI
                     mainRiver = geoLength;
                     //gradientPoints1 = gradientPoints;
                 }
+                percent++;
+                FormOutput.AppendProress(percent * 50 / dic.Count);
             }
             reader.Dispose();
             return maxLength;         

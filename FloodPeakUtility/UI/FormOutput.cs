@@ -41,34 +41,108 @@ namespace FloodPeakUtility.UI
         }
 
         /// <summary>
+        /// 设置进度条进度
+        /// </summary>
+        /// <param name="process"></param>
+        public void SetProgress(int process)
+        {
+            this.progressBar1.Value = process;
+        }
+
+        /// <summary>
+        /// 设置进度条状态
+        /// </summary>
+        /// <param name="visible"></param>
+        public void SetProgress(bool visible)
+        {
+            this.progressBar1.Visible = visible;
+        }
+
+        /// <summary>
         /// 记录输出信息
         /// </summary>
         /// <param name="content">日志信息</param>
         public static void AppendLog(string content)
         {
-            if (_form == null || _form.IsDisposed)
+            try
             {
-                _form = new FormOutput();
-                //_form.StartPosition = FormStartPosition.CenterScreen;
+                if (_form == null || _form.IsDisposed)
+                {
+                    _form = new FormOutput();
+                    _form.BindConsole();
+                }
+                if (_form.InvokeRequired)
+                {
+                    _form.Invoke(new Action(() =>
+                        {
+                            _form.Show();
+                            _form.WindowState = FormWindowState.Normal;
+                            _form.Activate();
+                        }));
+                }
+                else
+                {
+                    _form.Show();
+                    _form.WindowState = FormWindowState.Normal;
+                    _form.Activate();
+                }
+                MyConsole.AppendLine(content);
             }
-            if (_form.InvokeRequired)
+            catch { }
+        }
+
+        /// <summary>
+        /// 设置进度条状态值
+        /// </summary>
+        /// <param name="percent"></param>
+        public static void AppendProress(int percent)
+        {
+            try
             {
-                _form.Invoke(new Action(() =>
+                if (_form == null || _form.IsDisposed)
+                {
+                    return;
+                }
+                if (_form.InvokeRequired)
+                {
+                    _form.Invoke(new Action(() =>
+                        {
+                            _form.SetProgress(percent);
+                        }));
+                }
+                else
+                {
+                    _form.SetProgress(percent);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 设置进度条可见状态
+        /// </summary>
+        /// <param name="visiable"></param>
+        public static void AppendProress(bool visiable)
+        {
+            try
+            {
+                if (_form == null || _form.IsDisposed)
+                {
+                    return;
+                }
+                if (_form.InvokeRequired)
+                {
+                    _form.Invoke(new Action(() =>
                     {
-                        _form.BindConsole();
-                        _form.Show();
-                        _form.WindowState = FormWindowState.Normal;
-                        _form.Activate();
+                        _form.SetProgress(visiable);
                     }));
+                }
+                else
+                {
+                    _form.SetProgress(visiable);
+                }
             }
-            else
-            {
-                _form.BindConsole();
-                _form.Show();
-                _form.WindowState = FormWindowState.Normal;
-                _form.Activate();
-            }
-            MyConsole.AppendLine(content);
+            catch { }
         }
 
         private void buttonItem2_Click(object sender, EventArgs e)
@@ -105,6 +179,9 @@ namespace FloodPeakUtility.UI
                     Y = this.Location.Y
 
                 }, Path.Combine(Application.StartupPath, ConfigNames.OutputLocation));
+
+            this.Hide();
+            e.Cancel = true;
         }
 
         #region

@@ -40,32 +40,6 @@ namespace FloodPeakToolUI.UI
         }
 
         /// <summary>
-        /// 计算
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (!backgroundWorker1.IsBusy)
-            {
-                FormOutput.AppendLog("开始计算...");
-                SaveCaculateArg();
-
-                //获取计算参数
-                string tifPath = fileChooseControl1.FilePath;//影像路径
-                string areaShp = fileChooseControl2.FilePath;//流域面积shp
-                string RShp = fileChooseControl3.FilePath;//系数R
-                string rShp = fileChooseControl4.FilePath;//指数r
-                //progressBar1.Visible = true;
-                backgroundWorker1.RunWorkerAsync(new string[] { tifPath, areaShp, RShp, rShp });
-            }
-            else
-            {
-                FormOutput.AppendLog("当前后台正在计算...");
-            }
-        }
-
-        /// <summary>
         /// 保存计算的GIS文件参数
         /// </summary>
         private void SaveCaculateArg()
@@ -110,11 +84,41 @@ namespace FloodPeakToolUI.UI
             lstModels.Add(temp);
         }
 
+        #region Events
+
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = File.Exists(fileChooseControl1.FilePath);
             btnGetHeWang.Enabled = File.Exists(fileChooseControl1.FilePath);
         }
+
+        /// <summary>
+        /// 计算
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!backgroundWorker1.IsBusy)
+            {
+                FormOutput.AppendLog("开始计算...");
+                FormOutput.AppendProress(true);
+                _currentTime = DateTime.Now;
+                SaveCaculateArg();
+                //获取计算参数
+                string tifPath = fileChooseControl1.FilePath;//影像路径
+                string areaShp = fileChooseControl2.FilePath;//流域面积shp
+                string RShp = fileChooseControl3.FilePath;//系数R
+                string rShp = fileChooseControl4.FilePath;//指数r
+                //progressBar1.Visible = true;
+                backgroundWorker1.RunWorkerAsync(new string[] { tifPath, areaShp, RShp, rShp });
+            }
+            else
+            {
+                FormOutput.AppendLog("当前后台正在计算...");
+            }
+        }
+
 
         /// <summary>
         /// 保存
@@ -156,6 +160,7 @@ namespace FloodPeakToolUI.UI
             }
         }
 
+        #endregion
 
         #region 计算暴雨损失系数
 
@@ -169,11 +174,6 @@ namespace FloodPeakToolUI.UI
             string rshppath = args[3];
         
             RainLoss(Rshppath,rshppath, inputDemPath, shppath, ref e);
-        }
-
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            //progressBar1.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -192,6 +192,8 @@ namespace FloodPeakToolUI.UI
                 if (result[3].HasValue)
                     txtr1.Text = result[3].GetValueOrDefault(0).ToString("f3");
             }
+            FormOutput.AppendLog(string.Format("计算结束,共耗时{0}秒..", (DateTime.Now - _currentTime).TotalSeconds));
+            FormOutput.AppendProress(false);
         }
 
         /// <summary>
@@ -369,9 +371,11 @@ namespace FloodPeakToolUI.UI
                             double currentCellArea = _cellArea / Math.Cos(slope);
                             _resultSurfaceArea += currentCellArea;
                         }
-                        Application.DoEvents();
+                       // Application.DoEvents();
                     }
-                    Application.DoEvents();
+                    FormOutput.AppendProress(((i + 1) * 100) / _widthNum);
+
+                   // Application.DoEvents();
                 }
             }/* end if point.count>3 */
         }
