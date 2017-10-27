@@ -371,6 +371,10 @@ namespace FloodPeakToolUI.UI
                             double currentCellArea = _cellArea / Math.Cos(slope);
                             _resultSurfaceArea += currentCellArea;
                         }
+                        else
+                        {
+
+                        }
                        // Application.DoEvents();
                     }
                     FormOutput.AppendProress(((i + 1) * 100) / _widthNum);
@@ -535,36 +539,36 @@ namespace FloodPeakToolUI.UI
             string scrPath = e.Argument.ToString();
             string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
             //计算流向
-           // FormOutput.AppendLog("开始计算流向..");
-          //  bool result = _hydrology.FlowDirection(scrPath, tempPath);
-            //if(!result)
-            //{
-            //    FormOutput.AppendLog("计算流向失败..");
-            //    return;
-            //}
+            FormOutput.AppendLog("开始计算流向..");
+            bool result = _hydrology.FlowDirection(scrPath, tempPath);
+            if (!result)
+            {
+                FormOutput.AppendLog("计算流向失败..");
+                return;
+            }
             //输出矩阵
            // RasterReader read = new RasterReader(tempPath);
            // double[,] matrix = _hydrology.GetElevation(read);
            // XmlHelper.SaveDataToExcelFile(matrix,@"D:\1.xls");
             FormOutput.AppendLog("计算流向完成.");
             //填充洼地 将流向为-1的设置为0
-            //scrPath = tempPath;
-            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
-            //FormOutput.AppendLog("开始填充洼地..");
-            //result = _hydrology.Fill(scrPath, tempPath);
-            //if (!result)
-            //{
-            //    FormOutput.AppendLog("填充洼地失败..");
-            //    return;
-            //}
-            //FormOutput.AppendLog("填充洼地完成.");
+            scrPath = tempPath;
+            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
+            FormOutput.AppendLog("开始填充洼地..");
+            result = _hydrology.Fill(scrPath, tempPath);
+            if (!result)
+            {
+                FormOutput.AppendLog("填充洼地失败..");
+                return;
+            }
+            FormOutput.AppendLog("填充洼地完成.");
 
             //计算汇流总数 --阈值默认为800
-            //scrPath = tempPath;
+            scrPath = tempPath;
             tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp2.tif");
             int FlowThreshold =int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
             FormOutput.AppendLog("开始计算汇流总数..");
-            bool result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
+            result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
             if (!result)
             {
                 FormOutput.AppendLog("计算汇流总数失败..");

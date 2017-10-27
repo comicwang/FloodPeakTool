@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace FloodPeakUtility
 {
+    /// <summary>
+    /// 计算模块接口
+    /// </summary>
     public interface ICaculateMemo
     {
 
