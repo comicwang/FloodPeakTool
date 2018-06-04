@@ -65,6 +65,11 @@ namespace FloodPeakUtility
         /// </summary>
         public static readonly string OutputLocation = "OutputLocation.xml";
 
+        /// <summary>
+        ///颜色配置文件位置
+        /// </summary>
+        public static readonly string Colors = "colors.xml";
+
     }
 
     /// <summary>

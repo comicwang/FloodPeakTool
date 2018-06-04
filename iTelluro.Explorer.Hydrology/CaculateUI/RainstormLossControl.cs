@@ -22,6 +22,7 @@ using iTelluro.GlobeEngine.Mathematics;
 using iTelluro.GlobeEngine.Graphics3D;
 using System.Text.RegularExpressions;
 using System.Configuration;
+using FloodPeakUtility.Algorithm;
 
 namespace FloodPeakToolUI.UI
 {
@@ -149,6 +150,7 @@ namespace FloodPeakToolUI.UI
             if (!backgroundWorker1.IsBusy)
             {
                 FormOutput.AppendLog("开始计算...");
+                FormCalView.InitializeForm();
                 _currentTime = DateTime.Now;
                 SaveCaculateArg();
                 string srcPath = fileChooseControl1.FilePath;
@@ -254,136 +256,67 @@ namespace FloodPeakToolUI.UI
         private TerrainPoint[,] _terrainTile;
         private void WatershedArea(string shppath, string rasterpath, ref double _resultProjectArea, ref double? _resultSurfaceArea)
         {
-            ShpReader shp = new ShpReader(shppath);
+            //获取流域面积形状以及它的外接矩形
+            GeoRect _analysisRect = new GeoRect(-90, 90, 180, -180); //外接矩形
+            iTelluroLib.GeoTools.Geometries.Polygon _analysisPolygon = _hydrology.CalLimitAreaPolygon(shppath, ref _analysisRect);  //流域面形状
 
-            OSGeo.OGR.Feature ofea;
-            List<Point2d> pointlist = new List<Point2d>();
-            while (((ofea = shp.layer.GetNextFeature()) != null))
+            //在存在流域面积界定的情况下要进行裁剪筛选，不存在默认全部计算  
+            RasterReader raster = new RasterReader(rasterpath);
+            double _widthStep = raster.CellSizeX;
+            double _heightStep = raster.CellSizeY;
+
+            // 网格大小：行、列数
+            int _widthNum = (int)((_analysisRect.East - _analysisRect.West) / _widthStep);
+            int _heightNum = (int)((_analysisRect.North - _analysisRect.South) / _heightStep);
+
+            _terrainTile = new TerrainPoint[_widthNum, _heightNum];
+
+            //构建高程矩阵
+            for (int i = 0; i < _widthNum; i++)
             {
-                int count = ofea.GetGeometryRef().GetPointCount();
-                string a = "";
-                ofea.GetGeometryRef().ExportToWkt(out a);
-                Regex reg = new Regex(@"\(([^)&^(]*)\)");
-                Match m = reg.Match(a);
-                string pointstr = "";
-                if (m.Success)
+                for (int j = 0; j < _heightNum; j++)
                 {
-                    pointstr = m.Result("$1").TrimStart('(').TrimEnd(')');
-                }
-                for (int i = 0; i < pointstr.Split(',').Length; i++)
-                {
-                    string[] point = pointstr.Split(',')[i].Split(' ');
-                    double x = double.Parse(point[0]);
-                    double y = double.Parse(point[1]);
-                    Point2d p = new Point2d(x, y);
-                    pointlist.Add(p);
+                    TerrainPoint tp = new TerrainPoint();
+                    tp.Longitude = _analysisRect.West + i * _widthStep;
+                    tp.Latitude = _analysisRect.South + j * _heightStep;
+                    tp.Altitude = ReadBand(raster, i, j);
+                    tp.col = i;
+                    tp.row = j;
+                    _terrainTile[i, j] = tp;
                 }
             }
-            //释放资源
-            shp.Dispose();
 
-            if (pointlist.Count >= 3)
+            double _cellArea = CaculateCellAera(raster, _widthNum, _heightNum);
+            //坡度计算
+            if (_resultSurfaceArea == null)
+                _resultSurfaceArea = 0;
+            for (int i = 0; i < _widthNum; i++)
             {
-                // 外接矩阵，边界取经纬度范围的反值
-                GeoRect _analysisRect = new GeoRect(-90, 90, 180, -180);
-                List<double> xPoint = new List<double>();
-                List<double> yPoint = new List<double>();
-                for (int i = 0; i < pointlist.Count; i++)
+                for (int j = 0; j < _heightNum; j++)
                 {
-                    Point2d p = pointlist[i];
-                    // 外接矩阵计算
-                    xPoint.Add(p.X);
-                    yPoint.Add(p.Y);
-                }
-                _analysisRect.North = yPoint.Max();
-                _analysisRect.South = yPoint.Min();
-                _analysisRect.East = xPoint.Max();
-                _analysisRect.West = xPoint.Min();
-
-                // NTS多边形
-                iTelluroLib.GeoTools.Geometries.Coordinate[] coords = new iTelluroLib.GeoTools.Geometries.Coordinate[pointlist.Count + 1];
-
-                for (int i = 0; i < pointlist.Count; i++)
-                {
-                    coords[i] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[i].X, pointlist[i].Y);
-                }
-                coords[pointlist.Count] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[0].X, pointlist[0].Y);
-
-                //创建多边形
-                iTelluroLib.GeoTools.Geometries.LinearRing ring = new iTelluroLib.GeoTools.Geometries.LinearRing(coords);
-                iTelluroLib.GeoTools.Geometries.Polygon _analysisPolygon = new iTelluroLib.GeoTools.Geometries.Polygon(ring);
-
-                RasterReader raster = new RasterReader(rasterpath);
-                double _widthStep = raster.CellSizeX;
-                double _heightStep = raster.CellSizeY;
-
-                // 网格大小：行、列数
-                int _widthNum = (int)((_analysisRect.East - _analysisRect.West) / _widthStep);
-                int _heightNum = (int)((_analysisRect.North - _analysisRect.South) / _heightStep);
-
-                _terrainTile = new TerrainPoint[_widthNum, _heightNum];
-
-                //构建高程矩阵
-                double[] x = new double[_widthNum * _heightNum];
-                double[] y = new double[_widthNum * _heightNum];
-                double[] z = new double[_widthNum * _heightNum];
-                int pos = 0;
-                for (int i = 0; i < _widthNum; i++)
-                {
-                    for (int j = 0; j < _heightNum; j++)
+                    TerrainPoint tp = _terrainTile[i, j];
+                    iTelluroLib.GeoTools.Geometries.Point currentPoint = new iTelluroLib.GeoTools.Geometries.Point(tp.Longitude, tp.Latitude);
+                    if ((_analysisPolygon != null && _analysisPolygon.Contains(currentPoint)) || _analysisPolygon == null)
                     {
-                        x[pos] = _analysisRect.West + i * _widthStep;
-                        y[pos] = _analysisRect.South + j * _heightStep;
-                        z[pos] = ReadBand(raster, i, j);
-                        pos++;
+                        _resultProjectArea += _cellArea;
+                        //计算坡度
+                        double slope = GetSlope(raster, tp);
+                        double currentCellArea = _cellArea / Math.Cos(slope);
+                        _resultSurfaceArea += currentCellArea;
                     }
                 }
-                pos = 0;
-                for (int i = 0; i < _widthNum; i++)
-                {
-                    for (int j = 0; j < _heightNum; j++)
-                    {
-                        TerrainPoint tp = new TerrainPoint();
-                        tp.Longitude = x[pos];
-                        tp.Latitude = y[pos];
-                        tp.Altitude = z[pos];
-                        tp.col = i;
-                        tp.row = j;
-                        pos++;
-                        _terrainTile[i, j] = tp;
-                    }
-                }
-                double _cellArea = CaculateCellAera(raster, _widthNum, _heightNum);
-                //坡度计算
-                if (_resultSurfaceArea == null)
-                    _resultSurfaceArea = 0;
-                for (int i = 0; i < _widthNum; i++)
-                {
-                    for (int j = 0; j < _heightNum; j++)
-                    {
-                        TerrainPoint tp = _terrainTile[i, j];
-                        iTelluroLib.GeoTools.Geometries.Point currentPoint = new iTelluroLib.GeoTools.Geometries.Point(tp.Longitude, tp.Latitude);
-                        if (_analysisPolygon.Contains(currentPoint))
-                        {
-                            _resultProjectArea += _cellArea;
-                            //计算坡度
-                            double slope = GetSlope(raster, tp);
-                            double currentCellArea = _cellArea / Math.Cos(slope);
-                            _resultSurfaceArea += currentCellArea;
-                        }
-                        else
-                        {
-
-                        }
-                       // Application.DoEvents();
-                    }
-                    FormOutput.AppendProress(((i + 1) * 100) / _widthNum);
-
-                   // Application.DoEvents();
-                }
-            }/* end if point.count>3 */
+                FormOutput.AppendProress(((i + 1) * 100) / _widthNum);
+            }
         }
 
+        /// <summary>
+        /// 计算影像数据单元格的投影面积
+        /// （区分了文件为投影坐标还是地理坐标）
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="_widthNum"></param>
+        /// <param name="_heightNum"></param>
+        /// <returns></returns>
         private double CaculateCellAera(RasterReader reader, int _widthNum, int _heightNum)
         {
             try
@@ -538,36 +471,53 @@ namespace FloodPeakToolUI.UI
         {
             string scrPath = e.Argument.ToString();
             string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
+            //读取高程矩阵
+            RasterReader read = new RasterReader(scrPath);
+          
+            double[,] src = DEMReader.GetElevation(read);
+
+            FormOutput.AppendLog("1.开始填充洼地..");
+            //填充洼地
+            double[,] src_fill = src.Fill();
+
+            FormOutput.AppendLog("洼地填充完成..");
             //计算流向
-            FormOutput.AppendLog("开始计算流向..");
-            bool result = _hydrology.FlowDirection(scrPath, tempPath);
-            if (!result)
-            {
-                FormOutput.AppendLog("计算流向失败..");
-                return;
-            }
+            FormOutput.AppendLog("2.开始计算流向..");
+            double[,] src_direct = src_fill.FlowDirection();
+
+            FormOutput.AppendLog("流向计算完成..");
+            bool result = true;//_hydrology.FlowDirection(scrPath, tempPath);
+            //if (!result)
+            //{
+            //    FormOutput.AppendLog("计算流向失败..");
+            //    return;
+            //}
             //输出矩阵
-           // RasterReader read = new RasterReader(tempPath);
-           // double[,] matrix = _hydrology.GetElevation(read);
-           // XmlHelper.SaveDataToExcelFile(matrix,@"D:\1.xls");
-            FormOutput.AppendLog("计算流向完成.");
+            // RasterReader read = new RasterReader(tempPath);
+            // double[,] matrix = _hydrology.GetElevation(read);
+            // XmlHelper.SaveDataToExcelFile(matrix,@"D:\1.xls");
+            //FormOutput.AppendLog("计算流向完成.");
             //填充洼地 将流向为-1的设置为0
-            scrPath = tempPath;
-            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
-            FormOutput.AppendLog("开始填充洼地..");
-            result = _hydrology.Fill(scrPath, tempPath);
-            if (!result)
-            {
-                FormOutput.AppendLog("填充洼地失败..");
-                return;
-            }
-            FormOutput.AppendLog("填充洼地完成.");
+            //scrPath = tempPath;
+            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
+            //FormOutput.AppendLog("开始填充洼地..");
+            //result = _hydrology.Fill(scrPath, tempPath);
+            //if (!result)
+            //{
+            //    FormOutput.AppendLog("填充洼地失败..");
+            //    return;
+            //}
+            //FormOutput.AppendLog("填充洼地完成.");
 
             //计算汇流总数 --阈值默认为800
-            scrPath = tempPath;
-            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp2.tif");
-            int FlowThreshold =int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
-            FormOutput.AppendLog("开始计算汇流总数..");
+            //scrPath = tempPath;
+            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
+
+            FormOutput.AppendLog("3.开始计算汇流量..");
+            double[,] src_total = src_direct.Accumulation();
+
+            FormOutput.AppendLog("计算汇流量完成..");
+            int FlowThreshold = int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
             result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
             if (!result)
             {

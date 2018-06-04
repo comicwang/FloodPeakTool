@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\iTelluro.Explorer.PluginEngine.5.0.5312.28595\lib\net40\iTelluro.Explorer.PluginEngine.dll</HintPath>
     </Reference>
+    <Reference Include="iTelluro.Explorer.Raster110, Version=1.10.6186.33355, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\iTelluro.Explorer.Raster110.dll</HintPath>
+    </Reference>
     <Reference Include="iTelluro.Explorer.Vector110, Version=1.10.5806.19922, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\iTelluro.Explorer.Vector110.1.10.5806.19922\lib\net20\iTelluro.Explorer.Vector110.dll</HintPath>
@@ -91,15 +95,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\DEMReader.cs" />
+    <Compile Include="Algorithm\Hydrographic.cs" />
     <Compile Include="Cons\CollectionCons.cs" />
     <Compile Include="Cons\ConfigNames.cs" />
     <Compile Include="Cons\Guids.cs" />
+    <Compile Include="FileExtentionRegist.cs" />
     <Compile Include="ICaculateMemo.cs" />
     <Compile Include="LayerLoader.cs" />
     <Compile Include="LogHelper.cs" />
     <Compile Include="Model\BYSJResult.cs" />
     <Compile Include="Model\BYSSResult.cs" />
     <Compile Include="Model\CaculateEventArgs.cs" />
+    <Compile Include="Model\ColorRamp.cs" />
     <Compile Include="Model\CvCure.cs" />
     <Compile Include="Model\DefaultArgModel.cs" />
     <Compile Include="Model\HCHLResult.cs" />
@@ -122,6 +130,24 @@
     </Compile>
     <Compile Include="RunExeHelper.cs" />
     <Compile Include="SqlHelper.cs" />
+    <Compile Include="UI\ColorChoose.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ColorChoose.Designer.cs">
+      <DependentUpon>ColorChoose.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormCalView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormCalView.Designer.cs">
+      <DependentUpon>FormCalView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormColorSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormColorSetting.Designer.cs">
+      <DependentUpon>FormColorSetting.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormOutput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +170,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\ColorChoose.resx">
+      <DependentUpon>ColorChoose.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormCalView.resx">
+      <DependentUpon>FormCalView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormColorSetting.resx">
+      <DependentUpon>FormColorSetting.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormOutput.resx">
       <DependentUpon>FormOutput.cs</DependentUpon>
     </EmbeddedResource>
@@ -162,6 +197,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\saveHover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -86,6 +86,15 @@ namespace FloodPeakTool
             InitializeComponent();         
             CreatUIControls();
             CreateGlobe();
+            if (args != null && args.Length > 0)
+            {
+                _FullPath = args[0];
+                IniProject();
+            }
+            if(!FileExtentionRegist.FileTypeRegistered(".hfll"))
+            {
+                FileExtentionRegist.RegistFileType(".hfll");
+            }
         }
 
         private void CreatUIControls()
@@ -270,23 +279,29 @@ namespace FloodPeakTool
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     _FullPath = dialog.FileName;
-                    //初始化化树节点
-                    if (_pnlLeft == null)
-                    {
-                        _pnlLeft = new PnlLeftControl(_globeView,this.tabControl1);
-                        _pnlLeft.Dock = DockStyle.Fill;
-                        _pnlLeft.OnChanged += _pnlLeft_OnChanged;
-                        _pnlLeft.OnCaculate += _pnlLeft_OnCaculate;
-                        Pnl_Main_Left.Controls.Add(_pnlLeft);
-                    }
-                    Pnl_Main_Left.Show();
-                    _pnlLeft.InitialzeProject(_FullPath);
-                    //设置标题
-                    this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
-                    btnImportDom.Enabled = true;
-                    btnImportShp.Enabled = true;
+                    IniProject();
+                  
                 }
             }
+        }
+
+        private void IniProject()
+        {
+            //初始化化树节点
+            if (_pnlLeft == null)
+            {
+                _pnlLeft = new PnlLeftControl(_globeView, this.tabControl1);
+                _pnlLeft.Dock = DockStyle.Fill;
+                _pnlLeft.OnChanged += _pnlLeft_OnChanged;
+                _pnlLeft.OnCaculate += _pnlLeft_OnCaculate;
+                Pnl_Main_Left.Controls.Add(_pnlLeft);
+            }
+            Pnl_Main_Left.Show();
+            _pnlLeft.InitialzeProject(_FullPath);
+            //设置标题
+            this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
+            btnImportDom.Enabled = true;
+            btnImportShp.Enabled = true;
         }
 
         private void 保存工程ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -347,6 +362,12 @@ namespace FloodPeakTool
             btnTools.Image = null;
             if (_globeControl.BarGlobeTools.Visible)
                 btnTools.Image = global::FloodPeakTool.Properties.Resources.duigou;
+        }
+
+        private void tlsColorSetting_Click(object sender, EventArgs e)
+        {
+            FormColorSetting form = new FormColorSetting();
+            form.ShowDialog();
         }
     }
 }

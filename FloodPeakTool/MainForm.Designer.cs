@@ -75,6 +75,8 @@
             this.dockSite1 = new DevComponents.DotNetBar.DockSite();
             this.dockSite2 = new DevComponents.DotNetBar.DockSite();
             this.dockSite3 = new DevComponents.DotNetBar.DockSite();
+            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsColorSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop.SuspendLayout();
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -174,7 +176,6 @@
             // tabControlPanel1
             // 
             this.tabControlPanel1.Controls.Add(this.ShowPLG);
-            //this.tabControlPanel1.DisabledBackColor = System.Drawing.Color.Empty;
             this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlPanel1.Location = new System.Drawing.Point(0, 25);
             this.tabControlPanel1.Name = "tabControlPanel1";
@@ -235,6 +236,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.File,
+            this.设置ToolStripMenuItem,
             this.暴雨参数ToolStripMenuItem,
             this.汇流参数ToolStripMenuItem,
             this.洪峰流量ToolStripMenuItem,
@@ -477,7 +479,6 @@
             this.dotNetBarManager.BottomDockSite = null;
             this.dotNetBarManager.EnableFullSizeDock = false;
             this.dotNetBarManager.LeftDockSite = null;
-            //this.dotNetBarManager.LicenseKey = "F962CEC7-CD8F-4911-A9E9-CAB39962FC1F";
             this.dotNetBarManager.ParentForm = this;
             this.dotNetBarManager.RightDockSite = null;
             this.dotNetBarManager.ShowCustomizeContextMenu = false;
@@ -527,6 +528,22 @@
             this.dockSite3.Size = new System.Drawing.Size(1184, 0);
             this.dockSite3.TabIndex = 11;
             this.dockSite3.TabStop = false;
+            // 
+            // 设置ToolStripMenuItem
+            // 
+            this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsColorSetting});
+            this.设置ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
+            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.设置ToolStripMenuItem.Text = "设置(&S)";
+            // 
+            // tlsColorSetting
+            // 
+            this.tlsColorSetting.Name = "tlsColorSetting";
+            this.tlsColorSetting.Size = new System.Drawing.Size(152, 24);
+            this.tlsColorSetting.Text = "颜色设置";
+            this.tlsColorSetting.Click += new System.EventHandler(this.tlsColorSetting_Click);
             // 
             // MainForm
             // 
@@ -615,6 +632,8 @@
         private DevComponents.DotNetBar.TabControlPanel tabControlPanel1;
         private System.Windows.Forms.Panel ShowPLG;
         private DevComponents.DotNetBar.TabItem tabItem1;
+        private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tlsColorSetting;
     }
 }
 

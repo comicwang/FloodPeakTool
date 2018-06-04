@@ -1,4 +1,6 @@
-﻿using iTelluro.DataTools.Utility.Img;
+﻿using FloodPeakUtility;
+using FloodPeakUtility.UI;
+using iTelluro.DataTools.Utility.Img;
 using iTelluro.DataTools.Utility.SHP;
 using iTelluro.Explorer.Raster;
 using iTelluro.GlobeEngine.DataSource.Geometry;
@@ -9,13 +11,23 @@ using OSGeo.GDAL;
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace FloodPeakToolUI
 {
     public class Hydrology
     {
+        private static string _path = Path.Combine(Application.StartupPath, ConfigNames.Colors);
+
+        /// <summary>
+        /// 记录坑地
+        /// </summary>
+        private List<Grid> noFlowList = new List<Grid>();
+
         /// <summary>
         /// 获取高程矩阵
         /// </summary>
@@ -29,6 +41,21 @@ namespace FloodPeakToolUI
                 for (int col = 0; col < colCount; col++)
                 {
                     result[row, col] = ReadBand(read, row, col);
+                }
+            }
+            return result;
+        }
+
+        public int[,] GetIntElevation(RasterReader read)
+        {
+            int rowCount = read.RowCount;
+            int colCount = read.ColumnCount;
+            int[,] result = new int[rowCount, colCount];//源数据高程值
+            for (int row = 0; row < rowCount; row++)
+            {
+                for (int col = 0; col < colCount; col++)
+                {
+                    result[row, col] =(int)ReadBand(read, row, col);
                 }
             }
             return result;
@@ -55,7 +82,6 @@ namespace FloodPeakToolUI
         /// <returns></returns>
         public bool FlowDirection(string srcPath, string savePath)
         {
-            List<Grid> noFlowList = new List<Grid>();
             try
             {
                 RasterReader read = new RasterReader(srcPath);
@@ -72,29 +98,36 @@ namespace FloodPeakToolUI
                 //按行计算流向并写入
                 double[] data = null;
 
+
+                ColorRamps ramps = XmlHelper.Deserialize<ColorRamps>(_path);
+                FormCalView.SetAllSize(row, col);
+
+                Dictionary<string, Color> dic = new Dictionary<string, Color>();
+                dic.Add("右-1", ramps.GetColor(1));
+                dic.Add("右下-2", ramps.GetColor(2));
+                dic.Add("下-4", ramps.GetColor(4));
+                dic.Add("左下-8", ramps.GetColor(8));
+                dic.Add("左-16", ramps.GetColor(16));
+                dic.Add("左上-32", ramps.GetColor(32));
+                dic.Add("上-64", ramps.GetColor(64));
+                dic.Add("右上-128", ramps.GetColor(128));
+
+                FormCalView.SetLegend(dic);
                 for (int i = 0; i < row; i++)
                 {
                     data = new double[col];
                     for (int j = 0; j < col; j++)
                     {
-                        if ((CalFlowDirection(row, col, i, j, src)) != -1)
-                        {
-                            data[j] = (CalFlowDirection(row, col, i, j, src));                           
-                        }
-                        else
-                        {
-                            noFlowList.Add(new Grid(i, j));
-                        }
+                        int flow = CalFlowDirection(row, col, i, j, src);
+                        data[j] = flow;
+                        FormCalView.SetColor(i, j, flow);
                     }
-
                     writer.WriteBand(1, 0, i, col, 1, data);
-                   
                 }
-
                 writer.Dispose();
                 read.Dispose();
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }
@@ -126,8 +159,9 @@ namespace FloodPeakToolUI
                     int[] data = new int[colCount];
                     for (int col = 0; col < colCount; col++)
                     {
+                        double maxValue = double.MinValue;
                         //遍历每个像元
-                        Grid temp = GetMin(rowCount, colCount, row, col, src);
+                        Grid temp = GetMin(rowCount, colCount, row, col, src, ref maxValue);
                         int flow = 0;
                         if (temp != null)
                         {
@@ -179,7 +213,7 @@ namespace FloodPeakToolUI
                 RasterReader read = new RasterReader(srcPath);
                 int rowCount = read.RowCount;
                 int colCount = read.ColumnCount;
-
+               
                 int[,] result = Accumulation(read);
 
                 List<double> data = new List<double>();
@@ -256,108 +290,142 @@ namespace FloodPeakToolUI
 
         #region 算法
 
-        private void CaculateOne(RasterReader read,Grid index,ref int value,ref List<Grid> grids)
+        /// <summary>
+        /// 根据流域面积文件来获取流域面
+        /// </summary>
+        /// <param name="shppath"></param>
+        /// <returns></returns>
+        public iTelluroLib.GeoTools.Geometries.Polygon CalLimitAreaPolygon(string shppath, ref GeoRect _analysisRect)
         {
-            Grid temp = null;
-            //搜索八个方向
-            bool result = this.IsFlowTo(read, index, Direct.left, out temp);
-            if(result)
+            try
             {
-                if (!grids.Contains(temp))
+                ShpReader shp = new ShpReader(shppath);
+                OSGeo.OGR.Feature ofea;
+                List<Point2d> pointlist = new List<Point2d>();
+                while (((ofea = shp.layer.GetNextFeature()) != null))
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value,ref grids);
+                    int count = ofea.GetGeometryRef().GetPointCount();
+                    string a = "";
+                    ofea.GetGeometryRef().ExportToWkt(out a);
+                    Regex reg = new Regex(@"\(([^)&^(]*)\)");
+                    Match m = reg.Match(a);
+                    string pointstr = "";
+                    if (m.Success)
+                    {
+                        pointstr = m.Result("$1").TrimStart('(').TrimEnd(')');
+                    }
+                    for (int i = 0; i < pointstr.Split(',').Length; i++)
+                    {
+                        string[] point = pointstr.Split(',')[i].Split(' ');
+                        double x = double.Parse(point[0]);
+                        double y = double.Parse(point[1]);
+                        Point2d p = new Point2d(x, y);
+                        pointlist.Add(p);
+                    }
                 }
+                //释放资源
+                shp.Dispose();
+
+                if (pointlist.Count >= 3)
+                {
+                    // 外接矩阵，边界取经纬度范围的反值            
+                    List<double> xPoint = new List<double>();
+                    List<double> yPoint = new List<double>();
+                    for (int i = 0; i < pointlist.Count; i++)
+                    {
+                        Point2d p = pointlist[i];
+                        // 外接矩阵计算
+                        xPoint.Add(p.X);
+                        yPoint.Add(p.Y);
+                    }
+                    _analysisRect.North = yPoint.Max();
+                    _analysisRect.South = yPoint.Min();
+                    _analysisRect.East = xPoint.Max();
+                    _analysisRect.West = xPoint.Min();
+
+                    // NTS多边形
+                    iTelluroLib.GeoTools.Geometries.Coordinate[] coords = new iTelluroLib.GeoTools.Geometries.Coordinate[pointlist.Count + 1];
+
+                    for (int i = 0; i < pointlist.Count; i++)
+                    {
+                        coords[i] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[i].X, pointlist[i].Y);
+                    }
+                    coords[pointlist.Count] = new iTelluroLib.GeoTools.Geometries.Coordinate(pointlist[0].X, pointlist[0].Y);
+
+                    //创建多边形
+                    iTelluroLib.GeoTools.Geometries.LinearRing ring = new iTelluroLib.GeoTools.Geometries.LinearRing(coords);
+                    return new iTelluroLib.GeoTools.Geometries.Polygon(ring);
+                }
+                
             }
-            result = this.IsFlowTo(read, index, Direct.leftBottom, out temp);
-            if (result)
+            catch(Exception ex)
             {
-                if (!grids.Contains(temp))
-                {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
-                }
+                FormOutput.AppendLog("获取流域面的形状失败：" + ex.Message);
             }
-            result = this.IsFlowTo(read, index, Direct.leftTop, out temp);
-            if (result)
+            return null;
+        }
+
+        private void CaculateOne(int[,] src, Grid index, ref Dictionary<Grid, List<Grid>> caled)
+        {
+            if (caled.ContainsKey(index))
+                return;
+            else
             {
-                if (!grids.Contains(temp))
+                List<Grid> lstTemp = new List<Grid>();
+                Grid temp = null;
+                //搜索八个方向
+                bool result = this.IsFlowTo(src, index, Direct.left, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
-            }
-            result = this.IsFlowTo(read, index, Direct.right, out temp);
-            if (result)
-            {
-                if (!grids.Contains(temp))
+                result = this.IsFlowTo(src, index, Direct.leftBottom, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
-            }
-            result = this.IsFlowTo(read, index, Direct.rightTop, out temp);
-            if (result)
-            {
-                if (!grids.Contains(temp))
+                result = this.IsFlowTo(src, index, Direct.leftTop, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
-            }
-            result = this.IsFlowTo(read, index, Direct.rigthBottom, out temp);
-            if (result)
-            {
-                if (!grids.Contains(temp))
+                result = this.IsFlowTo(src, index, Direct.right, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
-            }
-            result = this.IsFlowTo(read, index, Direct.top, out temp);
-            if (result)
-            {
-                if (!grids.Contains(temp))
+                result = this.IsFlowTo(src, index, Direct.rightTop, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
-            }
-            result = this.IsFlowTo(read, index, Direct.bottom, out temp);
-            if (result)
-            {
-                if (!grids.Contains(temp))
+                result = this.IsFlowTo(src, index, Direct.rigthBottom, out temp);
+                if (result)
                 {
-                    grids.Add(temp);
-                    //流量相加
-                    value += 1;
-                    CaculateOne(read, temp, ref value, ref grids);
+                    lstTemp.Add(temp);
                 }
+                result = this.IsFlowTo(src, index, Direct.top, out temp);
+                if (result)
+                {
+                    lstTemp.Add(temp);
+                }
+                result = this.IsFlowTo(src, index, Direct.bottom, out temp);
+                if (result)
+                {
+                    lstTemp.Add(temp);
+                }
+                caled.Add(index, lstTemp);
             }
         }
 
         /// <summary>
         /// 判断当前单元格指定方向的单元格是否流向它
         /// </summary>
-        /// <param name="read"></param>
+        /// <param name="src"></param>
         /// <param name="index"></param>
         /// <param name="direct"></param>
         /// <returns></returns>
-        private bool IsFlowTo(RasterReader read,Grid index,Direct direct,out Grid outPutGrid)
+        private bool IsFlowTo(int[,] src,Grid index,Direct direct,out Grid outPutGrid)
         {
             switch (direct)
             {
@@ -365,7 +433,7 @@ namespace FloodPeakToolUI
                     //判断边界
                     if (index.i - 1 >= 0)
                     {
-                        int x = (int)ReadBand(read, index.i - 1, index.j);
+                        int x = src[index.i - 1, index.j];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i - 1, index.j);
@@ -377,7 +445,7 @@ namespace FloodPeakToolUI
                     //判断边界
                     if (index.i - 1 >= 0 && index.j - 1 >= 0)
                     {
-                        int x = (int)ReadBand(read, index.i - 1, index.j - 1);
+                        int x = src[index.i - 1, index.j - 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i - 1, index.j - 1);
@@ -389,7 +457,7 @@ namespace FloodPeakToolUI
                     //判断边界
                     if (index.j - 1 >= 0)
                     {
-                        int x = (int)ReadBand(read, index.i, index.j - 1);
+                        int x =src[index.i, index.j - 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i, index.j - 1);
@@ -399,9 +467,9 @@ namespace FloodPeakToolUI
                     break;
                 case Direct.rightTop:
                     //判断边界
-                    if (index.i + 1 < read.ColumnCount && index.j - 1 >= 0)
+                    if (index.i + 1 < src.GetLength(0) && index.j - 1 >= 0)
                     {
-                        int x = (int)ReadBand(read, index.i + 1, index.j - 1);
+                        int x = src[index.i + 1, index.j - 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i + 1, index.j - 1);
@@ -411,9 +479,9 @@ namespace FloodPeakToolUI
                     break;
                 case Direct.right:
                     //判断边界
-                    if (index.i + 1 < read.ColumnCount)
+                    if (index.i + 1 < src.GetLength(0))
                     {
-                        int x = (int)ReadBand(read, index.i + 1, index.j);
+                        int x = src[index.i + 1, index.j];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i + 1, index.j);
@@ -423,9 +491,9 @@ namespace FloodPeakToolUI
                     break;
                 case Direct.rigthBottom:
                     //判断边界
-                    if (index.i + 1 < read.ColumnCount && index.j + 1 < read.RowCount)
+                    if (index.i + 1 < src.GetLength(0) && index.j + 1 < src.GetLength(1))
                     {
-                        int x = (int)ReadBand(read, index.i + 1, index.j + 1);
+                        int x = src[index.i + 1, index.j + 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i + 1, index.j + 1);
@@ -435,9 +503,9 @@ namespace FloodPeakToolUI
                     break;
                 case Direct.bottom:
                     //判断边界
-                    if (index.j + 1 < read.RowCount)
+                    if (index.j + 1 < src.GetLength(1))
                     {
-                        int x = (int)ReadBand(read, index.i, index.j + 1);
+                        int x = src[index.i, index.j + 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i, index.j + 1);
@@ -447,9 +515,9 @@ namespace FloodPeakToolUI
                     break;
                 case Direct.leftBottom:
                     //判断边界
-                    if (index.i - 1 >= 0 && index.j + 1 < read.RowCount)
+                    if (index.i - 1 >= 0 && index.j + 1 < src.GetLength(1))
                     {
-                        int x = (int)ReadBand(read, index.i - 1, index.j + 1);
+                        int x = src[index.i - 1, index.j + 1];
                         if (x == (int)direct)
                         {
                             outPutGrid = new Grid(index.i - 1, index.j + 1);
@@ -465,33 +533,95 @@ namespace FloodPeakToolUI
         }
 
         /// <summary>
-        /// 计算汇流累积(存在死循环)
+        /// 计算汇流累积
         /// </summary>
         public int[,] Accumulation(RasterReader read)
         {
-            int tempRow = 0, tempCol = 0;
             int rowCount = read.RowCount;
             int colCount = read.ColumnCount;
-
+            int[,] src = GetIntElevation(read);
             int[,] result = new int[rowCount, colCount];
-
+            double[,] r = new double[rowCount, colCount];
+            Queue<Grid> queueGrid = new Queue<Grid>();
+            //获取方程数据源
+            Dictionary<Grid, List<Grid>> dicCaledAll = new Dictionary<Grid, List<Grid>>();
             for (int row = 0; row < rowCount; row++)
             {
                 for (int col = 0; col < colCount; col++)
                 {
                     try
                     {
-                        tempRow = row;
-                        tempCol = col;
-                        int value = 0;
-                        List<Grid> grids = new List<Grid>();
-                        grids.Add(new Grid(col, row));
-                        CaculateOne(read, new Grid(col, row), ref value, ref grids);
-                        result[row, col] = value;
+                        Grid tempGrid = new Grid(row, col);
+                        queueGrid.Enqueue(tempGrid);
+                        CaculateOne(src, tempGrid, ref dicCaledAll);
                     }
                     catch(Exception ex)
                     {
 
+                    }
+                }
+            }
+            FormCalView.SetAllSize(rowCount, colCount);
+            Dictionary<Grid,int> findOutGrid = new Dictionary<Grid,int>();
+            Dictionary<Grid, int> unFindOutGrid = new Dictionary<Grid, int>();
+
+            FormOutput.AppendProress(true);
+            //开始解方程
+            while (queueGrid.Count > 0)
+            {
+                FormOutput.AppendProress(findOutGrid.Count * 100 / dicCaledAll.Count);
+                Grid tGrid = queueGrid.Dequeue();
+                List<Grid> lstGrid = dicCaledAll[tGrid];
+                if (lstGrid.Count == 0)
+                {
+                    findOutGrid.Add(tGrid, 1);
+
+                    FormCalView.SetValue(tGrid.i, tGrid.j, 1);
+                }
+                //临时添加河口
+                else if(tGrid.i==0)
+                {
+                    findOutGrid.Add(tGrid, 1);
+                    FormCalView.SetValue(tGrid.i, tGrid.j, 1);
+                }
+                else
+                {
+                    List<Grid> unFindGrid =new List<Grid>();
+                    int value = 1;
+                    //继续上次未完成的计算
+                    if(unFindOutGrid.ContainsKey(tGrid))
+                    {
+                        value = unFindOutGrid[tGrid];
+                    }
+
+                    //循环寻找当前找出的Grid
+                    for (int i = 0; i < lstGrid.Count; i++)
+                    {
+                        if(findOutGrid.ContainsKey(lstGrid[i]))
+                        {
+                            value += findOutGrid[lstGrid[i]];
+                        }
+                        else
+                        {
+                            unFindGrid.Add(lstGrid[i]);
+                        }
+                    }
+
+                    //如果还有未确定的继续添加计算
+                    if (unFindGrid.Count > 0)
+                    {
+                        dicCaledAll[tGrid] = unFindGrid;
+                        if (unFindOutGrid.ContainsKey(tGrid))
+                            unFindOutGrid[tGrid] = value;
+                        else
+                            unFindOutGrid.Add(tGrid, value);
+
+                        queueGrid.Enqueue(tGrid);
+                    }
+                    else
+                    {
+                        findOutGrid.Add(tGrid, value);
+                        FormCalView.SetValue(tGrid.i, tGrid.j,value);
                     }
                 }
             }
@@ -502,7 +632,7 @@ namespace FloodPeakToolUI
         /// 计算特定位置像元水流方向(根据高程差)
         /// 算法说明：计算某个单元格附近八个（不足的不考虑）的最小高程（最大高程差）
         /// 结果说明：若有一个最小的，流向指向最小的；若有多个最小的继续分别计算几个最小值附近的最小值
-        /// 一直递归找到最小值的那一项；若没有最小的（都比当前单元格大），属于洼地记录为-1
+        /// 一直递归找到最小值的那一项
         /// </summary>
         /// <param name="row">行</param>
         /// <param name="col">列</param>
@@ -521,122 +651,224 @@ namespace FloodPeakToolUI
             W = (col != 0) ? (src[row, col] - src[row, col - 1]) : -1;
             SW = (row != (rowCount - 1) && col != 0) ? (src[row, col] - src[row + 1, col - 1]) / Sqrt2 : -1;
 
-            //坡降计算
-            double M = 0;
-            M = (M > S) ? M : S;
-            M = (M > SE) ? M : SE;
-            M = (M > N) ? M : N;
-            M = (M > E) ? M : E;
-            M = (M > NE) ? M : NE;
-            M = (M > NW) ? M : NW;
-            M = (M > W) ? M : W;
-            M = (M > SW) ? M : SW;
+            //判断其中最小值
+            double M = new List<double>() { S, SE, N, E, NE, NW, W, SW }.Where(t => t != -1).Min();
 
-            //取最大的坡降
-            if (M > 0)
+            //洼地
+            if (M < 0)
             {
-                if (M == S)
-                {
-                    return 4;
-                }
-                else if (M == SE)
-                {
-                    return 2;
-                }
-                else if (M == N)
-                {
-                    return 64;
-                }
-                else if (M == E)
-                {
-                    return 1;
-                }
-                else if (M == NE)
-                {
-                    return 128;
-
-                }
-                else if (M == NW)
-                {
-                    return 32;
-                }
-                else if (M == W)
-                {
-                    return 16;
-                }
-                else if (M == SW)
-                {
-                    return 8;
-                }
-                else
-                {
-                    return 0;
-                }
+                noFlowList.Add(new Grid(row, col));
             }
-            return -1;
-        }
 
-        public Grid GetMin(int rowCount, int colCount, int row, int col, double[,] src)
-        {
-            double Sqrt2;
-            double S = 0, N = 0, E = 0, SE = 0, NE = 0, NW = 0, W = 0, SW = 0;
-            Sqrt2 = Math.Sqrt(2);
-
-            S = (row != (rowCount - 1)) ? (src[row, col] - src[row + 1, col]) : -1;
-            SE = (row != (rowCount - 1) && col != (colCount - 1)) ? (src[row, col] - src[row + 1, col + 1]) / Sqrt2 : -1;
-            N = (row != 0) ? (src[row, col] - src[row - 1, col]) : -1;
-            E = (col != (colCount - 1)) ? (src[row, col] - src[row, col + 1]) : -1;
-            NE = (row != 0 && col != (colCount - 1)) ? (src[row, col] - src[row - 1, col + 1]) / Sqrt2 : -1;
-            NW = (row != 0 && col != 0) ? (src[row, col] - src[row - 1, col - 1]) / Sqrt2 : -1;
-            W = (col != 0) ? (src[row, col] - src[row, col - 1]) : -1;
-            SW = (row != (rowCount - 1) && col != 0) ? (src[row, col] - src[row + 1, col - 1]) / Sqrt2 : -1;
-
-            //坡降计算
-            double M = 0;
-            M = (M < S) ? M : S;
-            M = (M < SE) ? M : SE;
-            M = (M < N) ? M : N;
-            M = (M < E) ? M : E;
-            M = (M < NE) ? M : NE;
-            M = (M < NW) ? M : NW;
-            M = (M < W) ? M : W;
-            M = (M < SW) ? M : SW;
-
+            ////取最大的坡降
+            Dictionary<string, int> dicMin = new Dictionary<string, int>();
             if (M == S)
             {
-                return new Grid(row + 1, col);
+                dicMin.Add("S", 4);
             }
-            else if (M == SE)
+            if (M == SE)
             {
-                return new Grid(row + 1, col + 1);
+                dicMin.Add("SE", 2);
             }
-            else if (M == N)
+            if (M == N)
             {
-                return new Grid(row - 1, col);
+                dicMin.Add("N", 64);
             }
-            else if (M == E)
+            if (M == E)
             {
-                return new Grid(row, col + 1);
+                dicMin.Add("E", 1);
             }
-            else if (M == NE)
+            if (M == NE)
             {
-                return new Grid(row - 1, col + 1);
-
+                dicMin.Add("NE", 128);
             }
-            else if (M == NW)
+            if (M == NW)
             {
-                return new Grid(row - 1, col - 1);
+                dicMin.Add("NW", 32);
             }
-            else if (M == W)
+            if (M == W)
             {
-                return new Grid(row, col - 1);
+                dicMin.Add("W",16);
             }
-            else if (M == SW)
+            if (M == SW)
             {
-                return new Grid(row + 1, col - 1);
+                dicMin.Add("SW", 8);
             }
-            return null;
+            if (dicMin.Count==1)
+            {
+                return dicMin.Values.FirstOrDefault();
+            }
+            return 0;
         }
+
+        public Grid GetMin(int rowCount, int colCount, int row, int col, double[,] src, ref double max)
+        {
+            List<Grid> minGrids = new List<Grid>();
+            Grid minGrid = null;
+            //double max = double.MinValue;
+            double temp = double.MinValue;
+            double Sqrt2 = Math.Sqrt(2);
+            //S
+            if (row != (rowCount - 1))
+            {
+                Grid tempGrid = new Grid(row + 1, col);
+                temp = src[row, col] - src[row + 1, col];
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+            //SE
+            if (row != (rowCount - 1) && col != (colCount - 1))
+            {
+                Grid tempGrid = new Grid(row + 1, col + 1);
+                temp = (src[row, col] - src[row + 1, col + 1]) / Sqrt2;
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+
+            //N 
+            if (row != 0)
+            {
+                Grid tempGrid = new Grid(row - 1, col);
+                temp = src[row, col] - src[row - 1, col];
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+
+            //E
+            if (col != (colCount - 1))
+            {
+                Grid tempGrid = new Grid(row, col + 1);
+                temp = src[row, col] - src[row, col + 1];
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+            //NE
+            if (row != 0 && col != (colCount - 1))
+            {
+                Grid tempGrid = new Grid(row - 1, col + 1);
+                temp = (src[row, col] - src[row - 1, col + 1]) / Sqrt2;
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+            //NW
+            if (row != 0 && col != 0)
+            {
+                Grid tempGrid = new Grid(row - 1, col - 1);
+                temp = (src[row, col] - src[row - 1, col - 1]) / Sqrt2;
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+            //W
+            if (col != 0)
+            {
+                Grid tempGrid = new Grid(row, col - 1);
+                temp = src[row, col] - src[row, col - 1];
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+            //SW
+            if (row != (rowCount - 1) && col != 0)
+            {
+                Grid tempGrid = new Grid(row + 1, col - 1);
+                temp = (src[row, col] - src[row + 1, col - 1]) / Sqrt2;
+                if (temp > max)
+                {
+                    minGrid = tempGrid;
+                    minGrids.Clear();
+                    minGrids.Add(minGrid);
+                    max = temp;
+                }
+                else if (temp == max)
+                {
+                    minGrids.Add(tempGrid);
+                }
+            }
+
+            return minGrid;
+
+            //if (minGrids.Count == 1)
+            //{
+            //    return minGrid;
+            //}
+            //else
+            //{
+            //    double max1=double.MinValue;
+            //    foreach (Grid grid in minGrids)
+            //    {
+            //        double maxValue = double.MinValue;
+            //        Grid tempGrid = GetMin(rowCount, colCount, grid.i, grid.j, src, ref maxValue);
+            //        if (maxValue > max1)
+            //        {
+            //            max1 = maxValue;
+            //        }
+            //        minGrid = tempGrid;
+            //    }
+            //}
+        }
+
         #endregion
 
         #region 河网相关参数计算
@@ -1444,6 +1676,11 @@ namespace FloodPeakToolUI
         public Grid()
         {
             i = j = 0;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("i={0},j={1}", i, j);
         }
     }
 
