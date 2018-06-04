@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>iTelluro.Explorer.CommonControls</id>
+    <version>2.0.5303.29965</version>
+    <title>iTelluro.Explorer.CommonControls</title>
+    <authors>武汉地大信息工程股份有限公司(InfoEarth)</authors>
+    <owners>武汉地大信息工程股份有限公司(InfoEarth)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>公共控件库</description>
+    <copyright>Copyright © InfoEarth 2014</copyright>
+  </metadata>
+</package>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>iTelluro.GeometrySymbol</id>
+    <version>1.0.6128.25612</version>
+    <title>iTelluro.GeometrySymbol</title>
+    <authors>infoearth</authors>
+    <owners>infoearth</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>矢量符号样式库</description>
+    <copyright>Copyright ©  2015</copyright>
+    <dependencies>
+      <dependency id="iTelluro.Utility" version="2.1.5739.20594" />
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata>
+    <id>gdal1.6.relaese_net2.0_x86</id>
+    <version>1.6.3.0</version>
+    <title>gdal1.6.relaese_net2.0_x86</title>
+    <authors>地大信息工程股份有限公司</authors>
+    <owners>地大信息工程股份有限公司</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Gdal1.6</description>
+    <copyright>Copyright © Infoearth 2014</copyright>
+    <tags>Gdal 106 net20</tags>
+    <references>
+      <group targetFramework=".NETFramework2.0">
+        <reference file="gdal_csharp.dll" />
+        <reference file="ogr_csharp.dll" />
+        <reference file="osr_csharp.dll" />
+      </group>
+    </references>
+  </metadata>
+</package>

@@ -1,0 +1,702 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>iTelluro.Explorer.Raster110</name>
+    </assembly>
+    <members>
+        <member name="T:iTelluro.Explorer.Raster.Model.HDF4Info">
+            <summary>
+            HDF4文件基本信息
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.#ctor(System.String)">
+            <summary>
+            获取hdf4文件子数据集信息
+            </summary>
+            <exception cref="T:System.Exception">文件打开失败，或者不是hdf4文件时</exception>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetName(System.Int32)">
+            <summary>
+            获取子数据集名字
+            </summary>
+            <param name="index">子数据集索引，基于0</param>
+            <returns>返回名字</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">索引超出子数据集数量范围</exception>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetPath(System.Int32)">
+            <summary>
+            获取子数据集的数据路径
+            </summary>
+            <param name="index">子数据集索引，基于0</param>
+            <returns>返回可直接用于Gdal.Open函数的数据路径</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetDescription(System.Int32)">
+            <summary>
+            获取子数据集的描述信息
+            </summary>
+            <param name="index">子数据集索引，基于0</param>
+            <returns>返回描述信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetWidth(System.Int32)">
+            <summary>
+            获取子数据集的影像宽度
+            </summary>
+            <param name="index">子数据集索引</param>
+            <exception cref="T:System.IndexOutOfRangeException"></exception>
+            <exception cref="T:System.Exception"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetHeight(System.Int32)">
+            <summary>
+            获取子数据集的影像高度
+            </summary>
+            <param name="index">子数据集索引</param>
+            <exception cref="T:System.IndexOutOfRangeException"></exception>
+            <exception cref="T:System.Exception"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetGeoTransform(System.Int32)">
+            <summary>
+            栅格影像的仿射变换参数
+            </summary>
+            <param name="index">子数据集索引</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetGCPProj(System.Int32)">
+            <summary>
+            栅格影像的控制点投影系
+            </summary>
+            <param name="index">子数据集索引</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Model.HDF4Info.GetSubDatasetGCPCount(System.Int32)">
+            <summary>
+            栅格影像的控制点个数
+            </summary>
+            <param name="index">子数据集索引</param>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.HDF4Info.MaxHeight">
+            <summary>
+            影像中所有子数据集的最大高度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.HDF4Info.MaxWidth">
+            <summary>
+            影像中所有子数据集的最大宽度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.HDF4Info.FullFilename">
+            <summary>
+            hdf影像路径
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.HDF4Info.Meta">
+            <summary>
+            文件参数信息
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.HDF4Info.SubDatasetCount">
+            <summary>
+            子数据集个数
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Raster.Model.RasterInfo">
+            <summary>
+            影像基本信息
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.FullFilename">
+            <summary>
+            栅格文件的全路径
+            包括物理路径和文件名
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.FileName">
+            <summary>
+            栅格文件的名称
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.ColumnCount">
+            <summary>
+            栅格影像的宽度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.RowCount">
+            <summary>
+            栅格影像的高度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.RasterCount">
+            <summary>
+            栅格影像波段数
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.DataType">
+            <summary>
+            影像像元的数据类型
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.GeoTransform">
+            <summary>
+            栅格影像的仿射变换参数
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.GeoPrj">
+            <summary>
+            栅格影像的坐标系统的WKT字符串
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.SpatialRef">
+            <summary>
+            空间参考
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.SpatialRefName">
+            <summary>
+            空间参考名称
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.IsProjected">
+            <summary>
+            是否是投影坐标系
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.IsGeographic">
+            <summary>
+            是否是地理坐标系
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.IsLocal">
+            <summary>
+            是否是未知坐标系
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.East">
+            <summary>
+            栅格影像范围 --- 东
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.North">
+            <summary>
+            栅格影像范围 --- 北
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.West">
+            <summary>
+            栅格影像范围 --- 西
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.South">
+            <summary>
+            栅格影像范围 --- 南
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.CellSizeX">
+            <summary>
+            CellSize - X
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RasterInfo.CellSizeY">
+            <summary>
+            CellSize - Y
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.Model.RGBBytesObject.Opacity">
+            <summary>
+            图片的透明度
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Raster.RasterReader">
+            <summary>
+            通过GDAL读取栅格数据
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="fullFilename"></param>
+            <exception cref="T:System.Exception">各波段数据类型不一致</exception>
+            <exception cref="T:System.Exception">HDF文件路径不正常</exception>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,``0[]@)">
+            <summary>
+            读取指定数据范围的所有波段，返回一维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，第一波段在前，紧接着是第二波段，以此类推</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,``0[]@,System.Int32,System.Int32)">
+            <summary>
+            读取指定数据范围的所有波段，返回一维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，第一波段在前，紧接着是第二波段，以此类推</param>
+            <param name="scale_xSize">缩放后数据宽度</param>
+            <param name="scale_ySize">缩放后数据高度</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,``0[][]@)">
+            <summary>
+            读取指定数据范围的所有波段，返回二维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，band[0]是第一波段数据，band[1]是第二波段...</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,``0[][]@,System.Int32,System.Int32)">
+            <summary>
+            读取指定数据范围的所有波段并缩放到指定尺寸，返回二维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，band[0]是第一波段数据，band[1]是第二波段...</param>
+            <param name="scale_xSize">缩放后数据宽度</param>
+            <param name="scale_ySize">缩放后数据高度</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            读取指定数据范围的所有波段，返回一维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            读取指定数据范围的所有波段，返回一维数组
+            </summary>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="scale_xSize">缩放后数据宽度</param>
+            <param name="scale_ySize">缩放后数据高度</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,``0[]@)">
+            <summary>
+            读取指定波段和指定数据范围的影像数据，返回一维数组
+            </summary>
+            <param name="bandNumber">读取波段序号，基于1</param>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，band[0]是第一波段数据，band[1]是第二波段...</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadBand``1(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,``0[]@,System.Int32,System.Int32)">
+            <summary>
+            读取指定波段和指定数据范围的影像数据，返回一维数组
+            </summary>
+            <param name="bandNumber">读取波段序号，基于1</param>
+            <param name="xoff">数据范围的x偏移量</param>
+            <param name="yoff">数据范围的y偏移量</param>
+            <param name="width">数据范围的宽度</param>
+            <param name="height">数据范围的高度</param>
+            <param name="band">返回读取结果，band[0]是第一波段数据，band[1]是第二波段...</param>
+            <param name="scale_xSize">缩放后数据宽度</param>
+            <param name="scale_ySize">缩放后数据高度</param>
+            <typeparam name="T">支持int/double/float/byte/short五种</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadImage(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            指定偏移量和大小读取栅格影像的一部分，返回32的图像
+            </summary>
+            <param name="xOff">x偏移量</param>
+            <param name="yOff">y偏移量</param>
+            <param name="xSize">x方向大小</param>
+            <param name="ySize">y方向大小</param>
+            <param name="xScaleSize">缩放后x方向大小</param>
+            <param name="yScaleSize">缩放后y方向大小</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.ReadImage(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Byte)">
+            <summary>
+            指定偏移量和大小读取栅格影像的一部分，返回32的图像
+            </summary>
+            <param name="xOff">x偏移量</param>
+            <param name="yOff">y偏移量</param>
+            <param name="xSize">x方向大小</param>
+            <param name="ySize">y方向大小</param>
+            <param name="xScaleSize">缩放后x方向大小</param>
+            <param name="yScaleSize">缩放后y方向大小</param>
+            <param name="opacity">图片透明度</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterReader.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.FullFileName">
+            <summary>
+            tif文件路径
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.DataSet">
+            <summary>
+            影像数据集接口
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.ColumnCount">
+            <summary>
+            栅格影像数据的宽度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.RowCount">
+            <summary>
+            栅格影像数据的高度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.RasterCount">
+            <summary>
+            影像波段数
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.Nodata">
+            <summary>
+            nodata值
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.RasterDataType">
+            <summary>
+            影像像元数据类型
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.MapRectEast">
+            <summary>
+            栅格影像数据的地理范围 - 东
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.MapRectWest">
+            <summary>
+            栅格影像数据的地理范围 - 西
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.MapRectNorth">
+            <summary>
+            栅格影像数据的地理范围 - 北
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.MapRectSouth">
+            <summary>
+            栅格影像数据的地理范围 - 南
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.CellSizeX">
+            <summary>
+            栅格象元大小 - X方向
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.CellSizeY">
+            <summary>
+            栅格象元大小 - Y方向
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.IsGeographic">
+            <summary>
+            是否是地理坐标
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.IsProjected">
+            <summary>
+            是否是投影坐标
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.IsLocal">
+            <summary>
+            是否是未知坐标系
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.GeoPrjWkt">
+            <summary>
+            坐标系统的Wkt字符串
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterReader.SpatialRefName">
+            <summary>
+            空间参考名
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Raster.RasterUtility">
+            <summary>
+            影像辅助类
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterUtility.DelRaster(System.String)">
+            <summary>
+            删除栅格文件
+            </summary>
+            <param name="strRasterFilename"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterUtility.RenameRaster(System.String,System.String)">
+            <summary>
+            重命名栅格文件
+            </summary>
+            <param name="strOldFilename"></param>
+            <param name="strNewFilename"></param>
+        </member>
+        <member name="T:iTelluro.Explorer.Raster.RasterWriter">
+            <summary>
+            影像写出类
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.#ctor(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nFileName">目标栅格影像数据的全路径</param>
+            <param name="bandCount">目标栅格影像的波段数</param>
+            <param name="width">目标栅格影像的宽度</param>
+            <param name="height">目标栅格影像的高度</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.#ctor(System.String,System.Int32,System.Int32,System.Int32,OSGeo.GDAL.DataType)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nFileName">目标栅格影像数据的全路径</param>
+            <param name="bandCount">目标栅格影像的波段数</param>
+            <param name="width">目标栅格影像的宽度</param>
+            <param name="height">目标栅格影像的高度</param>
+            <param name="datatype">数据类型</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.#ctor(System.String)">
+            <summary>
+            打开一个已存在的影像文件，在其上进行绘图操作
+            </summary>
+            <param name="tifPath">tif路径</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetProjection(System.String)">
+            <summary>
+            设置空间参考
+            </summary>
+            <param name="prj"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetPosition(System.Double[])">
+            <summary>
+            设置坐标位置
+            </summary>
+            <param name="transform">转换数组</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetNodata(System.Int32,System.Double)">
+            <summary>
+            设置Nodata值
+            </summary>
+            <param name="bandnum">波段序号，基于1</param>
+            <param name="nodata">nodata值</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetNodata(System.Double[])">
+            <summary>
+            设置Nodata值
+            </summary>
+            <param name="nodata">nodata值</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetPosition(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            设置坐标位置
+            </summary>
+            <param name="leftTopX">左上角X</param>
+            <param name="leftTopY">左上角Y</param>
+            <param name="xCellSize"></param>
+            <param name="yCellSize"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SetMetaData(System.String[])">
+            <summary>
+            设置元数据
+            </summary>
+            <param name="meta">元数据列表</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.FillDefaultNoData(OSGeo.GDAL.DataType)">
+            <summary>
+            以默认nodata值填充影像，避免黑图
+            </summary>
+            <param name="datatype"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.FillBandDefaultNoData(System.Double,System.Double)">
+            <summary>
+            为影像设置nodata值和初值
+            </summary>
+            <param name="nodata">nodata值</param>
+            <param name="initdata">初始值</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.FillColor(System.Drawing.Color)">
+            <summary>
+            将影像按指定颜色填充
+            </summary>
+            <param name="defaultVal">填充色</param>
+            <returns>defaultVal不能是Color.Empty，会返回false;<br />
+            如果有RGB通道之外的通道类型，返回false</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.WriteBand``1(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,``0[])">
+            <summary>
+            写入单波段
+            按照实际像素
+            如果超出范围则写入范围内的数据
+            </summary>
+            <param name="bandNumber">波段序号，基于1</param>
+            <param name="xoff">写出起始位置</param>
+            <param name="yoff">写出起始位置</param>
+            <param name="width">buff宽度</param>
+            <param name="height">buff高度</param>
+            <param name="buffer">待写入的数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.WriteBand``1(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,``0[],System.Int32,System.Int32)">
+            <summary>
+            写入单波段
+            写到指定位置范围
+            如果超出范围则不写入
+            </summary>
+            <param name="bandNumber">波段序号，基于1</param>
+            <param name="xoff">x方向偏移</param>
+            <param name="yoff">y方向偏移</param>
+            <param name="width">写出后的实际宽度</param>
+            <param name="height">写出后的实际高度</param>
+            <param name="bufxsize">待写数据宽度</param>
+            <param name="bufysize">待写数据高度</param>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.Save``1(System.Int32,System.Int32,System.Int32,System.Int32,``0[],``0[],``0[])">
+            <summary>
+            写入数据到tif所有波段
+            </summary>
+            <param name="xBufSize">宽度</param>
+            <param name="yBufSize">高度</param>
+            <param name="xoff">tif偏移量，x方向</param>
+            <param name="yoff">tif偏移量，y方向</param>
+            <param name="redbuffer">红波段字节数组</param>
+            <param name="greenbuffer">绿波段字节数组</param>
+            <param name="bluebuffer">蓝波段字节数组</param>
+            <typeparam name="T">像斑数据类型</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.Save``1(System.Drawing.Rectangle,System.String,System.Drawing.Rectangle)">
+            <summary>
+            从一张tif读取写入当前tif
+            </summary>
+            <param name="srcRect">源矩形</param>
+            <param name="destRect">目标矩形</param>
+            <param name="tilePath">源tif路径</param>
+            <typeparam name="T">tif中像斑数据类型</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.SaveTile``1(System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            一次写入单张瓦片，大小0-512
+            </summary>
+            <param name="xBufSize">瓦片大小，宽度</param>
+            <param name="yBufSize">瓦片大小，高度</param>
+            <param name="xoff">tif偏移量，x方向</param>
+            <param name="yoff">tif偏移量，y方向</param>
+            <param name="tilePath">瓦片路径</param>
+            <typeparam name="T">像斑数据类型</typeparam>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.MergeImage(System.Int32,System.Int32,System.Int32,System.Int32,System.Drawing.Bitmap)">
+            <summary>
+            将图片贴到影像上
+            </summary>
+            <param name="xoff">x方向偏移量</param>
+            <param name="yoff">y方向偏移量</param>
+            <param name="xSize">贴在影像上的宽度</param>
+            <param name="ySize">贴在影像上的高度</param>   
+            <param name="img">要贴的图片</param>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.GetPixelsOfImg(System.Drawing.Bitmap)">
+            <summary>
+            从图片中提取像素值数组
+            </summary>
+            <param name="img">图片</param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.RasterWriter.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterWriter.ColumnCount">
+            <summary>
+            栅格影像的宽度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterWriter.RowCount">
+            <summary>
+            栅格影像的高度
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Raster.RasterWriter.FullFileName">
+            <summary>
+            栅格影像路径
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Raster.Utility">
+            <summary>
+            工具类
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetColFromLongitude(System.Double,System.Double)">
+            <summary>
+            根据经度和tileSize计算列号
+            </summary>
+            <param name="longitude">经度</param>
+            <param name="tileSize">这一级的tileSize</param>
+            <returns>列号</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetRowFromLatitude(System.Double,System.Double)">
+            <summary>
+            根据纬度和tileSize计算行号
+            </summary>
+            <param name="latitude">纬度</param>
+            <param name="tileSize">这一级的tileSize</param>
+            <returns>行号</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetLongitudeFromCol(System.Int32,System.Double)">
+            <summary>
+            根据列号和tileSize计算经度
+            </summary>
+            <param name="col">列号</param>
+            <param name="tileSize">这一级的tileSize</param>
+            <returns>经度</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetLatitudeFromRow(System.Int32,System.Double)">
+            <summary>
+            根据行号和tileSize计算纬度
+            </summary>
+            <param name="row">行号</param>
+            <param name="tileSize">这一级的tileSize</param>
+            <returns>纬度</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetFileByPos(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            根据级数、行号、列号、路径得到相应的文件名称，默认文件后缀jpg
+            </summary>
+            <param name="level">级数</param>
+            <param name="col">列号</param>
+            <param name="row">行号</param>
+            <param name="path">存储路径</param>
+            <returns>文件的全路径</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Raster.Utility.GetFileByPos(System.Int32,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            根据级数、行号、列号、路径、文件类型得到相应的文件名称
+            </summary>
+            <param name="level">级数</param>
+            <param name="col">列号</param>
+            <param name="row">行号</param>
+            <param name="path">存储路径</param>
+            <param name="fileType">文件类型</param>
+            <returns>文件的全路径</returns>
+        </member>
+    </members>
+</doc>

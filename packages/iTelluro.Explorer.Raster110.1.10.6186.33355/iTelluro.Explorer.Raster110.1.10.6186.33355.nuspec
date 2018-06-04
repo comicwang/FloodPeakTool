@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>iTelluro.Explorer.Raster110</id>
+    <version>1.10.6186.33355</version>
+    <title>iTelluro.Explorer.Raster.110</title>
+    <authors>武汉地大信息工程股份有限公司(InfoEarth)</authors>
+    <owners>武汉地大信息工程股份有限公司(InfoEarth)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>栅格数据读写封装库.</description>
+    <copyright>Copyright © Infoearth 2014</copyright>
+    <dependencies>
+      <dependency id="gdal110_release_net2.0_x86" version="1.0.5184.21789" />
+    </dependencies>
+  </metadata>
+</package>

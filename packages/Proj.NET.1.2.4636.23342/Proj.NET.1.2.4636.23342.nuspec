@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Proj.NET</id>
+    <version>1.2.4636.23342</version>
+    <title>Proj.NET</title>
+    <authors>Proj.NET</authors>
+    <owners>Proj.NET</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Proj.NET performs point-to-point coordinate conversions between geodetic coordinate systems for use in fx, Geographic Information Systems (GIS) or GPS applications. The spatial reference model used adheres to the Simple Features specification.</description>
+    <copyright>Copyright 2012</copyright>
+    <tags>GeoAPI NTS ProjNET Proj.NET</tags>
+    <dependencies>
+      <dependency id="GeoAPI" version="1.6" />
+    </dependencies>
+  </metadata>
+</package>

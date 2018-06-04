@@ -1,0 +1,815 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>iTelluro.Explorer.VectorUtility110</name>
+    </assembly>
+    <members>
+        <member name="T:iTelluro.Explorer.Vector.Utility.ConvertFromFeature">
+            <summary>
+            Feature对象转换
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.Feature2WKT(OSGeo.OGR.Feature)">
+            <summary>
+            单个Feature对象转换为WKT格式
+            </summary>
+            <param name="pFeature">Feature对象</param>
+            <returns>WKT格式</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.Feature2WKT(System.Collections.Generic.List{OSGeo.OGR.Feature})">
+            <summary>
+            多个Feature对象转换为WKT格式
+            </summary>
+            <param name="lstFeature">Feature对象列表</param>
+            <returns>转换结果列表</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.Feature2Geometry(OSGeo.OGR.Feature)">
+            <summary>
+            单个Feature对象转换为GeneralGeometry对象
+            </summary>
+            <param name="pFeature">Feature对象</param>
+            <returns>GeneralGeometry对象</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.OgrGeo2Geometry(OSGeo.OGR.Geometry)">
+            <summary>
+            单个Geometry对象转换为GeneralGeometry对象
+            </summary>
+            <param name="pGeometry">Geometry对象</param>
+            <returns>GeneralGeometry对象</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.Feature2Geometry(System.Collections.Generic.List{OSGeo.OGR.Feature})">
+            <summary>
+            多个Feature对象转换为GeneralGeometry对象列表
+            </summary>
+            <param name="lstFeature">Feature对象列表</param>
+            <returns>GeneralGeometry对象列表</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.OgrGeo2Geometry(System.Collections.Generic.List{OSGeo.OGR.Geometry})">
+            <summary>
+            多个Feature对象转换为GeneralGeometry对象列表
+            </summary>
+            <param name="lstGeo">Feature对象列表</param>
+            <returns>GeneralGeometry对象列表</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.ConvertFromFeature.ParseGeometry(OSGeo.OGR.Feature)">
+            <summary>
+            单个OSGeo.OGR.Featur对象转换为GeneralGeometry对象
+            </summary>
+            <param name="pFeature">单个Feature对象</param>
+            <returns>GeneralGeometry对象</returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.CoordsTransform">
+            <summary>
+            坐标换算，包括世界坐标到屏幕坐标的换算
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.CoordsTransform.WorldToScreen(iTelluro.GlobeEngine.DataSource.Geometry.Point3d,iTelluro.GlobeEngine.DataSource.Geometry.GeoRect,System.Drawing.Size)">
+            <summary>
+            地理坐标到(屏幕)图片坐标
+            </summary>
+            <param name="pnts3d">要变换的点</param>
+            <param name="geoRange">地理坐标范围</param>
+            <param name="imgSize">屏幕(图片)尺寸</param>
+            <returns>变换后的点</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.CoordsTransform.WorldToScreen(iTelluro.GlobeEngine.DataSource.Geometry.Point3d[],iTelluro.GlobeEngine.DataSource.Geometry.GeoRect,System.Drawing.Size)">
+            <summary>
+            地理坐标到(屏幕)图片坐标
+            </summary>
+            <param name="pnts3d">要变换的点串</param>
+            <param name="geoRange">地理坐标范围</param>
+            <param name="imgSize">屏幕(图片)尺寸</param>
+            <returns>变换后的点串</returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.GeneralGeometry">
+            <summary>
+            GeneralGeometry对象
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeneralGeometry.#ctor">
+            <summary>
+            默认构造函数
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.GeometryType">
+            <summary>
+            对象类型
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyPoint3d">
+            <summary>
+            单点
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyMultiPoint3d">
+            <summary>
+            多点
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyLineString">
+            <summary>
+            线
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyMultiLineString">
+            <summary>
+            多线
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyPolygon">
+            <summary>
+            多边形
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.GeneralGeometry.MyMultiPolygon">
+            <summary>
+            多多边形
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.GeoConvert">
+            <summary>
+            数据类型转换
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.Line2WKT(iTelluro.GlobeEngine.DataSource.Data.Line)">
+            <summary>
+            线转wkt
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.LineString2WKT(iTelluro.GlobeEngine.DataSource.Geometry.LineString)">
+            <summary>
+            线转wkt
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.Points2WKT(iTelluro.GlobeEngine.DataSource.Geometry.Point3d[])">
+            <summary>
+            线点集转wkt
+            </summary>
+            <param name="ps"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.Polygon2WKT(iTelluro.GlobeEngine.DataSource.Geometry.Polygon)">
+            <summary>
+            多边形面转wkt,支持带洞的面
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.ToRect(iTelluro.GlobeEngine.DataSource.Geometry.Polygon)">
+            <summary>
+            获取polygon外接矩形
+            </summary>
+            <param name="poly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.ToPolygon(iTelluro.GlobeEngine.DataSource.Geometry.GeoRect)">
+            <summary>
+            获取矩形面
+            </summary>
+            <param name="rc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.ToPolygon(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            获取矩形面
+            </summary>
+            <param name="west"></param>
+            <param name="east"></param>
+            <param name="north"></param>
+            <param name="south"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.ClonePolygonAttrs(iTelluro.GlobeEngine.DataSource.Geometry.Polygon@,iTelluro.GlobeEngine.DataSource.Geometry.Polygon)">
+            <summary>
+            克隆面属性
+            </summary>
+            <param name="to"></param>
+            <param name="from"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.CloneLineStringAttr(iTelluro.GlobeEngine.DataSource.Geometry.LineString@,iTelluro.GlobeEngine.DataSource.Geometry.LineString)">
+            <summary>
+            克隆线属性
+            </summary>
+            <param name="to"></param>
+            <param name="from"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.CloneLineAttr(iTelluro.GlobeEngine.DataSource.Data.Line@,iTelluro.GlobeEngine.DataSource.Data.Line)">
+            <summary>
+            克隆线属性
+            </summary>
+            <param name="to"></param>
+            <param name="from"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2Point(System.String)">
+            <summary>
+            wkt转Point,Point3d.operator ==有bug，不能比较null
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2MultiPoint(System.String)">
+            <summary>
+            wkt转Point,Point3d.operator ==有bug，不能比较null
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2LineString(System.String)">
+            <summary>
+            wkt转LineString
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2MultiLineString(System.String)">
+            <summary>
+            wkt转LineString
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2MultiPolygon(System.String)">
+            <summary>
+            wkt转LineString
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeoConvert.WKT2Polygon(System.String)">
+            <summary>
+            wkt转polygon
+            </summary>
+            <param name="wkt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.GeometryFromWKB">
+            <summary>
+            由WKB创建GeneralGeometry
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.Parse(System.Byte[])">
+            <summary>
+            将二进制流解析成几何对象
+            </summary>
+            <param name="bytes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.Parse(System.IO.BinaryReader)">
+            <summary>
+            由WKB创建一个Geometry
+            Creates a SharpMap.Geometries.Geometry based on the Well-known binary representation.
+            </summary>
+            <param name="reader">A System.IO.BinaryReader used to read the Well-known binary representation.</param>
+            <returns>A SharpMap.Geometries.Geometry based on the Well-known binary representation.</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBPoint(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建点
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.ReadCoordinates(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建点串
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBLineString(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建线LineString
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBLinearRing(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建环线LinearRing
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBPolygon(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建多边形Polygon
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBMultiPoint(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建多点MultiPoint
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBMultiLineString(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建多线MultiLineString
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.CreateWKBMultiPolygon(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            创建多多边形MultiPolygon
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.ReadUInt32(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            byte2int
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKB.ReadDouble(System.IO.BinaryReader,iTelluro.Explorer.Vector.Utility.WkbByteOrder)">
+            <summary>
+            byte2double
+            </summary>
+            <param name="reader"></param>
+            <param name="byteOrder"></param>
+            <returns></returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.GeometryFromWKT">
+            <summary>
+            由WKT串创建GeneralGeometry
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.Parse(System.String)">
+            <summary>
+            根据WKT串得到相应的GeneralGeometry对象
+            </summary>
+            <param name="wellKnownText"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.Parse(System.IO.TextReader)">
+            <summary>
+            根据TextReader得到相应的GeneralGeometry对象
+            </summary>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.ReadGeometryTaggedText(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            根据WktStreamTokenizer得到相应的GeneralGeometry对象
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreatePoint3d(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建Point3d
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetCoordinates(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建点串
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreateMultiPoint3d(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建多点
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreateLineString(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建线LineString
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreateMultiLineString(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建多线MultiLineString
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreatePolygon(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建多边形Polygon
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.CreateMultiPolygon(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            创建多个多边形MultiPolygon
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetNextEmptyOrOpener(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            得到下一个空字符或左边括号
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetNextNumber(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            得到数字
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetNextCloser(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            得到右边括号
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetNextWord(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            得到文字
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.GeometryFromWKT.GetNextCloserOrComma(iTelluro.Explorer.Vector.Utility.WktStreamTokenizer)">
+            <summary>
+            得到逗号或者右边括号
+            </summary>
+            <param name="tokenizer"></param>
+            <returns></returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.TagFieldType">
+            <summary>
+            Tag字段数据类型
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.TagFieldType.TFTInteger">
+            <summary>
+            int
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.TagFieldType.TFTReal">
+            <summary>
+            double
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.TagFieldType.TFTString">
+            <summary>
+            string
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.TagFieldType.TFTDateTime">
+            <summary>
+            date and time
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.LayerExporter">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.LayerExporter._LabelList">
+            <summary>
+            定义屏幕矩阵绘制后的矩阵空间索引
+            (仅分块内的点位，因为除了边界点，不同分块点位不冲突)
+            </summary> 
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.LayerExporter._resolution">
+            <summary>
+            出图分辨率
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.AbstractLayer,iTelluro.Explorer.Vector.Utility.TagFieldType)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径，文件名可能会被添加后缀，<br />
+            因为shp文件不支持不同几何类型的要素混存</param>
+            <param name="layer"></param>
+            <param name="tag">tag字段的数据类型，所有图层都采用这一种数据类型</param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportFeatureLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.FeatureLayer,iTelluro.Explorer.Vector.Utility.TagFieldType)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径，文件名可能会被添加后缀，<br />
+            因为shp文件不支持不同几何类型的要素混存</param>
+            <param name="layer"></param>
+            <param name="tag">tag字段的数据类型</param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportLonLatVectorLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.LonLatVectorDataLayer)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径，文件名可能会被添加后缀，<br />
+            因为shp文件不支持不同几何类型的要素混存</param>
+            <param name="layer"></param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportLonLatVectorLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.LonLatVectorDataLayer,iTelluro.GlobeEngine.DataSource.Geometry.GeoRect,iTelluro.Explorer.Vector.Utility.TagFieldType)">
+            <summary>
+            将网图上的矢量图层指定范围导出成shp文件
+            </summary>
+            <param name="path">文件完整路径，文件名可能会被添加后缀，<br />
+            因为shp文件不支持不同几何类型的要素混存</param>
+            <param name="lyr"></param>
+            <param name="exportRegion">导出区域，只导出该范围内的要素</param>
+            <param name="tag">tag字段的数据类型</param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportLabelLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.LabelLayer,iTelluro.Explorer.Vector.Utility.TagFieldType)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径</param>
+            <param name="layer"></param>
+            <param name="tag">tag字段的数据类型，所有图层都采用这一种数据类型</param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportIconLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.IconLayer)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径</param>
+            <param name="layer"></param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportIconLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.IconLayer,iTelluro.GlobeEngine.DataSource.Geometry.GeoRect,iTelluro.Explorer.Vector.Utility.TagFieldType)">
+            <summary>
+            将网图上的矢量图层导出成shp文件
+            </summary>
+            <param name="path">文件完整路径</param>
+            <param name="layer"></param>
+            <param name="rect">导出区域</param>
+            <param name="tag">tag字段的数据类型，类型一致性由调用方保证</param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.ExportRaster(System.String,System.Int32,System.Int32,iTelluro.GlobeEngine.DataSource.Layer.AbstractLayer)">
+            <summary>
+            将已渲染过的矢量图层输出成栅格文件
+            </summary>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.IsOverlap(iTelluroLib.SpatialIndex.SpatialBox)">
+            <summary>
+            检查是否有重叠，
+            </summary>
+            <param name="box"></param>
+            <returns>有重叠则返回true，无重叠返回false</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerExporter.GetLabelPosition(System.Drawing.Point,System.Int32,System.Int32,System.Single,System.Single)">
+            <summary>
+            计算标注的合适位置，按右、左、上、下的顺序放置
+            </summary>
+            <param name="pnt">图片中心点位</param>
+            <param name="imgwidth">图片宽度</param>
+            <param name="imgheight">图片高度</param>
+            <param name="lblwidth">标注宽度</param>
+            <param name="lblheight">标注高度</param>
+            <returns>放不下时返回null</returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.LayerImporter">
+            <summary>
+            将从网图上导出的图层再加载到网图
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerImporter.ImportLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.AbstractLayer@)">
+            <summary>
+            导出矢量图层
+            </summary>
+            <param name="path"></param>
+            <param name="layer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerImporter.ImportIconLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.IconLayer)">
+            <summary>
+            导入使用LayerExporter从网图上导出的图层
+            </summary>
+            <param name="path">使用LayerExporter导出时的文件路径</param>
+            <param name="lyr"></param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.LayerImporter.ImportLonLatVectorLayer(System.String,iTelluro.GlobeEngine.DataSource.Layer.LonLatVectorDataLayer)">
+            <summary>
+            导入使用LayerExporter从网图上导出的图层
+            </summary>
+            <param name="path">使用LayerExporter导出时的文件路径</param>
+            <param name="lyr"></param>
+            <returns>错误信息</returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.Pt2Pt">
+            <summary>
+            投影转换类
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.Pt2Pt.TransFormPt2Pt(System.String,System.String,System.Double,System.Double)">
+            <summary>
+            单点的投影转换
+            </summary>
+            <param name="fromCSwkt">源坐标系统的wkt串</param>
+            <param name="toCSwkt">目标坐标系统的wkt串</param>
+            <param name="x">x坐标</param>
+            <param name="y">y坐标</param>
+            <returns>投影变换后的坐标数组，长度2，[0]为x，[1]为y</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.Pt2Pt.TransFormPts2Pts(System.String,System.String,System.Collections.Generic.List{System.Double[]})">
+            <summary>
+            点串的投影转换
+            </summary>
+            <param name="fromCSwkt">源坐标系统的wkt串</param>
+            <param name="toCSwkt">目标坐标系统的wkt串</param>
+            <param name="lstPt">源点串坐标</param>
+            <returns>结果点串坐标，[0]为x，[1]为y</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.Pt2Pt.TransFormPt2Pt(System.String,System.String,iTelluro.GlobeEngine.DataSource.Geometry.Point3d)">
+            <summary>
+            单个点的投影变换
+            </summary>
+            <param name="fromCSwkt">源坐标系统的wkt串</param>
+            <param name="toCSwkt">目标坐标系统的wkt串</param>
+            <param name="pt">要转换的Point3d点</param>
+            <returns>转换后的Point3d点</returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.Pt2Pt.TransFormPts2Pts(System.String,System.String,iTelluro.GlobeEngine.DataSource.Geometry.Point3d[])">
+            <summary>
+            点串的投影变换
+            </summary>
+            <param name="fromCSwkt">源坐标系统的wkt串</param>
+            <param name="toCSwkt">目标坐标系统的wkt串</param>
+            <param name="lstPt">要转换的Point3d点串</param>
+            <returns>转换后的Point3d点串</returns>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.StreamTokenizer">
+            <summary>
+            将二进制流解释成WktTokenType的符号
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.GetNumericValue">
+            <summary>
+            得到数字类型的值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.GetStringValue">
+            <summary>
+            得到字符类型的值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.GetTokenType">
+            <summary>
+            得到当前的WktTokenType类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.NextToken(System.Boolean)">
+            <summary>
+            得到下一个字符的类型
+            </summary>
+            <param name="ignoreWhitespace">是否忽略空格</param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.NextToken">
+            <summary>
+            得到下一个字符的类型，默认不忽略空格符
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.NextNonWhitespaceToken">
+            <summary>
+            得到下一个非空格符字符的类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.NextTokenAny">
+            <summary>
+            得到下一个字符的类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.StreamTokenizer.GetType(System.Char)">
+            <summary>
+            得到char的WktTokenType类型
+            </summary>
+            <param name="character">输入参数</param>
+            <returns>返回类型</returns>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.StreamTokenizer.ColNumber">
+            <summary>
+            列号
+            </summary>
+        </member>
+        <member name="P:iTelluro.Explorer.Vector.Utility.StreamTokenizer.LineNumber">
+            <summary>
+            行号
+            </summary>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.WkbByteOrder">
+            <summary>
+            wkb串的字节序
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WkbByteOrder.Xdr">
+            <summary>
+            XDR (Big Endian) Encoding of Numeric Types
+            </summary>
+            <remarks>
+            <para>The XDR representation of an Unsigned Integer is Big Endian (most significant byte first).</para>
+            <para>The XDR representation of a Double is Big Endian (sign bit is first byte).</para>
+            </remarks>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WkbByteOrder.Ndr">
+            <summary>
+            NDR (Little Endian) Encoding of Numeric Types
+            </summary>
+            <remarks>
+            <para>The NDR representation of an Unsigned Integer is Little Endian (least significant byte first).</para>
+            <para>The NDR representation of a Double is Little Endian (sign bit is last byte).</para>
+            </remarks>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.WKBGeometryType">
+            <summary>
+            wkb几何类型
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbNone">
+            <summary>
+            无
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbPoint">
+            <summary>
+            点
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbLineString">
+            <summary>
+            线
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbPolygon">
+            <summary>
+            简单面
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbMultiPoint">
+            <summary>
+            多点
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbMultiLineString">
+            <summary>
+            组合线
+            </summary>
+        </member>
+        <member name="F:iTelluro.Explorer.Vector.Utility.WKBGeometryType.wkbMultiPolygon">
+            <summary>
+            组合面
+            </summary>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.WktStreamTokenizer.ReadToken(System.String)">
+            <summary>
+            验证所独到的字符是否是所期望的值
+            </summary>
+            <param name="expectedToken"></param>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.WktStreamTokenizer.ReadDoubleQuotedWord">
+            <summary>
+            得到双引号里面的文字
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.Explorer.Vector.Utility.WktStreamTokenizer.ReadAuthority(System.String@,System.Int64@)">
+            <summary>
+            应该是用于坐标系统的WKT串吧??
+            </summary>
+            <param name="authority"></param>
+            <param name="authorityCode"></param>
+        </member>
+        <member name="T:iTelluro.Explorer.Vector.Utility.WktTokenType">
+            <summary>
+            WKT串字符类型
+            </summary>
+        </member>
+    </members>
+</doc>
