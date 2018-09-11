@@ -202,6 +202,18 @@
       <DependentUpon>CaculateResultUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\FormA2Table.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormA2Table.Designer.cs">
+      <DependentUpon>FormA2Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormA1Table.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormA1Table.Designer.cs">
+      <DependentUpon>FormA1Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormCaculateArgView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -271,6 +283,12 @@
     <EmbeddedResource Include="UI\CaculateResultUI.resx">
       <DependentUpon>CaculateResultUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormA2Table.resx">
+      <DependentUpon>FormA2Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormA1Table.resx">
+      <DependentUpon>FormA1Table.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormCaculateArgView.resx">
       <DependentUpon>FormCaculateArgView.cs</DependentUpon>
     </EmbeddedResource>
@@ -313,6 +331,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\layer_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

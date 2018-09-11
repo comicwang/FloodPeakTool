@@ -252,6 +252,87 @@
             内部数据
             </summary>
         </member>
+        <member name="T:iTelluro.GlobeEngine.DataSource.Data.LineNode">
+            <summary>
+            线对象，小于2000个（同时在界面显示，可以通过显示范围优化）
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LineNode.#ctor(System.Int64,iTelluro.GlobeEngine.DataSource.Geometry.Point3d[],System.String[],System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="points"></param>
+            <param name="imgs"></param>
+            <param name="midSize">中间点大小</param>
+            <param name="sideSize">外边点大小</param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LineNode.AddPoint(System.Double,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Adds a point to the end of the line.
+            </summary>
+            <param name="x">Lon</param>
+            <param name="y">Lat</param>
+            <param name="z">Alt (米)</param>
+            <param name="img">图片路径</param>
+            <param name="size">点大小</param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LineNode.AddPoint(iTelluro.GlobeEngine.DataSource.Geometry.Point3d,System.String,System.Int32)">
+            <summary>
+            Adds a point to the line at the end of the line.
+            </summary>
+            <param name="point">The Point3d object to add.</param>
+            <param name="img">图片路径</param>
+            <param name="size">点大小</param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LineNode.Update">
+            <summary>
+            当数据更新后，更新当前的线
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LineNode.GetGeographicBoundingBox">
+            <summary>
+            返回外接矩形
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.IsRelativeToGround">
+            <summary>
+            是否绝对高程
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.LineColor">
+            <summary>
+            线颜色
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.LineWidth">
+            <summary>
+            线宽
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.Points">
+            <summary>
+            线的形状点序列
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.PointsList">
+            <summary>
+            形状点序列
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.NumPoints">
+            <summary>
+            形状点数量
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.LineNode.UseZBuffer">
+            <summary>
+            是否使用 Zbuffer。缺省为true。如果为 false，
+            则在摄像机镜头视角较大时，不使用遮挡计算，线始终可见。
+            用于解决矢量线和三维地形“贴合”的问题。
+            </summary>
+        </member>
         <member name="T:iTelluro.GlobeEngine.DataSource.Data.Line">
             <summary>
             线对象，小于2000个（同时在界面显示，可以通过显示范围优化）
@@ -496,6 +577,16 @@
         <member name="M:iTelluro.GlobeEngine.DataSource.Data.LODScene.UpdatePosition">
             <summary>
             通知场景坐标被外部修改
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LODScene.SplitModelIndex(System.Collections.Generic.List{iTelluro.GlobeEngine.DataSource.Geometry.Point3d},System.String)">
+            <summary>
+            模型裁剪,生成新的索引文件
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.LODScene.SplitModelMesh(System.Collections.Generic.List{iTelluro.GlobeEngine.DataSource.Geometry.Point3d},iTelluro.GlobeEngine.Graphics3D.Renderable.Model.ProgressReporter)">
+            <summary>
+            模型裁剪,生成新的Mesh数据
             </summary>
         </member>
         <member name="P:iTelluro.GlobeEngine.DataSource.Data.LODScene.Pointer">
@@ -760,6 +851,11 @@
             是否模型已渲染
             </summary>
         </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Data.Model.IsTerrainProvider">
+            <summary>
+            是否参与高程计算，默认不参与
+            </summary>
+        </member>
         <member name="P:iTelluro.GlobeEngine.DataSource.Data.Model.ModelFeature">
             <summary>
             模型对象, 返回内部的ModelFeature
@@ -834,6 +930,21 @@
             <param name="longitude"></param>
             <param name="latitude"></param>
             <param name="altitude"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.POIIcon.AddIndexToImage(System.String,System.String,System.Int32,System.Drawing.Color,System.Int32)">
+            <summary>
+            在图片上添加索引号
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.POIIcon.ShowIconWithIndex(System.Int32,System.Int32)">
+            <summary>
+            带索引的图标，白色索引
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Data.POIIcon.ShowIconWithIndex(System.Int32,System.Drawing.Color,System.Int32)">
+            <summary>
+            带索引的图标
+            </summary>
         </member>
         <member name="M:iTelluro.GlobeEngine.DataSource.Data.POIIcon.ToString">
             <summary>
@@ -1764,7 +1875,7 @@
             
             </summary>
         </member>
-        <member name="T:iTelluro.GlobeEngine.DataSource.Layer.FeatureLayer">
+        <member name="T:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer">
             <summary>
             
             </summary>
@@ -1862,6 +1973,111 @@
             </summary>
         </member>
         <member name="P:iTelluro.GlobeEngine.DataSource.Layer.FloatLayer.Visible">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.GetEnumerator">
+            <summary>
+            获取每个Feature
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Add(System.Collections.Generic.IEnumerable{iTelluro.GlobeEngine.DataSource.Data.Feature})">
+            <summary>
+            添加一些要素
+            </summary>
+            <param name="features"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Add(iTelluro.GlobeEngine.DataSource.Data.Feature)">
+            <summary>
+            
+            </summary>
+            <param name="feature"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Remove(iTelluro.GlobeEngine.DataSource.Data.Feature)">
+            <summary>
+            
+            </summary>
+            <param name="feature"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Remove(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Clear">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.GetLines">
+            <summary>
+            获取所有线
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.GetLine(System.Int32)">
+            <summary>
+            获取线，index必须在LineCount范围内
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.ContainFeatureKeys(System.Int64)">
+            <summary>
+            是否包含指定id的对象
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.OnRenderableObjectSelect(System.Object,System.Int64,System.Windows.Forms.MouseButtons)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="id"></param>
+            <param name="buttons"></param>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.OnDisplayDistanceChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.SetDisplayDistance(iTelluro.GlobeEngine.DataSource.Data.Feature)">
+            <summary>
+            设置对象的显示高程
+            </summary>
+            <param name="feature"></param>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Item(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.Item(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.count">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.FeatureNodeLayer.LineCount">
+            <summary>
+            图层中线总数
+            </summary>
+        </member>
+        <member name="T:iTelluro.GlobeEngine.DataSource.Layer.FeatureLayer">
             <summary>
             
             </summary>
@@ -2442,6 +2658,16 @@
             图层是否可见
             </summary>
         </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LabelLayer.StartTime">
+            <summary>
+            设置标注过滤时间段的起始时间
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LabelLayer.EndTime">
+            <summary>
+            设置标注过滤时间段的截止时间
+            </summary>
+        </member>
         <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LabelLayer.MaxDisplayDistance">
             <summary>
             最大显示距离
@@ -2923,6 +3149,16 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LODSceneLayer.LodRatio">
+            <summary>
+            仅SDK内部使用
+            </summary>
+        </member>
+        <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LODSceneLayer.Internal">
+            <summary>
+            仅SDK内部使用
+            </summary>
+        </member>
         <member name="P:iTelluro.GlobeEngine.DataSource.Layer.LODSceneLayer.Extent">
             <summary>
             图层地理范围
@@ -3201,6 +3437,11 @@
             <summary>
             距离海平面的高度，对于TerrainMapped未false的数据，可以设置其距离海平面的距离，
             可用于模拟云层、水面等对象。默认为0. 
+            </summary>
+        </member>
+        <member name="F:iTelluro.GlobeEngine.DataSource.Layer.LonLatDataLayer.LonLatDataLayerDescriptor.PixelSize">
+            <summary>
+            切片像素尺寸
             </summary>
         </member>
         <member name="T:iTelluro.GlobeEngine.DataSource.Layer.LonLatVectorDataLayer">

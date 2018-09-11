@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -41,11 +42,15 @@
             this.fileChooseControl2 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl1 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl3 = new FloodPeakToolUI.UI.FileChooseControl();
+            this.picInfo = new System.Windows.Forms.PictureBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.picInfo);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.textBox3);
@@ -96,7 +101,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.Location = new System.Drawing.Point(120, 75);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(115, 21);
+            this.textBox3.Size = new System.Drawing.Size(93, 21);
             this.textBox3.TabIndex = 1;
             // 
             // textBox2
@@ -131,11 +136,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(4, 55);
+            this.label2.Location = new System.Drawing.Point(5, 55);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 12);
             this.label2.TabIndex = 0;
-            this.label2.Text = "平均坡度l2(千分比)";
+            this.label2.Text = "坡面平均比降l2(‰)";
             // 
             // label1
             // 
@@ -145,7 +150,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(113, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "流域平均坡长L2(km)";
+            this.label1.Text = "坡面平均坡长L2(km)";
             // 
             // backgroundWorker1
             // 
@@ -161,13 +166,14 @@
             this.fileChooseControl2.Name = "fileChooseControl2";
             this.fileChooseControl2.Size = new System.Drawing.Size(240, 24);
             this.fileChooseControl2.TabIndex = 1;
+            this.fileChooseControl2.Visible = false;
             this.fileChooseControl2.OnSelectIndexChanged += new System.EventHandler(this.fileChooseControl3_OnSelectIndexChanged);
             // 
             // fileChooseControl1
             // 
             this.fileChooseControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl1.FileType = FloodPeakUtility.Model.ImportType.Dom;
-            this.fileChooseControl1.LeftTitle = "DEM";
+            this.fileChooseControl1.LeftTitle = "流域DEM图层";
             this.fileChooseControl1.Location = new System.Drawing.Point(0, 24);
             this.fileChooseControl1.Name = "fileChooseControl1";
             this.fileChooseControl1.Size = new System.Drawing.Size(240, 24);
@@ -178,12 +184,25 @@
             // 
             this.fileChooseControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl3.FileType = FloodPeakUtility.Model.ImportType.Shp;
-            this.fileChooseControl3.LeftTitle = "主河槽";
+            this.fileChooseControl3.LeftTitle = "坡面图层";
             this.fileChooseControl3.Location = new System.Drawing.Point(0, 0);
             this.fileChooseControl3.Name = "fileChooseControl3";
             this.fileChooseControl3.Size = new System.Drawing.Size(240, 24);
             this.fileChooseControl3.TabIndex = 3;
             this.fileChooseControl3.OnSelectIndexChanged += new System.EventHandler(this.fileChooseControl3_OnSelectIndexChanged);
+            // 
+            // picInfo
+            // 
+            this.picInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picInfo.Image = global::FloodPeakToolUI.Properties.Resources.table;
+            this.picInfo.Location = new System.Drawing.Point(217, 78);
+            this.picInfo.Name = "picInfo";
+            this.picInfo.Size = new System.Drawing.Size(16, 16);
+            this.picInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picInfo.TabIndex = 8;
+            this.picInfo.TabStop = false;
+            this.picInfo.Click += new System.EventHandler(this.picInfo_Click);
             // 
             // SlopeConfluenceControl
             // 
@@ -195,8 +214,10 @@
             this.Controls.Add(this.fileChooseControl3);
             this.Name = "SlopeConfluenceControl";
             this.Size = new System.Drawing.Size(240, 240);
+            this.Load += new System.EventHandler(this.SlopeConfluenceControl_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -216,5 +237,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private FileChooseControl fileChooseControl3;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PictureBox picInfo;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

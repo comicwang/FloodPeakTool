@@ -35,6 +35,9 @@
             this.panelTitle = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.expandableSplitter1 = new DevComponents.DotNetBar.ExpandableSplitter();
+            this.pnl_Main_Right = new System.Windows.Forms.Panel();
+            this.grpPnl = new System.Windows.Forms.GroupBox();
             this.PlnMainPlug = new System.Windows.Forms.Panel();
             this.tabControl1 = new DevComponents.DotNetBar.TabControl();
             this.tabControlPanel1 = new DevComponents.DotNetBar.TabControlPanel();
@@ -54,6 +57,8 @@
             this.btnExport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tlsColorSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.暴雨参数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.暴雨频率计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.暴雨衰减参数计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,12 +80,11 @@
             this.dockSite1 = new DevComponents.DotNetBar.DockSite();
             this.dockSite2 = new DevComponents.DotNetBar.DockSite();
             this.dockSite3 = new DevComponents.DotNetBar.DockSite();
-            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlsColorSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop.SuspendLayout();
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelMain.SuspendLayout();
+            this.pnl_Main_Right.SuspendLayout();
             this.PlnMainPlug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -134,7 +138,9 @@
             // panelMain
             // 
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(224)))), ((int)(((byte)(255)))));
+            this.panelMain.Controls.Add(this.expandableSplitter1);
             this.panelMain.Controls.Add(this.PlnMainPlug);
+            this.panelMain.Controls.Add(this.pnl_Main_Right);
             this.panelMain.Controls.Add(this.Pnl_Main_Left);
             this.panelMain.Controls.Add(this.panelMenu);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -143,13 +149,67 @@
             this.panelMain.Size = new System.Drawing.Size(1184, 673);
             this.panelMain.TabIndex = 8;
             // 
+            // expandableSplitter1
+            // 
+            this.expandableSplitter1.BackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(101)))), ((int)(((byte)(147)))), ((int)(((byte)(207)))));
+            this.expandableSplitter1.BackColor2SchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandableSplitter1.BackColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.expandableSplitter1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.expandableSplitter1.ExpandableControl = this.pnl_Main_Right;
+            this.expandableSplitter1.ExpandFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(101)))), ((int)(((byte)(147)))), ((int)(((byte)(207)))));
+            this.expandableSplitter1.ExpandFillColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandableSplitter1.ExpandLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.expandableSplitter1.ExpandLineColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText;
+            this.expandableSplitter1.GripDarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.expandableSplitter1.GripDarkColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText;
+            this.expandableSplitter1.GripLightColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(239)))), ((int)(((byte)(255)))));
+            this.expandableSplitter1.GripLightColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.BarBackground;
+            this.expandableSplitter1.HotBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(151)))), ((int)(((byte)(61)))));
+            this.expandableSplitter1.HotBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(184)))), ((int)(((byte)(94)))));
+            this.expandableSplitter1.HotBackColor2SchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemPressedBackground2;
+            this.expandableSplitter1.HotBackColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemPressedBackground;
+            this.expandableSplitter1.HotExpandFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(101)))), ((int)(((byte)(147)))), ((int)(((byte)(207)))));
+            this.expandableSplitter1.HotExpandFillColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandableSplitter1.HotExpandLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.expandableSplitter1.HotExpandLineColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.ItemText;
+            this.expandableSplitter1.HotGripDarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(101)))), ((int)(((byte)(147)))), ((int)(((byte)(207)))));
+            this.expandableSplitter1.HotGripDarkColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.expandableSplitter1.HotGripLightColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(239)))), ((int)(((byte)(255)))));
+            this.expandableSplitter1.HotGripLightColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.BarBackground;
+            this.expandableSplitter1.Location = new System.Drawing.Point(978, 42);
+            this.expandableSplitter1.Name = "expandableSplitter1";
+            this.expandableSplitter1.Size = new System.Drawing.Size(6, 631);
+            this.expandableSplitter1.Style = DevComponents.DotNetBar.eSplitterStyle.Office2007;
+            this.expandableSplitter1.TabIndex = 0;
+            this.expandableSplitter1.TabStop = false;
+            // 
+            // pnl_Main_Right
+            // 
+            this.pnl_Main_Right.Controls.Add(this.grpPnl);
+            this.pnl_Main_Right.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnl_Main_Right.Location = new System.Drawing.Point(984, 42);
+            this.pnl_Main_Right.Name = "pnl_Main_Right";
+            this.pnl_Main_Right.Size = new System.Drawing.Size(200, 631);
+            this.pnl_Main_Right.TabIndex = 1;
+            this.pnl_Main_Right.Visible = false;
+            // 
+            // grpPnl
+            // 
+            this.grpPnl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpPnl.Location = new System.Drawing.Point(0, 0);
+            this.grpPnl.Name = "grpPnl";
+            this.grpPnl.Size = new System.Drawing.Size(200, 631);
+            this.grpPnl.TabIndex = 1;
+            this.grpPnl.TabStop = false;
+            this.grpPnl.Text = "输出日志";
+            // 
             // PlnMainPlug
             // 
             this.PlnMainPlug.Controls.Add(this.tabControl1);
             this.PlnMainPlug.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PlnMainPlug.Location = new System.Drawing.Point(240, 42);
             this.PlnMainPlug.Name = "PlnMainPlug";
-            this.PlnMainPlug.Size = new System.Drawing.Size(944, 631);
+            this.PlnMainPlug.Size = new System.Drawing.Size(744, 631);
             this.PlnMainPlug.TabIndex = 2;
             // 
             // tabControl1
@@ -166,7 +226,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedTabFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold);
             this.tabControl1.SelectedTabIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(944, 631);
+            this.tabControl1.Size = new System.Drawing.Size(744, 631);
             this.tabControl1.Style = DevComponents.DotNetBar.eTabStripStyle.Office2007Document;
             this.tabControl1.TabIndex = 0;
             this.tabControl1.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.FixedWithNavigationBox;
@@ -180,7 +240,7 @@
             this.tabControlPanel1.Location = new System.Drawing.Point(0, 25);
             this.tabControlPanel1.Name = "tabControlPanel1";
             this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(944, 606);
+            this.tabControlPanel1.Size = new System.Drawing.Size(744, 606);
             this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
             this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
             this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
@@ -198,7 +258,7 @@
             this.ShowPLG.Location = new System.Drawing.Point(1, 1);
             this.ShowPLG.Margin = new System.Windows.Forms.Padding(0);
             this.ShowPLG.Name = "ShowPLG";
-            this.ShowPLG.Size = new System.Drawing.Size(942, 604);
+            this.ShowPLG.Size = new System.Drawing.Size(742, 604);
             this.ShowPLG.TabIndex = 1;
             // 
             // tabItem1
@@ -343,6 +403,22 @@
             this.btnExit.Size = new System.Drawing.Size(166, 24);
             this.btnExit.Text = "退出程序(&E)";
             this.btnExit.Click += new System.EventHandler(this.退出程序ToolStripMenuItem_Click);
+            // 
+            // 设置ToolStripMenuItem
+            // 
+            this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlsColorSetting});
+            this.设置ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
+            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.设置ToolStripMenuItem.Text = "设置(&S)";
+            // 
+            // tlsColorSetting
+            // 
+            this.tlsColorSetting.Name = "tlsColorSetting";
+            this.tlsColorSetting.Size = new System.Drawing.Size(134, 24);
+            this.tlsColorSetting.Text = "颜色设置";
+            this.tlsColorSetting.Click += new System.EventHandler(this.tlsColorSetting_Click);
             // 
             // 暴雨参数ToolStripMenuItem
             // 
@@ -529,22 +605,6 @@
             this.dockSite3.TabIndex = 11;
             this.dockSite3.TabStop = false;
             // 
-            // 设置ToolStripMenuItem
-            // 
-            this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tlsColorSetting});
-            this.设置ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
-            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
-            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
-            this.设置ToolStripMenuItem.Text = "设置(&S)";
-            // 
-            // tlsColorSetting
-            // 
-            this.tlsColorSetting.Name = "tlsColorSetting";
-            this.tlsColorSetting.Size = new System.Drawing.Size(152, 24);
-            this.tlsColorSetting.Text = "颜色设置";
-            this.tlsColorSetting.Click += new System.EventHandler(this.tlsColorSetting_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -573,6 +633,7 @@
             this.panelTitle.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelMain.ResumeLayout(false);
+            this.pnl_Main_Right.ResumeLayout(false);
             this.PlnMainPlug.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).EndInit();
             this.tabControl1.ResumeLayout(false);
@@ -634,6 +695,9 @@
         private DevComponents.DotNetBar.TabItem tabItem1;
         private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tlsColorSetting;
+        private System.Windows.Forms.Panel pnl_Main_Right;
+        private System.Windows.Forms.GroupBox grpPnl;
+        private DevComponents.DotNetBar.ExpandableSplitter expandableSplitter1;
     }
 }
 

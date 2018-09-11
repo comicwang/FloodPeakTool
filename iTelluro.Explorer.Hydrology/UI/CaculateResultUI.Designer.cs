@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnExport = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.expandablePanel1 = new DevComponents.DotNetBar.ExpandablePanel();
             this.txtQm = new System.Windows.Forms.TextBox();
@@ -53,7 +52,6 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btnExport);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.expandablePanel1);
             this.panel1.Location = new System.Drawing.Point(3, 3);
@@ -61,18 +59,6 @@
             this.panel1.Size = new System.Drawing.Size(703, 501);
             this.panel1.TabIndex = 1;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // btnExport
-            // 
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Location = new System.Drawing.Point(52, 379);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 23);
-            this.btnExport.TabIndex = 3;
-            this.btnExport.Text = "导出Sd-Qm";
-            this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // panel2
             // 
@@ -263,7 +249,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txttQ;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button btnExport;
 
     }
 }

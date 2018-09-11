@@ -21,7 +21,7 @@ namespace FloodPeakUtility
         public static readonly string RainStormSub = "RainStormSub.xml";
 
         /// <summary>
-        /// 河槽汇流文件名称
+        /// 沟道汇流文件名称
         /// </summary>
         public static readonly string RiverConfluence = "RiverConfluence.xml";
 

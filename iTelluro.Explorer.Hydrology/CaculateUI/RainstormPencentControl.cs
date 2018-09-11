@@ -137,7 +137,7 @@ namespace FloodPeakToolUI.UI
             //保存数据到xls
             XmlHelper.SaveDataToExcelFile<PercentStaticsModel>(lstStatics, filePath);
 
-            FormOutput.AppendLog("开始计算水文频率曲线..");
+            FormOutput.AppendLog("开始计算暴雨频率曲线..");
             RunExeHelper.RunMethod(MethodName.SWCure);
             e.Result = "1";
         }
@@ -173,7 +173,7 @@ namespace FloodPeakToolUI.UI
                         {
                             _resutUI = new CaculatePercentUI();
                             _resutUI.Dock = DockStyle.Fill;
-                            _parent.ShowDock("水文频率计算与曲线配线", _resutUI);
+                            _parent.ShowDock("暴雨频率计算", _resutUI);
                         }
                         cv.State = txtState.Text;
                         cv.Time = cmbPercent.SelectedValue.ToString();

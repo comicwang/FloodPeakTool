@@ -35,13 +35,12 @@
             // 
             // textBox1
             // 
-            this.textBox1.BackColor = System.Drawing.Color.LightYellow;
+            this.textBox1.BackColor = System.Drawing.Color.White;
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(384, 299);
             this.textBox1.TabIndex = 0;
             // 

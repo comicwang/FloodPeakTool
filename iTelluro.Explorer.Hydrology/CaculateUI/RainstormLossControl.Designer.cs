@@ -105,6 +105,7 @@
             this.btnGetHeWang.TabIndex = 2;
             this.btnGetHeWang.Text = "河网提取";
             this.btnGetHeWang.UseVisualStyleBackColor = true;
+            this.btnGetHeWang.Visible = false;
             this.btnGetHeWang.Click += new System.EventHandler(this.btnGetHeWang_Click);
             // 
             // button1
@@ -176,7 +177,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "流域面积F(k㎡)";
+            this.label1.Text = "流域面积F(km²)";
             // 
             // backgroundWorker1
             // 
@@ -187,7 +188,7 @@
             // 
             this.fileChooseControl2.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl2.FileType = FloodPeakUtility.Model.ImportType.Shp;
-            this.fileChooseControl2.LeftTitle = "流域面";
+            this.fileChooseControl2.LeftTitle = "流域范围图层";
             this.fileChooseControl2.Location = new System.Drawing.Point(0, 24);
             this.fileChooseControl2.Name = "fileChooseControl2";
             this.fileChooseControl2.Size = new System.Drawing.Size(240, 24);
@@ -209,7 +210,7 @@
             // 
             this.fileChooseControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl3.FileType = FloodPeakUtility.Model.ImportType.Dom;
-            this.fileChooseControl3.LeftTitle = "损失系数";
+            this.fileChooseControl3.LeftTitle = "损失系数图层";
             this.fileChooseControl3.Location = new System.Drawing.Point(0, 48);
             this.fileChooseControl3.Name = "fileChooseControl3";
             this.fileChooseControl3.Size = new System.Drawing.Size(240, 24);
@@ -219,7 +220,7 @@
             // 
             this.fileChooseControl4.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl4.FileType = FloodPeakUtility.Model.ImportType.Dom;
-            this.fileChooseControl4.LeftTitle = "损失指数";
+            this.fileChooseControl4.LeftTitle = "损失指数图层";
             this.fileChooseControl4.Location = new System.Drawing.Point(0, 72);
             this.fileChooseControl4.Name = "fileChooseControl4";
             this.fileChooseControl4.Size = new System.Drawing.Size(240, 24);

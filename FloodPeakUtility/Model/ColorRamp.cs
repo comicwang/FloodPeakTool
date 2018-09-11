@@ -34,13 +34,13 @@ namespace FloodPeakUtility
          /// <returns></returns>
          public Color GetColor(double value)
          {
-            //if (this.MyRamps == null)
-            //    return Color.White;
-            //ColorRamp result = MyRamps.Where(t => t.value == value).FirstOrDefault();
-            //if (result == null)
-            //    return Color.White;
-            //return Color.FromArgb(result.A, result.R, result.G, result.B);
-            return Color.FromArgb(0, 255, 0, (int)value);
+            if (this.MyRamps == null)
+                return Color.White;
+            ColorRamp result = MyRamps.Where(t => t.value == value).FirstOrDefault();
+            if (result == null)
+                return Color.White;
+            return Color.FromArgb(result.A, result.R, result.G, result.B);
+            //return Color.FromArgb(10, 255, 0, (int)value);
          }
 
 

@@ -185,10 +185,10 @@ namespace FloodPeakUtility.UI
             catch { }
         }
 
-        private void panel1_MouseHover(object sender, EventArgs e)
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             Panel pnl = sender as Panel;
-            Point point= pnl.PointToClient(Control.MousePosition);
+            Point point = pnl.PointToClient(Control.MousePosition);
 
             IntPtr hdc = GetDC(new IntPtr(0));//取到设备场景(0就是全屏的设备场景)   
             int c = GetPixel(hdc, Control.MousePosition);//取指定点颜色   

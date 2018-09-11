@@ -84,7 +84,7 @@ namespace FloodPeakToolUI.UI
 
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
-                string mainShp = fileChooseControl3.FilePath; //主河槽shp
+                string mainShp = fileChooseControl3.FilePath; //主沟道shp
                 string argShp = fileChooseControl2.FilePath;//流速系数
                 //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync(new string[] { mainShp, tifPath, argShp });
@@ -117,6 +117,25 @@ namespace FloodPeakToolUI.UI
         private void fileChooseControl3_OnSelectIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = File.Exists(fileChooseControl1.FilePath) || File.Exists(fileChooseControl2.FilePath) || File.Exists(fileChooseControl3.FilePath);
+        }
+
+        private void SlopeConfluenceControl_Load(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(picInfo, "坡面流速系数A2取值表");
+        }
+
+        /// <summary>
+        /// 系数参考表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void picInfo_Click(object sender, EventArgs e)
+        {
+            FormA12Table form = new FormA12Table();
+            if (DialogResult.OK == form.ShowDialog())
+            {
+                textBox3.Text = form.SelectedValue;
+            }
         }
 
         #endregion
@@ -520,6 +539,5 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
     }
 }

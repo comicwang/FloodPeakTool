@@ -16,10 +16,11 @@ namespace FloodPeakUtility.UI
     /// </summary>
     public partial class FormOutput : Form
     {
-        private static FormOutput _form = null;
+        private static FormOutput _form = new FormOutput();
         public FormOutput()
         {
             InitializeComponent();
+            BindConsole();
             //读取位置坐标
             try
             {
@@ -66,25 +67,25 @@ namespace FloodPeakUtility.UI
         {
             try
             {
-                if (_form == null || _form.IsDisposed)
+                if (Form == null || Form.IsDisposed)
                 {
-                    _form = new FormOutput();
-                    _form.BindConsole();
+                    Form = new FormOutput();
+                    Form.BindConsole();
                 }
-                if (_form.InvokeRequired)
+                if (Form.InvokeRequired)
                 {
-                    _form.Invoke(new Action(() =>
+                    Form.Invoke(new Action(() =>
                         {
-                            _form.Show();
-                            _form.WindowState = FormWindowState.Normal;
-                            _form.Activate();
+                            Form.Show();
+                            Form.WindowState = FormWindowState.Normal;
+                            Form.Activate();
                         }));
                 }
                 else
                 {
-                    _form.Show();
-                    _form.WindowState = FormWindowState.Normal;
-                    _form.Activate();
+                    Form.Show();
+                    Form.WindowState = FormWindowState.Normal;
+                    Form.Activate();
                 }
                 MyConsole.AppendLine(content);
             }
@@ -99,20 +100,20 @@ namespace FloodPeakUtility.UI
         {
             try
             {
-                if (_form == null || _form.IsDisposed)
+                if (Form == null || Form.IsDisposed)
                 {
                     return;
                 }
-                if (_form.InvokeRequired)
+                if (Form.InvokeRequired)
                 {
-                    _form.Invoke(new Action(() =>
+                    Form.Invoke(new Action(() =>
                         {
-                            _form.SetProgress(percent);
+                            Form.SetProgress(percent);
                         }));
                 }
                 else
                 {
-                    _form.SetProgress(percent);
+                    Form.SetProgress(percent);
                 }
             }
             catch { }
@@ -126,22 +127,22 @@ namespace FloodPeakUtility.UI
         {
             try
             {
-                if (_form == null || _form.IsDisposed)
+                if (Form == null || Form.IsDisposed)
                 {
                     return;
                 }
-                if (_form.InvokeRequired)
+                if (Form.InvokeRequired)
                 {
-                    _form.Invoke(new Action(() =>
+                    Form.Invoke(new Action(() =>
                     {
-                        _form.SetProgress(visiable);
-                        _form.SetProgress(0);
+                        Form.SetProgress(visiable);
+                        Form.SetProgress(0);
                     }));
                 }
                 else
                 {
-                    _form.SetProgress(visiable);
-                    _form.SetProgress(0);
+                    Form.SetProgress(visiable);
+                    Form.SetProgress(0);
                 }
             }
             catch { }
@@ -195,6 +196,8 @@ namespace FloodPeakUtility.UI
         public const int WM_SYSCOMMAND = 0x0112;
         public const int SC_MOVE = 0xF010;
         public const int HTCAPTION = 0x0002;
+
+        public static FormOutput Form { get => _form;private set => _form = value; }
 
         private void gPanelTitleBack_MouseDown(object sender, MouseEventArgs e)
         {

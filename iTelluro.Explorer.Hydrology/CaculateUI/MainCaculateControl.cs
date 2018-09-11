@@ -86,7 +86,7 @@ namespace FloodPeakToolUI.UI
                 MsgBox.ShowInfo("请确定参数完整！");
                 return;
             }
-            //河槽汇流赋值
+            //沟道汇流赋值
             xmlPath = Path.Combine(_projectForlder, ConfigNames.RiverConfluence);
             HCHLResult hchl;
             if (File.Exists(xmlPath))
@@ -172,13 +172,13 @@ namespace FloodPeakToolUI.UI
              logBuilder.AppendLine("nd："+bysj.nd);
             builder.Append(" ");
             builder.Append(byss.r1);
-             logBuilder.AppendLine("r1："+byss.r1);
+             logBuilder.AppendLine("r："+byss.r1);
             builder.Append(" ");
             builder.Append(byss.F);
              logBuilder.AppendLine("F："+byss.F);
             builder.Append(" ");
             builder.Append(hchl.L1);
-             logBuilder.AppendLine("L1："+hchl.L1);
+             logBuilder.AppendLine("L1：" + hchl.L1);
             builder.Append(" ");
             builder.Append(pmhl.L2);
              logBuilder.AppendLine("L2："+pmhl.L2);
@@ -302,5 +302,10 @@ namespace FloodPeakToolUI.UI
             }
         }
 
+        private void MainCaculateControl_Load(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(txtp1, "请输入0--1之间有效值");
+            toolTip1.SetToolTip(txttc, "产流历时初值迭代初始值,选2--20之间设为初值试凑");
+        }
     }
 }

@@ -41,7 +41,7 @@
             // 
             this.lblTitle.Location = new System.Drawing.Point(6, 3);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(67, 17);
+            this.lblTitle.Size = new System.Drawing.Size(100, 17);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "选取";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -51,9 +51,9 @@
             this.cmbAll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbAll.FormattingEnabled = true;
-            this.cmbAll.Location = new System.Drawing.Point(76, 2);
+            this.cmbAll.Location = new System.Drawing.Point(106, 2);
             this.cmbAll.Name = "cmbAll";
-            this.cmbAll.Size = new System.Drawing.Size(169, 20);
+            this.cmbAll.Size = new System.Drawing.Size(140, 20);
             this.cmbAll.TabIndex = 1;
             this.cmbAll.SelectedIndexChanged += new System.EventHandler(this.cmbAll_SelectedIndexChanged);
             // 

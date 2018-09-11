@@ -23,7 +23,7 @@ namespace FloodPeakUtility
         public static readonly string BYSS = "9bd2a021-ed2b-4886-abba-15dce7d48fb2";
 
         /// <summary>
-        /// 河槽汇流参数计算
+        /// 沟道汇流参数计算
         /// </summary>
         public static readonly string HCHL = "df3104dd-3e5c-4d8c-aad0-63d48202a3e1";
 

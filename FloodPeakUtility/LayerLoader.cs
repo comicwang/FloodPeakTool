@@ -102,7 +102,7 @@ namespace FloodPeakUtility
         }
 
         /// <summary>
-        /// 输入主河槽
+        /// 输入主沟道
         /// </summary>
         /// <param name="lineLayerPath"></param>
         /// <returns></returns>

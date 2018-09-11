@@ -43,7 +43,7 @@ namespace FloodPeakToolUI.UI
                 txtR.Text = byss.R.ToString();
                 txtr1.Text = byss.r1.ToString();
             }
-            //河槽汇流赋值
+            //沟道汇流赋值
             xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence);
             if (File.Exists(xmlPath))
             {
@@ -87,7 +87,7 @@ namespace FloodPeakToolUI.UI
             };
             XmlHelper.Serialize<BYSSResult>(byss, xmlPath);
 
-            //河槽汇流保存
+            //沟道汇流保存
             xmlPath = Path.Combine(_projectForlder, ConfigNames.RiverConfluence);
             HCHLResult hchl = new HCHLResult()
             {
@@ -97,7 +97,7 @@ namespace FloodPeakToolUI.UI
             };
             XmlHelper.Serialize<HCHLResult>(hchl, xmlPath);
 
-            //河槽汇流保存
+            //沟道汇流保存
             xmlPath = Path.Combine(_projectForlder, ConfigNames.SlopeConfluence);
             PMHLResult pmhl = new PMHLResult()
             {

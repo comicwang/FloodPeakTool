@@ -23,7 +23,7 @@ namespace FloodPeakUtility
         public static void BindConsole(this TextBox textBox)
         {
             textBox.Multiline = true;
-            textBox.ScrollBars = ScrollBars.Vertical;
+            //textBox.ScrollBars = ScrollBars.Vertical;
             _textBox = textBox;
         }
 

@@ -221,6 +221,7 @@ namespace FloodPeakTool
                         Pnl_Main_Left.Controls.Add(_pnlLeft);
                     }
                     Pnl_Main_Left.Show();
+                    pnl_Main_Right.Show();
                     _pnlLeft.InitialzeProject(_FullPath);
                     //设置标题
                     this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
@@ -297,6 +298,7 @@ namespace FloodPeakTool
                 Pnl_Main_Left.Controls.Add(_pnlLeft);
             }
             Pnl_Main_Left.Show();
+            pnl_Main_Right.Show();
             _pnlLeft.InitialzeProject(_FullPath);
             //设置标题
             this.Text = string.Format("{0}-泥石流小流域洪峰流量计算", _pnlLeft.ProjectModel.ProjectName);
@@ -348,6 +350,12 @@ namespace FloodPeakTool
                 MsgBox.ShowError("系统缺少计算组件,请联系管理员或者尝试重新启动！");
                 Application.Exit();
             }
+
+            FormOutput.Form.FormBorderStyle = FormBorderStyle.None;
+            FormOutput.Form.Dock = DockStyle.Fill;
+            FormOutput.Form.TopLevel = false;
+            grpPnl.Controls.Add(FormOutput.Form);
+            FormOutput.Form.Show();
         }
 
         private void 暴雨频率计算ToolStripMenuItem_Click(object sender, EventArgs e)

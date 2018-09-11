@@ -324,7 +324,7 @@ namespace FloodPeakUtility.UI
                 node.PNode = Guids.JSGL;
                 sid = Guids.HCHL;
                 node.NodeId = sid;
-                node.NodeName = "河槽汇流参数计算";
+                node.NodeName = "沟道汇流参数计算";
                 node.ImageIndex = 4;
                 node.CanRemove = false;
                 node.ShowCheck = false;

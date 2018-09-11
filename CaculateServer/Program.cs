@@ -388,7 +388,7 @@ namespace CaculateServer
                     {
                         byss = XmlHelper.Deserialize<BYSSResult>(xmlPath);
                     }
-                    //河槽汇流赋值
+                    //沟道汇流赋值
                     HCHLResult hchl = null;
                     xmlPath = Path.Combine(projectForlder, ConfigNames.RiverConfluence);
                     if (File.Exists(xmlPath))

@@ -29,7 +29,7 @@ using iTelluro.Explorer.VectorLoader.ShpSymbolModel;
 namespace FloodPeakToolUI.UI
 {
     /// <summary>
-    /// 主河槽参数计算UI
+    /// 主沟道参数计算UI
     /// </summary>
     [Export(typeof(ICaculateMemo))]
     public partial class RiverConfluenceControl : UserControl, ICaculateMemo
@@ -115,7 +115,7 @@ namespace FloodPeakToolUI.UI
 
                 //获取计算参数
                 string tifPath = fileChooseControl1.FilePath;//影像路径
-                string mainShp = fileChooseControl3.FilePath; //主河槽shp
+                string mainShp = fileChooseControl3.FilePath; //主沟道shp
                 string argShp = fileChooseControl2.FilePath;//流速系数
                 //progressBar1.Visible = true;
                 backgroundWorker1.RunWorkerAsync(new string[] { mainShp, tifPath, argShp });
@@ -132,7 +132,7 @@ namespace FloodPeakToolUI.UI
         }
 
         /// <summary>
-        /// 导出主河槽
+        /// 导出主沟道
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -140,7 +140,7 @@ namespace FloodPeakToolUI.UI
         {
             if (_mainRiver == null)
             {
-                MsgBox.ShowInfo("暂时未计算主河槽");
+                MsgBox.ShowInfo("暂时未计算主沟道");
                 return;
             }
             SaveFileDialog dialog = new SaveFileDialog();
@@ -153,10 +153,23 @@ namespace FloodPeakToolUI.UI
             }
         }
 
+        private void RiverConfluenceControl_Load(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(picInfo, "河道流速系数A1取值表");
+        }
+
+        private void picInfo_Click(object sender, EventArgs e)
+        {
+            FormA1Table _a1Table = new FormA1Table();
+            if (DialogResult.OK == _a1Table.ShowDialog())
+            {
+                textBox3.Text = _a1Table.SelectedValue;
+            }
+        }
 
         #endregion
 
-        #region 计算河槽长度和纵比降,以及河槽流速系数
+        #region 计算沟道长度和纵比降,以及沟道流速系数
 
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -166,12 +179,12 @@ namespace FloodPeakToolUI.UI
             double j = 0;
             if (File.Exists(args[0]) && File.Exists(args[1]))
             {
-                FormOutput.AppendLog("开始递归所有河槽分支...");
+                FormOutput.AppendLog("开始递归所有沟道分支...");
                 List<Dictionary<Point2d, Geometry>> results = GetAllRivers(args[0]);
 
                 FormOutput.AppendLog(string.Format("共得到{0}条支流...", results.Count));
 
-                FormOutput.AppendLog("开始获取主河槽，并计算其长度...");
+                FormOutput.AppendLog("开始获取主沟道，并计算其长度...");
               
                 riverlength = CaculateRiver(results, args[1], ref _mainRiver);
 
@@ -179,7 +192,7 @@ namespace FloodPeakToolUI.UI
 
                 FormOutput.AppendLog("主河道长度：" + riverlength.ToString("f3"));
 
-                FormOutput.AppendLog("开始计算主河纵降比...");
+                FormOutput.AppendLog("开始计算主沟道纵降比...");
                 j = GetLonGradient(_mainRiver, args[1]);
                 FormOutput.AppendLog("主河道纵降比：" + j.ToString("f3"));
             }
@@ -187,10 +200,10 @@ namespace FloodPeakToolUI.UI
             double? r = null;
             if (File.Exists(args[2]) && File.Exists(args[1]))
             {
-                FormOutput.AppendLog("开始计算河槽流域系数...");
+                FormOutput.AppendLog("开始计算沟道流域系数...");
                 r = RasterCoefficientReader.ReadCoeficient(args[2], args[1]);
                 if (r.HasValue)
-                    FormOutput.AppendLog("河槽流速系数：" + r.Value.ToString("f3"));
+                    FormOutput.AppendLog("沟道流速系数：" + r.Value.ToString("f3"));
             }
 
             e.Result = new double[] { riverlength, j, r.GetValueOrDefault(0) };
@@ -211,8 +224,8 @@ namespace FloodPeakToolUI.UI
             if (Convert.ToDouble(result[2]) != 0)
                 textBox3.Text = result[2].ToString();
             FormOutput.AppendProress(false);
-            //输出主河槽到临时目录并且加载到三维球和节点
-            string tempPath = Path.Combine(Path.GetTempPath(), "主河槽" + DateTime.Now.ToString("HH_mm") + ".shp");
+            //输出主沟道到临时目录并且加载到三维球和节点
+            string tempPath = Path.Combine(Path.GetTempPath(), "主沟道" + DateTime.Now.ToString("HH_mm") + ".shp");
             ShpReader shp = new ShpReader(fileChooseControl3.FilePath);
             CreateShp(tempPath, _mainRiver, shp.SpatialRef);
             _parent.AddShpLineLayerByPath(tempPath);
@@ -408,7 +421,7 @@ namespace FloodPeakToolUI.UI
 
         private List<Dictionary<Point2d, Geometry>> GetAllRivers(string mainShp)
         {
-            //获取主河槽          
+            //获取主沟道          
             ShpReader shp = new ShpReader(mainShp);
             List<OSGeo.OGR.Feature> maxFeature = new List<OSGeo.OGR.Feature>();
             List<Geometry> geoList = null;
@@ -422,7 +435,7 @@ namespace FloodPeakToolUI.UI
         {
             RasterReader reader = new RasterReader(tifPath);
             //Dictionary<Point2d, Geometry> maxGeoLength = null;
-            double maxLength = 0;  //主河槽长度
+            double maxLength = 0;  //主沟道长度
             List<Point3d> gradientPoints = new List<Point3d>();
            // List<Point3d> gradientPoints1 = new List<Point3d>();
             int percent = 0;
@@ -530,7 +543,7 @@ namespace FloodPeakToolUI.UI
         /// </summary>
         public string CaculateName
         {
-            get { return "河槽汇流参数计算"; }
+            get { return "沟道汇流参数计算"; }
         }
 
         /// <summary>
@@ -538,7 +551,7 @@ namespace FloodPeakToolUI.UI
         /// </summary>
         public string Discription
         {
-            get { return "计算河槽汇流参数模块"; }
+            get { return "计算沟道汇流参数模块"; }
         }
 
         /// <summary>
@@ -580,6 +593,5 @@ namespace FloodPeakToolUI.UI
         }
 
         #endregion
-
     }
 }

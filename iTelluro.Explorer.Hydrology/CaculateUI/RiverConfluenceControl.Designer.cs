@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.picInfo = new System.Windows.Forms.PictureBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -39,14 +42,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.fileChooseControl2 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl1 = new FloodPeakToolUI.UI.FileChooseControl();
             this.fileChooseControl3 = new FloodPeakToolUI.UI.FileChooseControl();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.picInfo);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button1);
@@ -66,6 +73,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输出";
             // 
+            // picInfo
+            // 
+            this.picInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picInfo.Image = global::FloodPeakToolUI.Properties.Resources.table;
+            this.picInfo.Location = new System.Drawing.Point(217, 79);
+            this.picInfo.Name = "picInfo";
+            this.picInfo.Size = new System.Drawing.Size(16, 16);
+            this.picInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picInfo.TabIndex = 7;
+            this.picInfo.TabStop = false;
+            this.picInfo.Click += new System.EventHandler(this.picInfo_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("宋体", 7F);
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label4.Location = new System.Drawing.Point(72, 32);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(10, 10);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "1";
+            // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -75,7 +106,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(77, 26);
             this.button3.TabIndex = 5;
-            this.button3.Text = "输出主河槽";
+            this.button3.Text = "输出主沟道";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -112,7 +143,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.Location = new System.Drawing.Point(111, 75);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(123, 21);
+            this.textBox3.Size = new System.Drawing.Size(100, 21);
             this.textBox3.TabIndex = 1;
             // 
             // textBox2
@@ -137,31 +168,31 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label3.Location = new System.Drawing.Point(5, 79);
+            this.label3.Location = new System.Drawing.Point(16, 79);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 12);
+            this.label3.Size = new System.Drawing.Size(89, 12);
             this.label3.TabIndex = 0;
-            this.label3.Text = "主河槽流速系数A1";
+            this.label3.Text = "沟道流速系数A1";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label2.Location = new System.Drawing.Point(5, 54);
+            this.label2.Location = new System.Drawing.Point(31, 54);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 12);
+            this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 0;
-            this.label2.Text = "纵降比l1(千分比)";
+            this.label2.Text = "纵降比l1(‰)";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label1.Location = new System.Drawing.Point(5, 29);
+            this.label1.Location = new System.Drawing.Point(16, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 12);
+            this.label1.Size = new System.Drawing.Size(95, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "主河槽长度L1(km)";
+            this.label1.Text = "沟道长度L  (km)";
             // 
             // backgroundWorker1
             // 
@@ -179,13 +210,14 @@
             this.fileChooseControl2.Name = "fileChooseControl2";
             this.fileChooseControl2.Size = new System.Drawing.Size(240, 24);
             this.fileChooseControl2.TabIndex = 1;
+            this.fileChooseControl2.Visible = false;
             this.fileChooseControl2.OnSelectIndexChanged += new System.EventHandler(this.fileChooseControl3_OnSelectIndexChanged);
             // 
             // fileChooseControl1
             // 
             this.fileChooseControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl1.FileType = FloodPeakUtility.Model.ImportType.Dom;
-            this.fileChooseControl1.LeftTitle = "DEM";
+            this.fileChooseControl1.LeftTitle = "流域DEM图层";
             this.fileChooseControl1.Location = new System.Drawing.Point(0, 24);
             this.fileChooseControl1.Name = "fileChooseControl1";
             this.fileChooseControl1.Size = new System.Drawing.Size(240, 24);
@@ -196,7 +228,7 @@
             // 
             this.fileChooseControl3.Dock = System.Windows.Forms.DockStyle.Top;
             this.fileChooseControl3.FileType = FloodPeakUtility.Model.ImportType.Shp;
-            this.fileChooseControl3.LeftTitle = "河网";
+            this.fileChooseControl3.LeftTitle = "沟道图层";
             this.fileChooseControl3.Location = new System.Drawing.Point(0, 0);
             this.fileChooseControl3.Name = "fileChooseControl3";
             this.fileChooseControl3.Size = new System.Drawing.Size(240, 24);
@@ -213,8 +245,10 @@
             this.Controls.Add(this.fileChooseControl3);
             this.Name = "RiverConfluenceControl";
             this.Size = new System.Drawing.Size(240, 240);
+            this.Load += new System.EventHandler(this.RiverConfluenceControl_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -235,5 +269,8 @@
         private FileChooseControl fileChooseControl3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox picInfo;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

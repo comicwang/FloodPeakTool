@@ -154,7 +154,15 @@ namespace FloodPeakToolUI.UI
                 _currentTime = DateTime.Now;
                 SaveCaculateArg();
                 string srcPath = fileChooseControl1.FilePath;
-                backgroundWorker2.RunWorkerAsync(srcPath);
+                string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
+                //读取高程矩阵
+                RasterReader read = new RasterReader(srcPath);
+
+                double[,] src = DEMReader.GetElevation(read);
+
+                FormCalView.SetAllSize(src.GetLength(0), src.GetLength(1));
+
+                backgroundWorker2.RunWorkerAsync(src);
             }
             else
             {
@@ -215,8 +223,10 @@ namespace FloodPeakToolUI.UI
                 FormOutput.AppendLog("开始计算流域面积和折减系数");
                 WatershedArea(areaShp, inputDemPath, ref F, ref sf);
                 sf = sf / 1000000;
-                FormOutput.AppendLog(string.Format("流域面积F = {0}km²", sf.Value.ToString("f3")));
-                N = 1 / (1 + 0.016 * sf * 0.6);//折减系数
+                FormOutput.AppendLog(string.Format("流域表面积SF = {0}km²", sf.Value.ToString("f3")));
+                F = F / 1000000;
+                FormOutput.AppendLog(string.Format("流域投影面积F = {0}km²", F.ToString("f3")));
+                N = 1 / (1 + 0.016 * F * 0.6);//折减系数
                 FormOutput.AppendLog("折减系数N = " + N.Value.ToString("f3"));
             }
 
@@ -237,7 +247,7 @@ namespace FloodPeakToolUI.UI
                 if (r.HasValue)
                     FormOutput.AppendLog("损失指数r = " + r.Value.ToString("f3"));
             }
-            e.Result = new double?[] { sf, N, R, r };
+            e.Result = new double?[] { F, N, R, r };
         }
 
         private class TerrainPoint
@@ -469,12 +479,8 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            string scrPath = e.Argument.ToString();
-            string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
-            //读取高程矩阵
-            RasterReader read = new RasterReader(scrPath);
-          
-            double[,] src = DEMReader.GetElevation(read);
+            double[,] src = e.Argument as double[,];
+           
 
             FormOutput.AppendLog("1.开始填充洼地..");
             //填充洼地
@@ -517,27 +523,27 @@ namespace FloodPeakToolUI.UI
             double[,] src_total = src_direct.Accumulation();
 
             FormOutput.AppendLog("计算汇流量完成..");
-            int FlowThreshold = int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
-            result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
-            if (!result)
-            {
-                FormOutput.AppendLog("计算汇流总数失败..");
-                return;
-            }
-            FormOutput.AppendLog("计算汇流总数完成.");
+            //int FlowThreshold = int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
+            //result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
+            //if (!result)
+            //{
+            //    FormOutput.AppendLog("计算汇流总数失败..");
+            //    return;
+            //}
+            //FormOutput.AppendLog("计算汇流总数完成.");
 
-            //提取河网
-            scrPath = tempPath;
-            tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "hewang.tif");
-            FormOutput.AppendLog("开始提取河网..");
-            result = _hydrology.Raster2Polyline(scrPath, tempPath);
-            if (!result)
-            {
-                FormOutput.AppendLog("提取河网失败..");
-                return;
-            }
-            FormOutput.AppendLog("提取河网完成.");
-            e.Result = tempPath;
+            ////提取河网
+            //scrPath = tempPath;
+            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "hewang.tif");
+            //FormOutput.AppendLog("开始提取河网..");
+            //result = _hydrology.Raster2Polyline(scrPath, tempPath);
+            //if (!result)
+            //{
+            //    FormOutput.AppendLog("提取河网失败..");
+            //    return;
+            //}
+            //FormOutput.AppendLog("提取河网完成.");
+            //e.Result = tempPath;
 
         }
 
