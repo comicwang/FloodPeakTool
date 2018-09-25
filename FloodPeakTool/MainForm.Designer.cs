@@ -69,6 +69,7 @@
             this.洪峰流量ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清水流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.泥石流洪峰流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.雨量计算CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTools = new System.Windows.Forms.ToolStripMenuItem();
             this.快速入门ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -300,6 +301,7 @@
             this.暴雨参数ToolStripMenuItem,
             this.汇流参数ToolStripMenuItem,
             this.洪峰流量ToolStripMenuItem,
+            this.雨量计算CToolStripMenuItem,
             this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -503,6 +505,13 @@
             this.泥石流洪峰流量计算ToolStripMenuItem.Text = "泥石流洪峰流量计算";
             this.泥石流洪峰流量计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
+            // 雨量计算CToolStripMenuItem
+            // 
+            this.雨量计算CToolStripMenuItem.Name = "雨量计算CToolStripMenuItem";
+            this.雨量计算CToolStripMenuItem.Size = new System.Drawing.Size(84, 38);
+            this.雨量计算CToolStripMenuItem.Text = "雨量计算(&C)";
+            this.雨量计算CToolStripMenuItem.Click += new System.EventHandler(this.雨量计算CToolStripMenuItem_Click);
+            // 
             // 帮助ToolStripMenuItem
             // 
             this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -698,6 +707,7 @@
         private System.Windows.Forms.Panel pnl_Main_Right;
         private System.Windows.Forms.GroupBox grpPnl;
         private DevComponents.DotNetBar.ExpandableSplitter expandableSplitter1;
+        private System.Windows.Forms.ToolStripMenuItem 雨量计算CToolStripMenuItem;
     }
 }
 

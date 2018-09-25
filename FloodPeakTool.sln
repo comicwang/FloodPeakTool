@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloodPeakTool", "FloodPeakTool\FloodPeakTool.csproj", "{9003F0D8-362A-482F-8F62-EB00D0E45F5F}"
 EndProject
@@ -67,5 +67,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35
+		SolutionGuid = {C2A237AA-BA87-46EB-944D-DD1238A6286D}
 	EndGlobalSection
 EndGlobal

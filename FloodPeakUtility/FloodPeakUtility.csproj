@@ -79,8 +79,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\iTelluro.GlobeEngine.2.10.2017.071217\lib\net20\iTelluro.GlobeEngine.MapControl3D.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -100,6 +102,7 @@
     <Compile Include="Cons\CollectionCons.cs" />
     <Compile Include="Cons\ConfigNames.cs" />
     <Compile Include="Cons\Guids.cs" />
+    <Compile Include="ExcelReader.cs" />
     <Compile Include="FileExtentionRegist.cs" />
     <Compile Include="ICaculateMemo.cs" />
     <Compile Include="LayerLoader.cs" />
@@ -118,6 +121,8 @@
     <Compile Include="Model\PMHLResult.cs" />
     <Compile Include="Model\ProjectChangedEventArgs.cs" />
     <Compile Include="Model\ProjectModel.cs" />
+    <Compile Include="Model\RainCaculateConditon.cs" />
+    <Compile Include="Model\RainCaculateResult.cs" />
     <Compile Include="Model\SimpleModel.cs" />
     <Compile Include="Model\SubCure.cs" />
     <Compile Include="MsgBox.cs" />
@@ -163,6 +168,12 @@
     <Compile Include="UI\PnlLeftControl.Designer.cs">
       <DependentUpon>PnlLeftControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\RainCaculateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\RainCaculateControl.Designer.cs">
+      <DependentUpon>RainCaculateControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +196,9 @@
     <EmbeddedResource Include="UI\PnlLeftControl.resx">
       <DependentUpon>PnlLeftControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\RainCaculateControl.resx">
+      <DependentUpon>RainCaculateControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\save.png" />
@@ -200,6 +214,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

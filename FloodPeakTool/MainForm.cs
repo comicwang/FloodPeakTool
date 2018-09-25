@@ -32,7 +32,7 @@ namespace FloodPeakTool
 {
     public partial class MainForm : Form
     {
-        public GlobeControl _globeControl= null;
+        public GlobeControl _globeControl = null;
         public GlobeView _globeView;
 
         public GlobeView GlobeView
@@ -40,13 +40,14 @@ namespace FloodPeakTool
             get { return _globeView; }
             set { _globeView = value; }
         }
-      
+
         private GlobeLayerControl _globeLayerUI;
         private LabelEditControl _labelEditUI;
         private GlobeFlyRouteControl _globeRouteUI;
         private GlobeFlyRoutePlusControl _globeRoutePlusUI;
-        string _FullPath= string.Empty;
+        string _FullPath = string.Empty;
         private PnlLeftControl _pnlLeft = null;
+        private RainCaculateControl _rainCaculateControl = null;
         private ICaculateMemo _IMemo;
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace FloodPeakTool
         public MainForm(string[] args)
         {
             Application.DoEvents();
-            InitializeComponent();         
+            InitializeComponent();
             CreatUIControls();
             CreateGlobe();
             if (args != null && args.Length > 0)
@@ -91,7 +92,7 @@ namespace FloodPeakTool
                 _FullPath = args[0];
                 IniProject();
             }
-            if(!FileExtentionRegist.FileTypeRegistered(".hfll"))
+            if (!FileExtentionRegist.FileTypeRegistered(".hfll"))
             {
                 FileExtentionRegist.RegistFileType(".hfll");
             }
@@ -139,7 +140,7 @@ namespace FloodPeakTool
             _globeLayerUI.Connect(_globeView);
             _labelEditUI.Connect(_globeView);
             _globeRouteUI.Connect(_globeView);
-            _globeRoutePlusUI.Connect(_globeView);     
+            _globeRoutePlusUI.Connect(_globeView);
         }
 
         #region  鼠标移动窗体跟随移动代码
@@ -149,7 +150,7 @@ namespace FloodPeakTool
 
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left) 
+            if (e.Button == MouseButtons.Left)
             {
                 mouseOff = new Point(-e.X, -e.Y);//得到变量的值
                 leftFlag = true;
@@ -168,7 +169,7 @@ namespace FloodPeakTool
 
         private void MainForm_MouseUp(object sender, MouseEventArgs e)
         {
-            if (leftFlag) 
+            if (leftFlag)
             {
                 leftFlag = false;//释放鼠标后为false
             }
@@ -214,7 +215,7 @@ namespace FloodPeakTool
                     _FullPath = NJ.ProjectPath;
                     if (_pnlLeft == null)
                     {
-                        _pnlLeft = new PnlLeftControl(_globeView,this.tabControl1);
+                        _pnlLeft = new PnlLeftControl(_globeView, this.tabControl1);
                         _pnlLeft.Dock = DockStyle.Fill;
                         _pnlLeft.OnChanged += _pnlLeft_OnChanged;
                         _pnlLeft.OnCaculate += _pnlLeft_OnCaculate;
@@ -229,7 +230,7 @@ namespace FloodPeakTool
                     btnImportShp.Enabled = true;
                 }
             }
-           
+
         }
 
         /// <summary>
@@ -270,7 +271,7 @@ namespace FloodPeakTool
         {
             _pnlLeft.ctxImportShp_Click(null, null);
         }
-       
+
         private void 打开工程ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (AskSave() == true)
@@ -281,7 +282,7 @@ namespace FloodPeakTool
                 {
                     _FullPath = dialog.FileName;
                     IniProject();
-                  
+
                 }
             }
         }
@@ -376,6 +377,15 @@ namespace FloodPeakTool
         {
             FormColorSetting form = new FormColorSetting();
             form.ShowDialog();
+        }
+
+        private void 雨量计算CToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_rainCaculateControl == null || _rainCaculateControl.IsDisposed)
+            {
+                _rainCaculateControl = new RainCaculateControl(this.tabControl1);
+            }
+            _rainCaculateControl.ShowDock("雨量计算");
         }
     }
 }
