@@ -16,8 +16,9 @@ namespace FloodPeakUtility.UI
     {
         private DevComponents.DotNetBar.TabControl _tabControl = null;
 
+        int[] minArry = new int[] { 5, 10, 30 };
         int[] hourArry = new int[] { 1, 3, 6, 12, 24, 48, 72 };
-        int[] dayArry = new int[] { 1, 3, 5, 7, 15, 30 };
+        int[] dayArry = new int[] { 1,3, 5, 7, 15, 30 };
 
         List<RainCaculateConditon> lstCondition = null;
 
@@ -61,85 +62,294 @@ namespace FloodPeakUtility.UI
         private void RainCaculateControl_Load(object sender, EventArgs e)
         {
             toolTip1.SetToolTip(pictureBox1, "根据固定模板进行批量计算指定雨量统计值");
+            List<DataGridViewTextBoxColumn> lstColumnA = new List<DataGridViewTextBoxColumn>();         
+            List<DataGridViewTextBoxColumn> lstColumnB = new List<DataGridViewTextBoxColumn>();
             //动态添加表列
+
+            //分钟
+            for (int i = 0; i < minArry.Length; i++)
+            {
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{minArry[i]}_MIN";
+                column.Name = $"RAINFALL_{minArry[i]}_MIN";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{minArry[i]}_MIN_TIME";
+                column.Name = $"RAINFALL_{minArry[i]}_MIN_TIME";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{minArry[i]}_MIN_QC";
+                column.Name = $"RAINFALL_{minArry[i]}_MIN_QC";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"MAX_{minArry[i]}_MIN_MONTH";
+                column.Name = $"MAX_{minArry[i]}_MIN_MONTH";
+                column.ReadOnly = true;
+                lstColumnB.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"MAX_{minArry[i]}_MIN_MONTH_TIME";
+                column.Name = $"MAX_{minArry[i]}_MIN_MONTH_TIME";
+                column.ReadOnly = true;
+                lstColumnB.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"MAX_{minArry[i]}_MIN_MONTH_QC";
+                column.Name = $"MAX_{minArry[i]}_MIN_MONTH_QC";
+                column.ReadOnly = true;
+                lstColumnB.Add(column);
+            }
+
+            //小时
             for (int i = 0; i < hourArry.Length; i++)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{hourArry[i]}_HOUR";
                 column.Name= $"RAINFALL_{hourArry[i]}_HOUR";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{hourArry[i]}_HOUR_TIME";
                 column.Name = $"RAINFALL_{hourArry[i]}_HOUR_TIME";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{hourArry[i]}_HOUR_QC";
                 column.Name = $"RAINFALL_{hourArry[i]}_HOUR_QC";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{hourArry[i]}_HOUR_MONTH";
                 column.Name = $"MAX_{hourArry[i]}_HOUR_MONTH";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnB.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{hourArry[i]}_HOUR_MONTH_TIME";
                 column.Name = $"MAX_{hourArry[i]}_HOUR_MONTH_TIME"; 
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnB.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{hourArry[i]}_HOUR_MONTH_QC";
                 column.Name = $"MAX_{hourArry[i]}_HOUR_MONTH_QC";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column); 
+                lstColumnB.Add(column);
             }
 
+            //RAINFALL_HOUR_CP  RAINFALL_CP  RAINFALL_CP_DURATION
+            DataGridViewTextBoxColumn column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = "RAINFALL_HOUR_CP";
+            column1.Name = "RAINFALL_HOUR_CP";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_HOUR_CP_TIME";
+            column1.Name = $"RAINFALL_HOUR_CP_TIME";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_HOUR_CP_QC";
+            column1.Name = $"RAINFALL_HOUR_CP_QC";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = "RAINFALL_CP";
+            column1.Name = "RAINFALL_CP";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_CP_TIME";
+            column1.Name = $"RAINFALL_CP_TIME";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_CP_QC";
+            column1.Name = $"RAINFALL_CP_QC";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = "RAINFALL_CP_DURATION";
+            column1.Name = "RAINFALL_CP_DURATION";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_CP_DURATION_TIME";
+            column1.Name = $"RAINFALL_CP_DURATION_TIME";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_CP_DURATION_QC";
+            column1.Name = $"RAINFALL_CP_DURATION_QC";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            //天
             //动态添加表列
             for (int i = 0; i < dayArry.Length; i++)
             {
+                if (i == 1)
+                {
+                    DataGridViewTextBoxColumn column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"RAINFALL_{2}_DAY";
+                    column2.Name = $"RAINFALL_{2}_DAY";
+                    column2.ReadOnly = true;
+                    lstColumnA.Add(column2);
+
+                    column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"RAINFALL_{2}_DAY_TIME";
+                    column2.Name = $"RAINFALL_{2}_DAY_TIME";
+                    column2.ReadOnly = true;
+                    lstColumnA.Add(column2);
+
+                    column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"RAINFALL_{2}_DAY_QC";
+                    column2.Name = $"RAINFALL_{2}_DAY_QC";
+                    column2.ReadOnly = true;
+                    lstColumnA.Add(column2);
+
+                    column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"MAX_{2}_DAY_MONTH";
+                    column2.Name = $"MAX_{2}_DAY_MONTH";
+                    column2.ReadOnly = true;
+                    lstColumnB.Add(column2);
+
+                    column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"MAX_{2}_DAY_MONTH_TIME";
+                    column2.Name = $"MAX_{2}_DAY_MONTH_TIME";
+                    column2.ReadOnly = true;
+                    lstColumnB.Add(column2);
+
+                    column2 = new DataGridViewTextBoxColumn();
+                    column2.HeaderText = $"MAX_{2}_DAY_MONTH_QC";
+                    column2.Name = $"MAX_{2}_DAY_MONTH_QC";
+                    column2.ReadOnly = true;
+                    lstColumnB.Add(column2);
+                }
+
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY";
                 column.Name = $"RAINFALL_{dayArry[i]}_DAY";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY_TIME";
                 column.Name = $"RAINFALL_{dayArry[i]}_DAY_TIME";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY_QC";
                 column.Name = $"RAINFALL_{dayArry[i]}_DAY_QC";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnA.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{dayArry[i]}_DAY_MONTH";
                 column.Name = $"MAX_{dayArry[i]}_DAY_MONTH";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnB.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{dayArry[i]}_DAY_MONTH_TIME";
                 column.Name = $"MAX_{dayArry[i]}_DAY_MONTH_TIME";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnB.Add(column);
 
                 column = new DataGridViewTextBoxColumn();
                 column.HeaderText = $"MAX_{dayArry[i]}_DAY_MONTH_QC";
                 column.Name = $"MAX_{dayArry[i]}_DAY_MONTH_QC";
                 column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
+                lstColumnB.Add(column);
             }
+
+            //EP
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_{2}_DAY_EP";
+            column1.Name = $"RAINFALL_{2}_DAY_EP";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_{2}_DAY_EP_TIME";
+            column1.Name = $"RAINFALL_{2}_DAY_EP_TIME";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_{2}_DAY_EP_QC";
+            column1.Name = $"RAINFALL_{2}_DAY_EP_QC";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            for (int i = 1; i < dayArry.Length; i++)
+            {
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY_EP";
+                column.Name = $"RAINFALL_{dayArry[i]}_DAY_EP";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY_EP_TIME";
+                column.Name = $"RAINFALL_{dayArry[i]}_DAY_EP_TIME";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = $"RAINFALL_{dayArry[i]}_DAY_EP_QC";
+                column.Name = $"RAINFALL_{dayArry[i]}_DAY_EP_QC";
+                column.ReadOnly = true;
+                lstColumnA.Add(column);
+            }
+
+            //Month
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = "RAINFALL_MONTH";
+            column1.Name = "RAINFALL_MONTH";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_MONTH_TIME";
+            column1.Name = $"RAINFALL_MONTH_TIME";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            column1 = new DataGridViewTextBoxColumn();
+            column1.HeaderText = $"RAINFALL_MONTH_QC";
+            column1.Name = $"RAINFALL_MONTH_QC";
+            column1.ReadOnly = true;
+            lstColumnA.Add(column1);
+
+            foreach (var item in lstColumnA)
+            {
+                dataGridView1.Columns.Add(item);
+            }
+
+            foreach (var item in lstColumnB)
+            {
+                dataGridView1.Columns.Add(item);
+            }
+
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -152,7 +362,10 @@ namespace FloodPeakUtility.UI
                 for (int i = 0; i < lstCondition.Count; i++)
                 {
                     List<RainCaculateResult> tempResult = CaculateRain(lstCondition[i]);
-                    backgroundWorker1.ReportProgress((int)((i + 1) * 100 / lstCondition.Count), tempResult);
+                    if (tempResult.Count > 0)
+                        backgroundWorker1.ReportProgress((int)((i + 1) * 100 / lstCondition.Count), tempResult);
+                    else
+                        backgroundWorker1.ReportProgress((int)((i + 1) * 100 / lstCondition.Count), lstCondition[i]);
                 }
             }
         }
@@ -166,21 +379,21 @@ namespace FloodPeakUtility.UI
             for (int i = 0; i < hourArry.Length; i++)
             {
                 commandText += string.Format(@"SELECT top 1 
-                                   [RAINFALL _{3}_HOUR]
+                                   RAINFALL_{3}_HOUR
                                    ,TIME
-                                   ,[RAINFALL _{3}_HOUR_C]
+                                   ,RAINFALL_{3}_HOUR_C
                                    FROM [DB_RainMonitor].[dbo].[RAINFALL_HOUR] 
                                    where MONITORNUM = '{0}' 
                                    and TIME >= '{1}' 
-                                   and TIME <='{2}' order by [RAINFALL _{3}_HOUR] desc;", condition.State, condition.StartTime.ToShortDateString(), condition.EndTime.ToShortDateString(), hourArry[i]);
+                                   and TIME < '{2}' order by RAINFALL_{3}_HOUR desc;", condition.State, condition.StartTime.ToShortDateString(), condition.EndTime.AddDays(1).ToShortDateString(), hourArry[i]);
                 commandText+= string.Format(@"SELECT top 1 
-                                   [RAINFALL _{3}_HOUR]
+                                   RAINFALL_{3}_HOUR
                                    ,TIME
-                                   ,[RAINFALL _{3}_HOUR_C]
+                                   ,RAINFALL_{3}_HOUR_C
                                    FROM [DB_RainMonitor].[dbo].[RAINFALL_HOUR] 
                                    where MONITORNUM = '{0}' 
                                    and TIME >= '{1}-{4}-1' 
-                                   and TIME <'{2}-{5}-1' order by [RAINFALL _{3}_HOUR] desc;", condition.State, condition.StartTime.Year, condition.EndTime.AddMonths(1).Year, hourArry[i], condition.StartTime.Month, condition.EndTime.AddMonths(1).Month);
+                                   and TIME <'{2}-{5}-1' order by RAINFALL_{3}_HOUR desc;", condition.State, condition.StartTime.Year, condition.EndTime.AddMonths(1).Year, hourArry[i], condition.StartTime.Month, condition.EndTime.AddMonths(1).Month);
             }
 
             ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnection(), CommandType.Text, commandText);
@@ -220,21 +433,21 @@ namespace FloodPeakUtility.UI
             for (int i = 0; i < dayArry.Length; i++)
             {
                 commandText += string.Format(@"SELECT top 1 
-                                   [RAINFALL _{3}_DAY]
+                                   RAINFALL_{3}_DAY
                                    ,TIME
-                                   ,[RAINFALL _{3}_DAY_C]
+                                   ,RAINFALL_{3}_DAY_C
                                    FROM [DB_RainMonitor].[dbo].[RAINFALL_DAY] 
                                    where MONITORNUM = '{0}' 
                                    and TIME >= '{1}' 
-                                   and TIME <='{2}' order by [RAINFALL _{3}_DAY] desc;", condition.State, condition.StartTime.ToShortDateString(), condition.EndTime.ToShortDateString(), dayArry[i]);
+                                   and TIME < '{2}' order by RAINFALL_{3}_DAY desc;", condition.State, condition.StartTime.ToShortDateString(), condition.EndTime.AddDays(1).ToShortDateString(), dayArry[i]);
                 commandText+= string.Format(@"SELECT top 1 
-                                   [RAINFALL _{3}_DAY]
+                                   RAINFALL_{3}_DAY
                                    ,TIME
-                                   ,[RAINFALL _{3}_DAY_C]
+                                   ,RAINFALL_{3}_DAY_C
                                    FROM [DB_RainMonitor].[dbo].[RAINFALL_DAY] 
                                    where MONITORNUM = '{0}' 
                                    and TIME >= '{1}-{4}-1' 
-                                   and TIME <'{2}-{5}-1' order by [RAINFALL _{3}_DAY] desc;", condition.State, condition.StartTime.Year, condition.EndTime.AddMonths(1).Year, dayArry[i], condition.StartTime.Month, condition.EndTime.AddMonths(1).Month);            
+                                   and TIME <'{2}-{5}-1' order by RAINFALL_{3}_DAY desc;", condition.State, condition.StartTime.Year, condition.EndTime.AddMonths(1).Year, dayArry[i], condition.StartTime.Month, condition.EndTime.AddMonths(1).Month);            
             }
             ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnection(), CommandType.Text, commandText);
             for (int i = 0; i < dayArry.Length * 2; i++)
@@ -365,7 +578,7 @@ namespace FloodPeakUtility.UI
                 //读取Excel模板
                 DataTable sheetTable = ExcelReader.GetExcelContext(txtFilePath.Text, comboBox1.Text);
 
-                for (int i = 1; i < sheetTable.Rows.Count; i++)
+                for (int i = 0; i < sheetTable.Rows.Count; i++)
                 {
                     try
                     {
@@ -380,7 +593,7 @@ namespace FloodPeakUtility.UI
                         };
                         lstCondition.Add(temp);
                     }
-                    catch
+                    catch(Exception ex)
                     {
 
                     }
@@ -440,6 +653,23 @@ namespace FloodPeakUtility.UI
 
             List<RainCaculateResult> result = e.UserState as List<RainCaculateResult>;
 
+            if (result == null)
+            {
+                RainCaculateConditon condition = e.UserState as RainCaculateConditon;
+
+                int index = dataGridView1.Rows.Add();
+                //赋值各行数据
+                dataGridView1[0, index].Value = condition.EventNum;
+                dataGridView1[1, index].Value = condition.StartTime.ToLongDateString();
+                dataGridView1[2, index].Value = condition.EndTime.ToLongDateString();
+                dataGridView1[3, index].Value = condition.State;
+                dataGridView1[4, index].Value = "该行未查询到数据";
+
+                //加上红色背景色
+                dataGridView1.Rows[index].DefaultCellStyle.BackColor = Color.Red;
+                return;
+            }
+
             List<string> lstEventNum = result.OrderBy(t => t.EventNum).Select(t => t.EventNum).Distinct().ToList();
             foreach (var item in lstEventNum)
             {
@@ -453,44 +683,44 @@ namespace FloodPeakUtility.UI
                 for (int i = 0; i < hourArry.Length; i++)
                 {
                     string columName = $"RAINFALL_{hourArry[i]}_HOUR";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValue).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false && t.During == hourArry[i]).Select(t => t.MaxValue).FirstOrDefault();
 
                     columName = $"RAINFALL_{hourArry[i]}_HOUR_TIME";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValueDate).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false && t.During == hourArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
 
                     columName = $"RAINFALL_{hourArry[i]}_HOUR_QC";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValueQc).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == false && t.During == hourArry[i]).Select(t => t.MaxValueQc).FirstOrDefault();
 
                     columName = $"MAX_{hourArry[i]}_HOUR_MONTH";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValue).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true && t.During == hourArry[i]).Select(t => t.MaxValue).FirstOrDefault();
 
                     columName = $"MAX_{hourArry[i]}_HOUR_MONTH_TIME";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValueDate).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true && t.During == hourArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
 
                     columName = $"MAX_{hourArry[i]}_HOUR_MONTH_QC";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValueQc).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == false && t.EventNum == item && t.MonthMax == true && t.During == hourArry[i]).Select(t => t.MaxValueQc).FirstOrDefault();
 
                 }
 
                 for (int i = 0; i < dayArry.Length; i++)
                 {
                     string columName = $"RAINFALL_{dayArry[i]}_DAY";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValue).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false&&t.During==dayArry[i]).Select(t => t.MaxValue).FirstOrDefault();
 
                     columName = $"RAINFALL_{dayArry[i]}_DAY_TIME";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValueDate).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false && t.During == dayArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
 
                     columName = $"RAINFALL_{dayArry[i]}_DAY_QC";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false).Select(t => t.MaxValueQc).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false && t.During == dayArry[i]).Select(t => t.MaxValueQc).FirstOrDefault();
 
                     columName = $"MAX_{dayArry[i]}_DAY_MONTH";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValue).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true && t.During == dayArry[i]).Select(t => t.MaxValue).FirstOrDefault();
 
                     columName = $"MAX_{dayArry[i]}_DAY_MONTH_TIME";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValueDate).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true && t.During == dayArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
 
                     columName = $"MAX_{dayArry[i]}_DAY_MONTH_QC";
-                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true).Select(t => t.MaxValueQc).FirstOrDefault();
+                    dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == true && t.During == dayArry[i]).Select(t => t.MaxValueQc).FirstOrDefault();
 
                 }
 

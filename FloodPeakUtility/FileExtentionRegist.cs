@@ -36,7 +36,7 @@ namespace FloodPeakUtility
             sluKey.Close();
 
             RegistryKey relationKey = Registry.ClassesRoot.CreateSubKey(relationName);
-            relationKey.SetValue("", "Your Description");
+            relationKey.SetValue("", "洪峰流量计算文件");
 
             RegistryKey iconKey = relationKey.CreateSubKey("DefaultIcon");//图标
             iconKey.SetValue("", System.Windows.Forms.Application.StartupPath + @"\icon\iTelluro.Globe.ico");
