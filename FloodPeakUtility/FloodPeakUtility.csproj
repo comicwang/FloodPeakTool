@@ -113,6 +113,7 @@
     <Compile Include="Model\ColorRamp.cs" />
     <Compile Include="Model\CvCure.cs" />
     <Compile Include="Model\DefaultArgModel.cs" />
+    <Compile Include="Model\MyGrid.cs" />
     <Compile Include="Model\HCHLResult.cs" />
     <Compile Include="Model\ImportType.cs" />
     <Compile Include="Model\MainResult.cs" />

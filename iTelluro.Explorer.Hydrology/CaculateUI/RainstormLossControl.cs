@@ -480,16 +480,39 @@ namespace FloodPeakToolUI.UI
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             double[,] src = e.Argument as double[,];
-           
 
-            FormOutput.AppendLog("1.开始填充洼地..");
-            //填充洼地
-            double[,] src_fill = src.Fill();
+            FormOutput.AppendLog("1.计算洼地");
 
-            FormOutput.AppendLog("洼地填充完成..");
+            MyGrid.Src = src;
+            List<MyGrid> sourceGirds = MyGrid.GetSourceGrids();
+            List<MyGrid> unFillGrids = new List<MyGrid>();
+            foreach (var item in sourceGirds)
+            {
+                item.Caculate();
+                if (!item.IsFill)
+                {
+                    unFillGrids.Add(item);
+                }
+            }
+            FormOutput.AppendLog($"影像点有{sourceGirds.Count},洼地点有{unFillGrids.Count}");
+
+            FormOutput.AppendLog("2.开始填充洼地");
+
+            double[,] src_fill = src;
+
+            foreach (var item in unFillGrids)
+            {
+
+            }
+
+            //FormOutput.AppendLog("1.开始填充洼地..");
+            ////填充洼地
+            //double[,] src_fill = src.Fill();
+
+            //FormOutput.AppendLog("洼地填充完成..");
             //计算流向
             FormOutput.AppendLog("2.开始计算流向..");
-            double[,] src_direct = src_fill.FlowDirection();
+            double[,] src_direct = src.FlowDirection();
 
             FormOutput.AppendLog("流向计算完成..");
             bool result = true;//_hydrology.FlowDirection(scrPath, tempPath);

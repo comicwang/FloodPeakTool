@@ -38,7 +38,7 @@ namespace FloodPeakUtility
                 return Color.White;
             ColorRamp result = MyRamps.Where(t => t.value == value).FirstOrDefault();
             if (result == null)
-                return Color.White;
+                return Color.Black;
             return Color.FromArgb(result.A, result.R, result.G, result.B);
             //return Color.FromArgb(10, 255, 0, (int)value);
          }

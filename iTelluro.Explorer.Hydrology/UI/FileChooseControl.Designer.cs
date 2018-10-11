@@ -39,9 +39,10 @@
             // 
             // lblTitle
             // 
-            this.lblTitle.Location = new System.Drawing.Point(6, 3);
+            this.lblTitle.Location = new System.Drawing.Point(8, 4);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(100, 17);
+            this.lblTitle.Size = new System.Drawing.Size(133, 21);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "选取";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -51,9 +52,10 @@
             this.cmbAll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbAll.FormattingEnabled = true;
-            this.cmbAll.Location = new System.Drawing.Point(106, 2);
+            this.cmbAll.Location = new System.Drawing.Point(141, 2);
+            this.cmbAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbAll.Name = "cmbAll";
-            this.cmbAll.Size = new System.Drawing.Size(140, 20);
+            this.cmbAll.Size = new System.Drawing.Size(128, 23);
             this.cmbAll.TabIndex = 1;
             this.cmbAll.SelectedIndexChanged += new System.EventHandler(this.cmbAll_SelectedIndexChanged);
             // 
@@ -68,22 +70,24 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Image = global::FloodPeakToolUI.Properties.Resources.layer_add;
-            this.pictureBox1.Location = new System.Drawing.Point(249, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(275, 5);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox1.Size = new System.Drawing.Size(21, 20);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // FileChooseControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cmbAll);
             this.Controls.Add(this.lblTitle);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FileChooseControl";
-            this.Size = new System.Drawing.Size(270, 24);
+            this.Size = new System.Drawing.Size(303, 30);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
