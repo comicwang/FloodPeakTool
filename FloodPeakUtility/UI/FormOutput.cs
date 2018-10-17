@@ -78,14 +78,14 @@ namespace FloodPeakUtility.UI
                         {
                             Form.Show();
                             Form.WindowState = FormWindowState.Normal;
-                            Form.Activate();
+                            //Form.Activate();
                         }));
                 }
                 else
                 {
                     Form.Show();
                     Form.WindowState = FormWindowState.Normal;
-                    Form.Activate();
+                    //Form.Activate();
                 }
                 MyConsole.AppendLine(content);
             }

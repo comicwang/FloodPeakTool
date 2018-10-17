@@ -33,7 +33,52 @@ namespace FloodPeakToolUI.UI
         private PnlLeftControl _parent = null;
         private string _xmlPath = string.Empty;
         private Hydrology _hydrology = null;
+        private FormRiverArg formRiver = null;
         private DateTime _currentTime = DateTime.Now;
+        //当前计算的Dem路径
+        private string currentDem = string.Empty;
+        //填洼缓存
+        private double[,] fillGrid = null;
+        //流向数据缓存
+        private int[,] directionDev = null;
+        //流量数据缓存
+        private int[,] Accumulation = null;
+        //河网缓存数据
+        private int[,] RiverGrid = null;
+
+        #region 河网提取参数
+
+        /// <summary>
+        /// 获取河网阀值
+        /// </summary>
+        private int RiverThreshold = 0;
+
+        /// <summary>
+        /// 获取填洼Z值
+        /// </summary>
+        private int FillThreshold = 0;
+
+        /// <summary>
+        /// 获取河网输出路径
+        /// </summary>
+        private string RiverPath = string.Empty;
+
+        /// <summary>
+        /// 获取填洼输出路径
+        /// </summary>
+        private string FillPath = string.Empty;
+
+        /// <summary>
+        /// 获取流向输出路径
+        /// </summary>
+        private string DirectionPath = string.Empty;
+
+        /// <summary>
+        /// 获取流量输出路径
+        /// </summary>
+        private string AccumulationPath = string.Empty;
+
+        #endregion
         public RainstormLossControl()
         {
             InitializeComponent();
@@ -149,20 +194,67 @@ namespace FloodPeakToolUI.UI
         {
             if (!backgroundWorker1.IsBusy)
             {
-                FormOutput.AppendLog("开始计算...");
-                FormCalView.InitializeForm();
-                _currentTime = DateTime.Now;
-                SaveCaculateArg();
-                string srcPath = fileChooseControl1.FilePath;
-                string tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
-                //读取高程矩阵
-                RasterReader read = new RasterReader(srcPath);
+                //获取河网参数
+                if (formRiver == null)
+                    formRiver = new FormRiverArg();
+                if (formRiver.ShowDialog() == DialogResult.OK)
+                {
+                    RiverPath = formRiver.RiverPath;
+                    RiverThreshold = formRiver.RiverThreshold;
+                    FillPath = formRiver.FillPath;
+                    DirectionPath = formRiver.DirectionPath;
+                    AccumulationPath = formRiver.AccumulationPath;
 
-                double[,] src = DEMReader.GetElevation(read);
+                    FormOutput.AppendLog("开始计算...");
+                    _currentTime = DateTime.Now;
+                    SaveCaculateArg();
+                    string srcPath = fileChooseControl1.FilePath;
+                    //已经计算过，直接从缓存读取
+                    if (currentDem == srcPath)
+                    {
+                        RasterReader read = new RasterReader(srcPath);
+                        if (!string.IsNullOrEmpty(FillPath))
+                        {
+                            DEMReader.SaveDem(read, fillGrid, null, FillPath);
+                        }
+                        if (!string.IsNullOrEmpty(DirectionPath))
+                        {
+                            DEMReader.SaveDem(read, directionDev, null, DirectionPath);
+                        }
+                        if (!string.IsNullOrEmpty(AccumulationPath))
+                        {
+                            DEMReader.SaveDem(read, Accumulation, null, AccumulationPath);
+                        }
 
-                FormCalView.SetAllSize(src.GetLength(0), src.GetLength(1));
+                        FormOutput.AppendLog("开始根据回流阀值提取河网..");
 
-                backgroundWorker2.RunWorkerAsync(src);
+                        FormOutput.AppendLog($"当前阀值为{RiverThreshold}..");
+
+                        RiverGrid = new int[Accumulation.GetLength(0), Accumulation.GetLength(1)];
+                        for (int i = 0; i < Accumulation.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < Accumulation.GetLength(1); j++)
+                            {
+                                if (Accumulation[i, j] < RiverThreshold)
+                                {
+                                    RiverGrid[i, j] = -1;
+                                }
+
+                                else
+                                {
+                                    RiverGrid[i, j] = 1;
+                                }
+                            }
+                        }
+                        DEMReader.SaveDem(read, RiverGrid, null, RiverPath);
+                        FormOutput.AppendLog("河网提取完成..");
+
+                        FormOutput.AppendLog(string.Format("提取结束,共耗时{0}秒..", (DateTime.Now - _currentTime).TotalSeconds));
+                        System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(RiverPath));
+                    }
+                    else
+                        backgroundWorker2.RunWorkerAsync(srcPath);
+                }
             }
             else
             {
@@ -479,104 +571,182 @@ namespace FloodPeakToolUI.UI
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
-            double[,] src = e.Argument as double[,];
+            //读取高程矩阵
+            RasterReader read = new RasterReader(e.Argument as string);
+
+            double[,] src = DEMReader.GetElevation(read);
 
             FormOutput.AppendLog("1.计算洼地");
 
+            List<MyGrid> SourceGrid = new List<MyGrid>();
+
             MyGrid.Src = src;
-            List<MyGrid> sourceGirds = MyGrid.GetSourceGrids();
-            List<MyGrid> unFillGrids = new List<MyGrid>();
-            foreach (var item in sourceGirds)
-            {
-                item.Caculate();
-                if (!item.IsFill)
-                {
-                    unFillGrids.Add(item);
-                }
-            }
-            FormOutput.AppendLog($"影像点有{sourceGirds.Count},洼地点有{unFillGrids.Count}");
+            SourceGrid = MyGrid.GetSourceGrids();
+            FormOutput.AppendLog($"栅格点有{SourceGrid.Count},其中洼地点有{SourceGrid.Where(t => t.IsFill == false).Count()}");
 
             FormOutput.AppendLog("2.开始填充洼地");
 
-            double[,] src_fill = src;
+            #region 指定填洼
+            int times = 1;
 
-            foreach (var item in unFillGrids)
+            while (SourceGrid.Where(t => t.IsFill == false).Count() > 0)
             {
+                double[,] tempSrc = src;
+                foreach (var item in SourceGrid.Where(t => t.IsFill == false))
+                {
+                    tempSrc[item.Row, item.Col] = item.FilledALT;
+                }
+                MyGrid.Src = tempSrc;
+                SourceGrid = MyGrid.GetSourceGrids();
+                FormOutput.AppendLog($"第{times}次填充洼地,栅格点有{SourceGrid.Count},其中洼地点有{SourceGrid.Where(t => t.IsFill == false).Count()}");
+                src = tempSrc;
+                times++;
+            }
+            #endregion
 
+            fillGrid = src;
+            if (!string.IsNullOrEmpty(FillPath))
+            {
+                DEMReader.SaveDem(read, fillGrid, null, FillPath);
             }
 
-            //FormOutput.AppendLog("1.开始填充洼地..");
-            ////填充洼地
-            //double[,] src_fill = src.Fill();
-
-            //FormOutput.AppendLog("洼地填充完成..");
+            FormOutput.AppendLog("填充洼地完成");
             //计算流向
             FormOutput.AppendLog("2.开始计算流向..");
-            double[,] src_direct = src.FlowDirection();
+
+            FormOutput.AppendLog($"未确定流向的点有{SourceGrid.Where(t => t.IsFlat).Count()}");
+
+            directionDev = new int[src.GetLength(0), src.GetLength(1)];
+
+            int index = 0;
+            FormOutput.AppendProress(true);
+            foreach (var item in SourceGrid)
+            {
+                directionDev[item.Row, item.Col] = item.Direction;
+                index++;
+                FormOutput.AppendProress(index * 100 / SourceGrid.Count);
+            }
+
+            if (!string.IsNullOrEmpty(DirectionPath))
+            {
+                DEMReader.SaveDem(read, directionDev, null, DirectionPath);
+            }
 
             FormOutput.AppendLog("流向计算完成..");
-            bool result = true;//_hydrology.FlowDirection(scrPath, tempPath);
-            //if (!result)
-            //{
-            //    FormOutput.AppendLog("计算流向失败..");
-            //    return;
-            //}
-            //输出矩阵
-            // RasterReader read = new RasterReader(tempPath);
-            // double[,] matrix = _hydrology.GetElevation(read);
-            // XmlHelper.SaveDataToExcelFile(matrix,@"D:\1.xls");
-            //FormOutput.AppendLog("计算流向完成.");
-            //填充洼地 将流向为-1的设置为0
-            //scrPath = tempPath;
-            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp1.tif");
-            //FormOutput.AppendLog("开始填充洼地..");
-            //result = _hydrology.Fill(scrPath, tempPath);
-            //if (!result)
-            //{
-            //    FormOutput.AppendLog("填充洼地失败..");
-            //    return;
-            //}
-            //FormOutput.AppendLog("填充洼地完成.");
 
-            //计算汇流总数 --阈值默认为800
-            //scrPath = tempPath;
-            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "temp.tif");
 
             FormOutput.AppendLog("3.开始计算汇流量..");
-            double[,] src_total = src_direct.Accumulation();
+
+            Accumulation = new int[src.GetLength(0), src.GetLength(1)];
+
+            for (int i1 = 0; i1 < src.GetLength(0); i1++)
+            {
+                FormOutput.AppendProress(i1 * 100 / src.GetLength(0));
+                for (int j1 = 0; j1 < src.GetLength(1); j1++)
+                {
+                    int i = i1;
+                    int j = j1;
+                    bool flag = true;
+                    List<Point> caledPoint = new List<Point>();
+                    while (flag)
+                    {
+                        //计算之后不计算，防止死循环
+                        if (caledPoint.Where(t => t.X == i && t.Y == j).Any())
+                        {
+                            break;
+                        }
+                        int direction = directionDev[i, j];
+                        caledPoint.Add(new Point(i, j));
+                        switch (direction)
+                        {
+                            case 1:
+                                Accumulation[i, j + 1]++;
+                                j = j + 1;
+                                break;
+                            case 2:
+                                Accumulation[i = 1, j + 1]++;
+                                i = i + 1;
+                                j = j + 1;
+                                break;
+                            case 4:
+                                Accumulation[i + 1, j]++;
+                                i = i + 1;
+                                break;
+                            case 8:
+                                Accumulation[i + 1, j - 1]++;
+                                i = i + 1;
+                                j = j - 1;
+                                break;
+                            case 16:
+                                Accumulation[i, j - 1]++;
+                                j = j - 1;
+                                break;
+                            case 32:
+                                Accumulation[i - 1, j - 1]++;
+                                i = i - 1;
+                                j = j - 1;
+                                break;
+                            case 64:
+                                Accumulation[i - 1, j]++;
+                                i = i - 1;
+                                break;
+                            case 128:
+                                Accumulation[i - 1, j + 1]++;
+                                i = i - 1;
+                                j = j + 1;
+                                break;
+                            default:
+                                break;
+                        }
+                        flag = direction != 0 && i < src.GetLength(0) && j < src.GetLength(1);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(AccumulationPath))
+            {
+                DEMReader.SaveDem(read, Accumulation, null, AccumulationPath);
+            }
 
             FormOutput.AppendLog("计算汇流量完成..");
-            //int FlowThreshold = int.Parse(ConfigurationManager.AppSettings["FlowThreshold"]);
-            //result = _hydrology.FlowAccumulation(scrPath, tempPath, FlowThreshold);
-            //if (!result)
-            //{
-            //    FormOutput.AppendLog("计算汇流总数失败..");
-            //    return;
-            //}
-            //FormOutput.AppendLog("计算汇流总数完成.");
 
-            ////提取河网
-            //scrPath = tempPath;
-            //tempPath = Path.Combine(Path.GetDirectoryName(_xmlPath), "hewang.tif");
-            //FormOutput.AppendLog("开始提取河网..");
-            //result = _hydrology.Raster2Polyline(scrPath, tempPath);
-            //if (!result)
-            //{
-            //    FormOutput.AppendLog("提取河网失败..");
-            //    return;
-            //}
-            //FormOutput.AppendLog("提取河网完成.");
-            //e.Result = tempPath;
+            FormOutput.AppendLog("4.开始根据回流阀值提取河网..");
 
+            FormOutput.AppendLog($"当前阀值为{RiverThreshold}..");
+
+            RiverGrid = new int[src.GetLength(0), src.GetLength(1)];
+            for (int i = 0; i < Accumulation.GetLength(0); i++)
+            {
+                for (int j = 0; j < Accumulation.GetLength(1); j++)
+                {
+                    if (Accumulation[i, j] < RiverThreshold)
+                    {
+                        RiverGrid[i, j] = -1;
+                    }
+
+                    else
+                    {
+                        RiverGrid[i, j] = 1;
+                    }
+                }
+            }
+
+            DEMReader.SaveDem(read, RiverGrid, null, RiverPath);
+
+            FormOutput.AppendLog("河网提取完成..");
+
+            e.Result = RiverPath;
         }
 
         private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if(e.Result!=null)
+            if (e.Result != null)
             {
                 FormOutput.AppendLog(string.Format("提取结束,共耗时{0}秒..", (DateTime.Now - _currentTime).TotalSeconds));
                 System.Diagnostics.Process.Start("Explorer.exe", Path.GetDirectoryName(e.Result.ToString()));
             }
+            FormOutput.AppendProress(false);
+            currentDem = fileChooseControl1.FilePath;
         }
 
         #endregion

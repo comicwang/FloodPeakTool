@@ -291,14 +291,14 @@ namespace FloodPeakUtility.Algorithm
         private static void GetAround(int rowCount, int colCount, int row, int col, double[,] src, out double? S, out double? N, out double? E, out double? SE, out double? NE, out double? NW, out double? W, out double? SW, out double M)
         {
             double Sqrt2 = Math.Sqrt(2);
-            S = null;
-            N = null;
-            E = null;
-            SE = null;
-            NE = null;
-            NW = null;
-            W = null;
-            SW = null;
+            S = -1;
+            N = -1;
+            E = -1;
+            SE = -1;
+            NE = -1;
+            NW = -1;
+            W = -1;
+            SW = -1;
             if ((row != (rowCount - 1)))
                 S = (src[row, col] - src[row + 1, col]);
             if (row != (rowCount - 1) && col != (colCount - 1))
@@ -317,7 +317,7 @@ namespace FloodPeakUtility.Algorithm
                 SW = (src[row, col] - src[row + 1, col - 1]) / Sqrt2;
 
             //判断其中最小值
-            M = new List<double?>() { S, SE, N, E, NE, NW, W, SW }.Where(t => t != null).Min().Value;
+            M = new List<double?>() { S, SE, N, E, NE, NW, W, SW }.Where(t => t != null && t >= 0).Min().HasValue ? new List<double?>() { S, SE, N, E, NE, NW, W, SW }.Where(t => t != null && t >= 0).Min().Value : new List<double?>() { S, SE, N, E, NE, NW, W, SW }.Where(t => t != null).Max().Value;
         }
 
         /// <summary>

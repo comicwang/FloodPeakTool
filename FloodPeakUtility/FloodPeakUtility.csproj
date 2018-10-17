@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DevComponents.DotNetBar2.8.7.0.4\lib\DevComponents.TreeGX.dll</HintPath>
     </Reference>
+    <Reference Include="gdal_csharp, Version=1.0.5184.21788, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\iTelluro.Explorer.Hydrology\bin\Debug\gdal_csharp.dll</HintPath>
+    </Reference>
     <Reference Include="iTelluro.Explorer.DOMImport, Version=2.1.5638.34111, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\iTelluro.Explorer.DOMImport.dll</HintPath>

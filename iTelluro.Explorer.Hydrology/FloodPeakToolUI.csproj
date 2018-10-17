@@ -268,6 +268,12 @@
     <Compile Include="UI\FormPercentExport.Designer.cs">
       <DependentUpon>FormPercentExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\FormRiverArg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormRiverArg.Designer.cs">
+      <DependentUpon>FormRiverArg.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -315,6 +321,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormPercentExport.resx">
       <DependentUpon>FormPercentExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormRiverArg.resx">
+      <DependentUpon>FormRiverArg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
