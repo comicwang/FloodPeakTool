@@ -370,8 +370,8 @@ namespace FloodPeakUtility.Model
         {
             get
             {
-                //if (IsFlat == false)
-                //{
+                if (IsFlat == false)
+                {
                     double? S, N, E, SE, NE, NW, W, SW;
 
                     double Sqrt2 = Math.Sqrt(2);
@@ -435,13 +435,13 @@ namespace FloodPeakUtility.Model
                         return 8;
                     }
                     return 0;
-                //}
-                //else
-                //{
-                //    CaledGrid = new List<MyGrid>();
-                //    MyGrid resultGrid = CalMultiDirection(MaybeDirections);
-                //    return CompareDirection(resultGrid);
-                //}
+                }
+                else
+                {
+                    CaledGrid = new List<MyGrid>();
+                    MyGrid resultGrid = CalMultiDirection(MaybeDirections);
+                    return CompareDirection(resultGrid);
+                }
             }
         }
 
@@ -486,26 +486,25 @@ namespace FloodPeakUtility.Model
             //有多条，取出下级多条网格列表，迭代计算
             else
             {
-                return result.FirstOrDefault();
-                //List<MyGrid> lstNextLvlGrid = new List<MyGrid>();
-                //foreach (var grid in result)
-                //{
-                //    List<MyGrid> lstTempGrid = grid.MaybeDirections;
-                //    foreach (var item in lstTempGrid)
-                //    {
-                //        if (!ContainsGrid(lstNextLvlGrid, item) && !ContainsGrid(CaledGrid, item))
-                //        {
-                //            lstNextLvlGrid.Add(item);
-                //        }
-                //    }
-                //}
-                //if (lstNextLvlGrid.Count == 0)
-                //{
-                //    return result.FirstOrDefault();  //去掉无限递归的数据
-                //}
-                //MyGrid resultGrid = CalMultiDirection(lstNextLvlGrid);
+                List<MyGrid> lstNextLvlGrid = new List<MyGrid>();
+                foreach (var grid in result)
+                {
+                    List<MyGrid> lstTempGrid = grid.MaybeDirections;
+                    foreach (var item in lstTempGrid)
+                    {
+                        if (!ContainsGrid(lstNextLvlGrid, item) && !ContainsGrid(CaledGrid, item))
+                        {
+                            lstNextLvlGrid.Add(item);
+                        }
+                    }
+                }
+                if (lstNextLvlGrid.Count == 0)
+                {
+                    return result.FirstOrDefault();  //去掉无限递归的数据
+                }
+                MyGrid resultGrid = CalMultiDirection(lstNextLvlGrid);
                 ////获取结果Grid所属的根Grid
-                //return GetNextLvlGrid(result, resultGrid);
+                return GetNextLvlGrid(result, resultGrid);
             }
         }
 
@@ -596,6 +595,11 @@ namespace FloodPeakUtility.Model
                 return 8;
             }
             return 0;
+        }
+
+        public override string ToString()
+        {
+            return $"x{Row},y{Col}:{ALT}";
         }
     }
 }

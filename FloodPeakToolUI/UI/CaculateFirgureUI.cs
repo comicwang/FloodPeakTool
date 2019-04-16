@@ -315,7 +315,7 @@ namespace FloodPeakToolUI.UI
             builder.Append(" ");
             builder.Append(maxHourValue.Substring(0, maxHourValue.Length - 1));
             builder.Append(" ");         
-            RunExeHelper.RunMethod(builder.ToString());
+            RunExeHelper.RunMethod(builder.ToString());            
             e.Result = "1";
         }
 

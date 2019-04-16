@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FloodPeakUtility.UI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -68,8 +69,12 @@ namespace FloodPeakUtility
             if (_lstPrc.Count > 0)
                 foreach (var prs in _lstPrc)
                 {
-                    if (prs != null)
-                        prs.Kill();
+                    try
+                    {
+                        if (prs != null)
+                            prs.Kill();
+                    }
+                    catch { }
                 }
         }
 

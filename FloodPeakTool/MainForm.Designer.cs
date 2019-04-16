@@ -70,6 +70,8 @@
             this.清水流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.泥石流洪峰流量计算ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.雨量计算CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.有效雨量SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.模板计算TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnTools = new System.Windows.Forms.ToolStripMenuItem();
             this.快速入门ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -238,10 +240,10 @@
             // 
             this.tabControlPanel1.Controls.Add(this.ShowPLG);
             this.tabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlPanel1.Location = new System.Drawing.Point(0, 25);
+            this.tabControlPanel1.Location = new System.Drawing.Point(0, 28);
             this.tabControlPanel1.Name = "tabControlPanel1";
             this.tabControlPanel1.Padding = new System.Windows.Forms.Padding(1);
-            this.tabControlPanel1.Size = new System.Drawing.Size(744, 606);
+            this.tabControlPanel1.Size = new System.Drawing.Size(744, 603);
             this.tabControlPanel1.Style.BackColor1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(254)))));
             this.tabControlPanel1.Style.BackColor2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(188)))), ((int)(((byte)(227)))));
             this.tabControlPanel1.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
@@ -259,7 +261,7 @@
             this.ShowPLG.Location = new System.Drawing.Point(1, 1);
             this.ShowPLG.Margin = new System.Windows.Forms.Padding(0);
             this.ShowPLG.Name = "ShowPLG";
-            this.ShowPLG.Size = new System.Drawing.Size(742, 604);
+            this.ShowPLG.Size = new System.Drawing.Size(742, 601);
             this.ShowPLG.TabIndex = 1;
             // 
             // tabItem1
@@ -328,7 +330,7 @@
             this.File.Margin = new System.Windows.Forms.Padding(3);
             this.File.MergeIndex = 0;
             this.File.Name = "File";
-            this.File.Size = new System.Drawing.Size(74, 32);
+            this.File.Size = new System.Drawing.Size(90, 32);
             this.File.Text = "文  件(&F)";
             this.File.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             // 
@@ -336,7 +338,7 @@
             // 
             this.btnNew.BackColor = System.Drawing.Color.Transparent;
             this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(166, 24);
+            this.btnNew.Size = new System.Drawing.Size(199, 28);
             this.btnNew.Text = "新建工程(&N)";
             this.btnNew.Click += new System.EventHandler(this.新建工程ToolStripMenuItem_Click);
             // 
@@ -344,7 +346,7 @@
             // 
             this.btnOpen.BackColor = System.Drawing.Color.Transparent;
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(166, 24);
+            this.btnOpen.Size = new System.Drawing.Size(199, 28);
             this.btnOpen.Text = "打开工程(&O)";
             this.btnOpen.Click += new System.EventHandler(this.打开工程ToolStripMenuItem_Click);
             // 
@@ -353,21 +355,21 @@
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.Enabled = false;
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(166, 24);
+            this.btnSave.Size = new System.Drawing.Size(199, 28);
             this.btnSave.Text = "保存工程(&S)";
             this.btnSave.Click += new System.EventHandler(this.保存工程ToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
             // 
             // btnImportDom
             // 
             this.btnImportDom.BackColor = System.Drawing.Color.Transparent;
             this.btnImportDom.Enabled = false;
             this.btnImportDom.Name = "btnImportDom";
-            this.btnImportDom.Size = new System.Drawing.Size(166, 24);
+            this.btnImportDom.Size = new System.Drawing.Size(199, 28);
             this.btnImportDom.Text = "导入DOM(&M)";
             this.btnImportDom.Click += new System.EventHandler(this.导入DOMToolStripMenuItem_Click);
             // 
@@ -376,33 +378,33 @@
             this.btnImportShp.BackColor = System.Drawing.Color.Transparent;
             this.btnImportShp.Enabled = false;
             this.btnImportShp.Name = "btnImportShp";
-            this.btnImportShp.Size = new System.Drawing.Size(166, 24);
+            this.btnImportShp.Size = new System.Drawing.Size(199, 28);
             this.btnImportShp.Text = "导入SHP(&H)";
             this.btnImportShp.Click += new System.EventHandler(this.导入SHPToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(196, 6);
             // 
             // btnExport
             // 
             this.btnExport.BackColor = System.Drawing.Color.Transparent;
             this.btnExport.Enabled = false;
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(166, 24);
+            this.btnExport.Size = new System.Drawing.Size(199, 28);
             this.btnExport.Text = "导出(&P)";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(196, 6);
             // 
             // btnExit
             // 
             this.btnExit.BackColor = System.Drawing.Color.Transparent;
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(166, 24);
+            this.btnExit.Size = new System.Drawing.Size(199, 28);
             this.btnExit.Text = "退出程序(&E)";
             this.btnExit.Click += new System.EventHandler(this.退出程序ToolStripMenuItem_Click);
             // 
@@ -412,13 +414,13 @@
             this.tlsColorSetting});
             this.设置ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
-            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(67, 38);
+            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(80, 38);
             this.设置ToolStripMenuItem.Text = "设置(&S)";
             // 
             // tlsColorSetting
             // 
             this.tlsColorSetting.Name = "tlsColorSetting";
-            this.tlsColorSetting.Size = new System.Drawing.Size(134, 24);
+            this.tlsColorSetting.Size = new System.Drawing.Size(158, 28);
             this.tlsColorSetting.Text = "颜色设置";
             this.tlsColorSetting.Click += new System.EventHandler(this.tlsColorSetting_Click);
             // 
@@ -431,27 +433,27 @@
             this.暴雨参数ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.暴雨参数ToolStripMenuItem.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.暴雨参数ToolStripMenuItem.Name = "暴雨参数ToolStripMenuItem";
-            this.暴雨参数ToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.暴雨参数ToolStripMenuItem.Size = new System.Drawing.Size(94, 38);
             this.暴雨参数ToolStripMenuItem.Text = "暴雨参数";
             // 
             // 暴雨频率计算ToolStripMenuItem
             // 
             this.暴雨频率计算ToolStripMenuItem.Name = "暴雨频率计算ToolStripMenuItem";
-            this.暴雨频率计算ToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.暴雨频率计算ToolStripMenuItem.Size = new System.Drawing.Size(230, 28);
             this.暴雨频率计算ToolStripMenuItem.Text = "暴雨频率计算";
             this.暴雨频率计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
             // 暴雨衰减参数计算ToolStripMenuItem
             // 
             this.暴雨衰减参数计算ToolStripMenuItem.Name = "暴雨衰减参数计算ToolStripMenuItem";
-            this.暴雨衰减参数计算ToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.暴雨衰减参数计算ToolStripMenuItem.Size = new System.Drawing.Size(230, 28);
             this.暴雨衰减参数计算ToolStripMenuItem.Text = "暴雨衰减参数计算";
             this.暴雨衰减参数计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
             // 暴雨损失参数计算ToolStripMenuItem
             // 
             this.暴雨损失参数计算ToolStripMenuItem.Name = "暴雨损失参数计算ToolStripMenuItem";
-            this.暴雨损失参数计算ToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.暴雨损失参数计算ToolStripMenuItem.Size = new System.Drawing.Size(230, 28);
             this.暴雨损失参数计算ToolStripMenuItem.Text = "暴雨损失参数计算";
             this.暴雨损失参数计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
@@ -463,20 +465,20 @@
             this.汇流参数ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.汇流参数ToolStripMenuItem.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.汇流参数ToolStripMenuItem.Name = "汇流参数ToolStripMenuItem";
-            this.汇流参数ToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.汇流参数ToolStripMenuItem.Size = new System.Drawing.Size(94, 38);
             this.汇流参数ToolStripMenuItem.Text = "汇流参数";
             // 
             // 河槽汇流参数计算ToolStripMenuItem
             // 
             this.河槽汇流参数计算ToolStripMenuItem.Name = "河槽汇流参数计算ToolStripMenuItem";
-            this.河槽汇流参数计算ToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.河槽汇流参数计算ToolStripMenuItem.Size = new System.Drawing.Size(230, 28);
             this.河槽汇流参数计算ToolStripMenuItem.Text = "河槽汇流参数计算";
             this.河槽汇流参数计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
             // 坡面汇流参数计算ToolStripMenuItem
             // 
             this.坡面汇流参数计算ToolStripMenuItem.Name = "坡面汇流参数计算ToolStripMenuItem";
-            this.坡面汇流参数计算ToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
+            this.坡面汇流参数计算ToolStripMenuItem.Size = new System.Drawing.Size(230, 28);
             this.坡面汇流参数计算ToolStripMenuItem.Text = "坡面汇流参数计算";
             this.坡面汇流参数计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
@@ -488,29 +490,46 @@
             this.洪峰流量ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.洪峰流量ToolStripMenuItem.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.洪峰流量ToolStripMenuItem.Name = "洪峰流量ToolStripMenuItem";
-            this.洪峰流量ToolStripMenuItem.Size = new System.Drawing.Size(77, 38);
+            this.洪峰流量ToolStripMenuItem.Size = new System.Drawing.Size(94, 38);
             this.洪峰流量ToolStripMenuItem.Text = "洪峰流量";
             // 
             // 清水流量计算ToolStripMenuItem
             // 
             this.清水流量计算ToolStripMenuItem.Name = "清水流量计算ToolStripMenuItem";
-            this.清水流量计算ToolStripMenuItem.Size = new System.Drawing.Size(204, 24);
+            this.清水流量计算ToolStripMenuItem.Size = new System.Drawing.Size(248, 28);
             this.清水流量计算ToolStripMenuItem.Text = "清水洪峰流量计算";
             this.清水流量计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
             // 泥石流洪峰流量计算ToolStripMenuItem
             // 
             this.泥石流洪峰流量计算ToolStripMenuItem.Name = "泥石流洪峰流量计算ToolStripMenuItem";
-            this.泥石流洪峰流量计算ToolStripMenuItem.Size = new System.Drawing.Size(204, 24);
+            this.泥石流洪峰流量计算ToolStripMenuItem.Size = new System.Drawing.Size(248, 28);
             this.泥石流洪峰流量计算ToolStripMenuItem.Text = "泥石流洪峰流量计算";
             this.泥石流洪峰流量计算ToolStripMenuItem.Click += new System.EventHandler(this.暴雨频率计算ToolStripMenuItem_Click);
             // 
             // 雨量计算CToolStripMenuItem
             // 
+            this.雨量计算CToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.有效雨量SToolStripMenuItem,
+            this.模板计算TToolStripMenuItem});
             this.雨量计算CToolStripMenuItem.Name = "雨量计算CToolStripMenuItem";
-            this.雨量计算CToolStripMenuItem.Size = new System.Drawing.Size(84, 38);
+            this.雨量计算CToolStripMenuItem.Size = new System.Drawing.Size(101, 38);
             this.雨量计算CToolStripMenuItem.Text = "雨量计算(&C)";
             this.雨量计算CToolStripMenuItem.Click += new System.EventHandler(this.雨量计算CToolStripMenuItem_Click);
+            // 
+            // 有效雨量SToolStripMenuItem
+            // 
+            this.有效雨量SToolStripMenuItem.Name = "有效雨量SToolStripMenuItem";
+            this.有效雨量SToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.有效雨量SToolStripMenuItem.Text = "日综合雨量（&S）";
+            this.有效雨量SToolStripMenuItem.Click += new System.EventHandler(this.有效雨量SToolStripMenuItem_Click);
+            // 
+            // 模板计算TToolStripMenuItem
+            // 
+            this.模板计算TToolStripMenuItem.Name = "模板计算TToolStripMenuItem";
+            this.模板计算TToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.模板计算TToolStripMenuItem.Text = "历史雨量计算（&T）";
+            this.模板计算TToolStripMenuItem.Click += new System.EventHandler(this.模板计算TToolStripMenuItem_Click);
             // 
             // 帮助ToolStripMenuItem
             // 
@@ -522,32 +541,32 @@
             this.帮助ToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.帮助ToolStripMenuItem.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
-            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(78, 38);
+            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(94, 38);
             this.帮助ToolStripMenuItem.Text = "帮  助(&H)";
             // 
             // btnTools
             // 
             this.btnTools.Name = "btnTools";
-            this.btnTools.Size = new System.Drawing.Size(157, 24);
+            this.btnTools.Size = new System.Drawing.Size(186, 28);
             this.btnTools.Text = "iTelluro工具";
             this.btnTools.Click += new System.EventHandler(this.iTelluro工具ToolStripMenuItem_Click);
             // 
             // 快速入门ToolStripMenuItem
             // 
             this.快速入门ToolStripMenuItem.Name = "快速入门ToolStripMenuItem";
-            this.快速入门ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.快速入门ToolStripMenuItem.Size = new System.Drawing.Size(186, 28);
             this.快速入门ToolStripMenuItem.Text = "快速入门";
             // 
             // 帮助手册ToolStripMenuItem
             // 
             this.帮助手册ToolStripMenuItem.Name = "帮助手册ToolStripMenuItem";
-            this.帮助手册ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.帮助手册ToolStripMenuItem.Size = new System.Drawing.Size(186, 28);
             this.帮助手册ToolStripMenuItem.Text = "帮助手册";
             // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(186, 28);
             this.关于ToolStripMenuItem.Text = "关于";
             // 
             // dotNetBarManager
@@ -708,6 +727,8 @@
         private System.Windows.Forms.GroupBox grpPnl;
         private DevComponents.DotNetBar.ExpandableSplitter expandableSplitter1;
         private System.Windows.Forms.ToolStripMenuItem 雨量计算CToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 有效雨量SToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 模板计算TToolStripMenuItem;
     }
 }
 

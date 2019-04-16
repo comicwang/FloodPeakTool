@@ -576,6 +576,8 @@ namespace FloodPeakToolUI.UI
 
             double[,] src = DEMReader.GetElevation(read);
 
+            DEMReader.SaveDem(read, src, null, RiverPath);
+
             FormOutput.AppendLog("1.计算洼地");
 
             List<MyGrid> SourceGrid = new List<MyGrid>();
@@ -591,11 +593,19 @@ namespace FloodPeakToolUI.UI
 
             while (SourceGrid.Where(t => t.IsFill == false).Count() > 0)
             {
-                double[,] tempSrc = src;
-                foreach (var item in SourceGrid.Where(t => t.IsFill == false))
+                double[,] tempSrc = new double[src.GetLongLength(0), src.GetLongLength(1)];
+                foreach (var item in SourceGrid)
                 {
-                    tempSrc[item.Row, item.Col] = item.FilledALT;
+                    if (item.IsFill)
+                    {
+                        tempSrc[item.Row, item.Col] = item.ALT;
+                    }
+                    else
+                    {
+                        tempSrc[item.Row, item.Col] = item.FilledALT;
+                    }
                 }
+
                 MyGrid.Src = tempSrc;
                 SourceGrid = MyGrid.GetSourceGrids();
                 FormOutput.AppendLog($"第{times}次填充洼地,栅格点有{SourceGrid.Count},其中洼地点有{SourceGrid.Where(t => t.IsFill == false).Count()}");
@@ -605,6 +615,8 @@ namespace FloodPeakToolUI.UI
             #endregion
 
             fillGrid = src;
+
+            var ss = SourceGrid.OrderByDescending(t => t.ALT).ToList();
             if (!string.IsNullOrEmpty(FillPath))
             {
                 DEMReader.SaveDem(read, fillGrid, null, FillPath);

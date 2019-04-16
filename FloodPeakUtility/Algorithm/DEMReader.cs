@@ -1,5 +1,4 @@
-﻿using iTelluro.Explorer.Raster;
-using OSGeo.GDAL;
+﻿using OSGeo.GDAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace FloodPeakUtility.Algorithm
         /// <summary>
         /// 获取高程矩阵
         /// </summary>
-        public static double[,] GetElevation(RasterReader read)
+        public static double[,] GetElevation(iTelluro.Explorer.Raster.RasterReader read)
         {
             int rowCount = read.RowCount;
             int colCount = read.ColumnCount;
@@ -33,7 +32,7 @@ namespace FloodPeakUtility.Algorithm
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        private static double ReadBand(RasterReader read, int row, int col)
+        private static double ReadBand(iTelluro.Explorer.Raster.RasterReader read, int row, int col)
         {
             double[] d = null;
             read.ReadBand(col, row, 1, 1, out d);
@@ -47,8 +46,13 @@ namespace FloodPeakUtility.Algorithm
         /// <param name="Accumulation"></param>
         /// <param name="funcVal"></param>
         /// <param name="savePath"></param>
-        public static void SaveDem(RasterReader read, int[,] Accumulation, Func<double, double> funcVal, string savePath)
+        public static void SaveDem(iTelluro.Explorer.Raster.RasterReader read, int[,] Accumulation, Func<double, double> funcVal, string savePath)
         {
+
+            double[] inGeo = new double[6];
+            read.DataSet.GetGeoTransform(inGeo);
+            RasterWriter write = new RasterWriter(savePath, new ResultInfo() { Width = Accumulation.GetLength(1), Height = Accumulation.GetLength(0), InGeo = inGeo });
+
             List<double> data = new List<double>();
 
             for (int i = 0; i < Accumulation.GetLength(0); i++)
@@ -57,23 +61,25 @@ namespace FloodPeakUtility.Algorithm
                 {
                     if (funcVal != null)
                     {
-                        data.Add(funcVal(Accumulation[i, j]));
+                        write.SetValue(j, i, funcVal(Accumulation[i, j]));
                     }
 
                     else
                     {
-                        data.Add(Accumulation[i, j]);
+                        write.SetValue(j, i, Accumulation[i, j]);
                     }
                 }
             }
+
+            write.Save();
             //重新生成汇流栅格
-            RasterWriter writer = new RasterWriter(savePath, 1, Accumulation.GetLength(1), Accumulation.GetLength(0), DataType.GDT_Float32);
-            writer.SetProjection(read.DataSet.GetProjectionRef());
-            writer.SetPosition(read.MapRectEast, read.MapRectWest, read.CellSizeX, read.CellSizeY);
-            writer.SetNodata(1, -1);//设置无数据
-            double[] buffer = data.ToArray();
-            writer.WriteBand(1, 0, 0, Accumulation.GetLength(1), Accumulation.GetLength(0), buffer);
-            writer.Dispose();
+            //RasterWriter writer = new RasterWriter(savePath, 1, Accumulation.GetLength(1), Accumulation.GetLength(0), DataType.GDT_Float32);
+            //writer.SetProjection(read.DataSet.GetProjectionRef());
+            //writer.SetPosition(read.MapRectEast, read.MapRectWest, read.CellSizeX, read.CellSizeY);
+            //writer.SetNodata(1, -1);//设置无数据
+            //double[] buffer = data.ToArray();
+            //writer.WriteBand(1, 0, 0, Accumulation.GetLength(1), Accumulation.GetLength(0), buffer);
+            //writer.Dispose();
         }
 
         /// <summary>
@@ -83,8 +89,12 @@ namespace FloodPeakUtility.Algorithm
         /// <param name="Accumulation"></param>
         /// <param name="funcVal"></param>
         /// <param name="savePath"></param>
-        public static void SaveDem(RasterReader read, double[,] Accumulation, Func<double, double> funcVal, string savePath)
+        public static void SaveDem(iTelluro.Explorer.Raster.RasterReader read, double[,] Accumulation, Func<double, double> funcVal, string savePath)
         {
+            double[] inGeo = new double[6];
+            read.DataSet.GetGeoTransform(inGeo);
+            RasterWriter write = new RasterWriter(savePath, new ResultInfo() { Width = Accumulation.GetLength(1), Height = Accumulation.GetLength(0), InGeo = inGeo });
+
             List<double> data = new List<double>();
 
             for (int i = 0; i < Accumulation.GetLength(0); i++)
@@ -93,23 +103,25 @@ namespace FloodPeakUtility.Algorithm
                 {
                     if (funcVal != null)
                     {
-                        data.Add(funcVal(Accumulation[i, j]));
+                        write.SetValue(j, i, funcVal(Accumulation[i, j]));
                     }
 
                     else
                     {
-                        data.Add(Accumulation[i, j]);
+                        write.SetValue(j, i, Accumulation[i, j]);
                     }
                 }
             }
-            //重新生成汇流栅格
-            RasterWriter writer = new RasterWriter(savePath, 1, Accumulation.GetLength(1), Accumulation.GetLength(0), DataType.GDT_Float32);
-            writer.SetProjection(read.DataSet.GetProjectionRef());
-            writer.SetPosition(read.MapRectEast, read.MapRectWest, read.CellSizeX, read.CellSizeY);
-            writer.SetNodata(1, -1);//设置无数据
-            double[] buffer = data.ToArray();
-            writer.WriteBand(1, 0, 0, Accumulation.GetLength(1), Accumulation.GetLength(0), buffer);
-            writer.Dispose();
+
+            write.Save();
+            ////重新生成汇流栅格
+            //RasterWriter writer = new RasterWriter(savePath, 1, Accumulation.GetLength(1), Accumulation.GetLength(0), DataType.GDT_Float32);
+            //writer.SetProjection(read.DataSet.GetProjectionRef());
+            //writer.SetPosition(read.MapRectWest, read.MapRectNorth, read.CellSizeX, read.CellSizeY);
+            //writer.SetNodata(1, -1);//设置无数据
+            //double[] buffer = data.ToArray();
+            //writer.WriteBand(1, 0, 0, Accumulation.GetLength(1), Accumulation.GetLength(0), buffer);
+            //writer.Dispose();
         }
     }
 }

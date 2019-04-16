@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloodPeakTool", "FloodPeakTool\FloodPeakTool.csproj", "{9003F0D8-362A-482F-8F62-EB00D0E45F5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloodPeakToolUI", "iTelluro.Explorer.Hydrology\FloodPeakToolUI.csproj", "{81742C4A-B689-4E28-8AFD-A79DFBF07F84}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloodPeakUtility", "FloodPeakUtility\FloodPeakUtility.csproj", "{C2817366-26F7-4BCA-88F5-CAAFBA9E8A51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaculateServer", "CaculateServer\CaculateServer.csproj", "{669F111B-9826-452C-B2EE-E4CF7235D329}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloodPeakToolUI", "FloodPeakToolUI\FloodPeakToolUI.csproj", "{81742C4A-B689-4E28-8AFD-A79DFBF07F84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,16 +31,6 @@ Global
 		{9003F0D8-362A-482F-8F62-EB00D0E45F5F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9003F0D8-362A-482F-8F62-EB00D0E45F5F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9003F0D8-362A-482F-8F62-EB00D0E45F5F}.Release|x86.ActiveCfg = Release|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|x86.ActiveCfg = Release|Any CPU
 		{C2817366-26F7-4BCA-88F5-CAAFBA9E8A51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2817366-26F7-4BCA-88F5-CAAFBA9E8A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2817366-26F7-4BCA-88F5-CAAFBA9E8A51}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -61,12 +51,24 @@ Global
 		{669F111B-9826-452C-B2EE-E4CF7235D329}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{669F111B-9826-452C-B2EE-E4CF7235D329}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{669F111B-9826-452C-B2EE-E4CF7235D329}.Release|x86.ActiveCfg = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Debug|x86.Build.0 = Debug|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|x86.ActiveCfg = Release|Any CPU
+		{81742C4A-B689-4E28-8AFD-A79DFBF07F84}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35
 		SolutionGuid = {C2A237AA-BA87-46EB-944D-DD1238A6286D}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal

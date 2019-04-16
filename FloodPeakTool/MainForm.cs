@@ -48,6 +48,7 @@ namespace FloodPeakTool
         string _FullPath = string.Empty;
         private PnlLeftControl _pnlLeft = null;
         private RainCaculateControl _rainCaculateControl = null;
+        private RainCaculateControl2 _rainCaculateControl2 = null;
         private ICaculateMemo _IMemo;
 
         /// <summary>
@@ -381,11 +382,29 @@ namespace FloodPeakTool
 
         private void 雨量计算CToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //if (_rainCaculateControl == null || _rainCaculateControl.IsDisposed)
+            //{
+            //    _rainCaculateControl = new RainCaculateControl(this.tabControl1);
+            //}
+            //_rainCaculateControl.ShowDock("雨量计算");
+        }
+
+        private void 模板计算TToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             if (_rainCaculateControl == null || _rainCaculateControl.IsDisposed)
             {
                 _rainCaculateControl = new RainCaculateControl(this.tabControl1);
             }
-            _rainCaculateControl.ShowDock("雨量计算");
+            _rainCaculateControl.ShowDock("雨量模板计算");
+        }
+
+        private void 有效雨量SToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_rainCaculateControl2 == null || _rainCaculateControl2.IsDisposed)
+            {
+                _rainCaculateControl2 = new RainCaculateControl2(this.tabControl1);
+            }
+            _rainCaculateControl2.ShowDock("日综合雨量计算");
         }
     }
 }
