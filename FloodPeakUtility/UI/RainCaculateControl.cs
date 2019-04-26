@@ -19,6 +19,7 @@ namespace FloodPeakUtility.UI
         int[] minArry = new int[] { 5, 10, 30 };
         int[] hourArry = new int[] { 1, 3, 6, 12, 24, 48, 72 };
         int[] dayArry = new int[] { 1,3, 5, 7, 15, 30 };
+        int[] yxDayArry = new int[] { 3, 5, 7, 15 };
 
         List<RainCaculateConditon> lstCondition = null;
 
@@ -65,6 +66,15 @@ namespace FloodPeakUtility.UI
             List<DataGridViewTextBoxColumn> lstColumnA = new List<DataGridViewTextBoxColumn>();         
             List<DataGridViewTextBoxColumn> lstColumnB = new List<DataGridViewTextBoxColumn>();
             //动态添加表列
+
+            for (int i = 0; i < yxDayArry.Length; i++)
+            {
+                DataGridViewTextBoxColumn column2 = new DataGridViewTextBoxColumn();
+                column2.HeaderText = $"RAINFALL_{yxDayArry[i]}_DAY_YX";
+                column2.Name = $"RAINFALL_{yxDayArry[i]}_DAY_YX";
+                column2.ReadOnly = true;
+                lstColumnA.Add(column2);
+            }
 
             //分钟
             for (int i = 0; i < minArry.Length; i++)
@@ -706,6 +716,35 @@ namespace FloodPeakUtility.UI
                 {
                     string columName = $"RAINFALL_{dayArry[i]}_DAY";
                     dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false&&t.During==dayArry[i]).Select(t => t.MaxValue).FirstOrDefault();
+
+                    if (yxDayArry.Contains(dayArry[i]))
+                    {
+                        //加入有效雨量，计算有效雨量的最大值日期
+                        DateTime yxMaxTime = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false && t.During == dayArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
+
+                        if (yxMaxTime != DateTime.MinValue)
+                        {
+
+                            //计算有效雨量值,并乘以系数
+                            double yxVal = 0;
+                            for (int j = 0; j < dayArry[i]; j++)
+                            {
+                                string sql = $"SELECT sum(rainfall) FROM RAINFALL_STATE where monitornum = '{dataGridView1[3, index].Value}' and recorddate > '{yxMaxTime.AddDays(-j - 1)}' and recorddate<='{yxMaxTime.AddDays(-j)}'";
+                                DataSet ds = SqlHelper.ExecuteDataset(SqlHelper.GetConnection(), CommandType.Text, sql);
+                                if (ds.Tables[0].Rows.Count > 0)
+                                {
+                                    double? val = ConvertDecimal(ds.Tables[0].Rows[0][0]);
+                                    if (val.HasValue)
+                                    {
+                                        double arg = Math.Round(Math.Pow(0.8, j), 2);
+                                        yxVal += (val.Value * arg);
+                                    }
+                                }
+                            }
+                            columName = $"RAINFALL_{dayArry[i]}_DAY_YX";
+                            dataGridView1[columName, index].Value = yxVal;
+                        }
+                    }
 
                     columName = $"RAINFALL_{dayArry[i]}_DAY_TIME";
                     dataGridView1[columName, index].Value = result.Where(t => t.Day == true && t.EventNum == item && t.MonthMax == false && t.During == dayArry[i]).Select(t => t.MaxValueDate).FirstOrDefault();
